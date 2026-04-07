@@ -35,8 +35,8 @@ jobs:
               run: npm run build
             - name: Fent neteja
               run: rm -rf node_modules
-            - name: Esborrar carpeta storage
-              run: rm -rf storage
+            # - name: Esborrar carpeta storage
+            #   run: rm -rf storage
             - name: Comprimir el projecte  (incloent els ocults)
               run: tar -czf app.tgz $(ls -A)
             - name: Envia app.tgz al servidor
