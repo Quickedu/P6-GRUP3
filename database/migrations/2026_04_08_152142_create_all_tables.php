@@ -13,16 +13,9 @@ return new class extends Migration
     {
         if (! Schema::hasColumn('users', 'role')) {
             Schema::table('users', function (Blueprint $table) {
-                // Existing users need a default role when adding a non-nullable column.
                 $table->enum('role', ['admin', 'worker', 'user'])->default('user')->after('email');
             });
         }
-
-        Schema::create('worker_roles', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
-            $table->timestamps();
-        });
         Schema::create('workers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
@@ -31,7 +24,7 @@ return new class extends Migration
             $table->string('dni')->unique();
             $table->integer('phone');
             $table->string('password');
-            $table->foreignId('worker_role_id')->constrained('worker_roles')->onDelete('cascade');
+            $table->enum('worker_role', ['doctor', 'secretary'])->default('doctor');
             $table->timestamps();
         });
         Schema::create('admins', function (Blueprint $table) {
