@@ -13,14 +13,14 @@ return new class extends Migration
     {
         if (! Schema::hasColumn('users', 'role')) {
             Schema::table('users', function (Blueprint $table) {
-                $table->enum('role', ['admin', 'secretary', 'doctor'])->default('user')->after('email');
+                $table->enum('role', ['admin', 'secretary', 'doctor'])->after('email');
             });
         }
         Schema::create('workers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('nss')->unique();
-            $table->string('adress');
+            $table->string('address');
             $table->string('dni')->unique();
             $table->integer('phone');
             $table->timestamps();
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('nts')->unique();
-            $table->string('adress');
+            $table->string('address');
             $table->string('dni')->unique();
             $table->integer('phone');
             $table->timestamps();
