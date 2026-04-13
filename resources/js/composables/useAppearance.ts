@@ -15,19 +15,12 @@ export function updateTheme(value: Appearance): void {
         return;
     }
 
-    if (value === 'system') {
-        const mediaQueryList = window.matchMedia(
-            '(prefers-color-scheme: dark)',
-        );
-        const systemTheme = mediaQueryList.matches ? 'dark' : 'light';
-
-        document.documentElement.classList.toggle(
-            'dark',
-            systemTheme === 'dark',
-        );
-    } else {
-        document.documentElement.classList.toggle('dark', value === 'dark');
+    if (value !== 'light') {
+        localStorage.setItem('appearance', 'light');
+        setCookie('appearance', 'light');
     }
+
+    document.documentElement.classList.toggle('dark', false);
 }
 
 const setCookie = (name: string, value: string, days = 365) => {
@@ -91,9 +84,12 @@ export function useAppearance(): UseAppearanceReturn {
             'appearance',
         ) as Appearance | null;
 
-        if (savedAppearance) {
-            appearance.value = savedAppearance;
+        if (savedAppearance !== 'light') {
+            localStorage.setItem('appearance', 'light');
+            setCookie('appearance', 'light');
         }
+
+        appearance.value = 'light';
     });
 
     const resolvedAppearance = computed<ResolvedAppearance>(() => {
@@ -105,15 +101,20 @@ export function useAppearance(): UseAppearanceReturn {
     });
 
     function updateAppearance(value: Appearance) {
-        appearance.value = value;
+        if (value !== 'light') {
+            localStorage.setItem('appearance', 'light');
+            setCookie('appearance', 'light');
+        }
+
+        appearance.value = 'light';
 
         // Store in localStorage for client-side persistence...
-        localStorage.setItem('appearance', value);
+        localStorage.setItem('appearance', 'light');
 
         // Store in cookie for SSR...
-        setCookie('appearance', value);
+        setCookie('appearance', 'light');
 
-        updateTheme(value);
+        updateTheme('light');
     }
 
     return {
