@@ -42,7 +42,6 @@ defineProps<{
         v-slot="{ errors, processing }"
         class="flex flex-col gap-6"
     >
-    <h1 class="text-pmf-primary bg-pmf-secondary">HOLAAAA</h1>
         <div class="grid gap-6 border rounded-md">
             <div class="grid gap-2">
                 <Label for="email">Email address</Label>
