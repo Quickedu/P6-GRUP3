@@ -48,10 +48,6 @@ class TestTypeSeeder extends Seeder
             ],
             [
                 'name' => 'Ecografia Cardíaca',
-                'time' => 10
-            ],
-            [
-                'name' => 'Ecografia Cardíaca',
                 'time' => 15
             ], 
             [
