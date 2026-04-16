@@ -1,111 +1,108 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import { register } from '@/routes';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
-
-defineOptions({
-    layout: {
-        title: 'Inicia sessió',
-        description: 'Accedeix amb les teves dades',
-    },
-});
+import { ref } from 'vue';
 
 defineProps<{
-    status?: string;
     canResetPassword: boolean;
     canRegister: boolean;
 }>();
+
+const authMethod = ref<'dni' | 'targeta'>('dni');
 </script>
 
 <template>
-    <Head title="Iniciar Sessió" />
-
-    <div
-        v-if="status"
-        class="mb-4 text-center text-sm font-medium text-green-600"
-    >
-        {{ status }}
-    </div>
-
+    <Head title="Iniciar sessió" />
     <Form
         v-bind="store.form()"
         :reset-on-success="['password']"
         v-slot="{ errors, processing }"
         class="flex flex-col gap-6"
     >
-        <div class="grid gap-6 border rounded-md">
-            <div class="grid gap-2">
-                <Label for="email">Email address</Label>
+        <div class="grid gap-6">
+            <!-- Radio tab selector -->
+            <div class="auth-tab-group">
+                <label class="auth-tab-option" :class="{ active: authMethod === 'dni' }">
+                    <input
+                        type="radio"
+                        name="auth_method"
+                        value="dni"
+                        v-model="authMethod"
+                        class="sr-only"
+                    />
+                    <span class="auth-tab-icon">
+                        <!-- ID card icon -->
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9h3m-3 3h3m-3 3h3m-6 1c-.306-.613-.933-1-1.618-1H7.618c-.685 0-1.312.387-1.618 1M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm7 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
+                        </svg>
+                    </span>
+                    DNI
+                </label>
+
+                <label class="auth-tab-option" :class="{ active: authMethod === 'targeta' }">
+                    <input
+                        type="radio"
+                        name="auth_method"
+                        value="targeta"
+                        v-model="authMethod"
+                        class="sr-only"
+                    />
+                    <span class="auth-tab-icon">
+                        <!-- Card icon -->
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M6 14h2m3 0h5M3 7v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Z"/>
+                        </svg>
+                    </span>
+                    Targeta sanitària
+                </label>
+            </div>
+
+            <!-- DNI field -->
+            <div v-if="authMethod === 'dni'" class="grid gap-2">
+                <Label for="dni">DNI</Label>
                 <Input
-                    id="email"
-                    type="email"
-                    name="email"
+                    id="dni"
+                    type="text"
+                    name="dni"
                     required
                     autofocus
                     :tabindex="1"
-                    autocomplete="email"
-                    placeholder="email@example.com"
+                    placeholder="12345678A"
                 />
-                <InputError :message="errors.email" />
+                <InputError :message="errors.dni" />
             </div>
 
-            <div class="grid gap-2">
-                <div class="flex items-center justify-between">
-                    <Label for="password">Password</Label>
-                    <TextLink
-                        v-if="canResetPassword"
-                        :href="request()"
-                        class="text-sm"
-                        :tabindex="5"
-                    >
-                        Forgot password?
-                    </TextLink>
-                </div>
-                <PasswordInput
-                    id="password"
-                    name="password"
+            <!-- TS field -->
+            <div v-else class="grid gap-2">
+                <Label for="nts">Número targeta sanitària</Label>
+                <Input
+                    id="nts"
+                    type="text"
+                    name="nts"
                     required
-                    :tabindex="2"
-                    autocomplete="current-password"
-                    placeholder="Password"
+                    autofocus
+                    :tabindex="1"
+                    placeholder="ABCD1234567890"
                 />
-                <InputError :message="errors.password" />
+                <InputError :message="errors.nts" />
             </div>
 
-            <div class="flex items-center justify-between">
-                <Label for="remember" class="flex items-center space-x-3">
-                    <Checkbox id="remember" name="remember" :tabindex="3" />
-                    <span>Remember me</span>
-                </Label>
-            </div>
-
+            <!-- Submit -->
             <Button
                 type="submit"
-                class="mt-4 w-full"
+                class="submit-btn mt-2 w-full"
                 :tabindex="4"
                 :disabled="processing"
                 data-test="login-button"
             >
                 <Spinner v-if="processing" />
-                Log in
+                Accedir
             </Button>
-        </div>
-
-        <div
-            class="text-center text-sm text-muted-foreground"
-            v-if="canRegister"
-        >
-            Don't have an account?
-            <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
         </div>
     </Form>
 </template>
