@@ -5,15 +5,14 @@ use App\Http\Requests\Worker\StoreDateRequest;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Models\Test;
+use App\Models\Date;
+use Illuminate\Support\Facades\Auth;
 
 class DatesController extends Controller
 {
   public function index(){
-    $query = User::with('role')->where('doctor');
-    $query2 = Test::get();
-
-    $doctors = $query->get();
-    $testTypes = $query2->get();
+    $doctors = User::where('role', '=', 'doctor')->get();
+    $testTypes = Test::get();
 
     return Inertia::render('newDate', [
       'doctors' => $doctors,
@@ -22,9 +21,6 @@ class DatesController extends Controller
   }
 
   public function store(StoreDateRequest $request){
-    $user = Auth::user();
-    abort_if(!$user, 403);
-
     $data = $request->validated();
 
     Date::create($data);
