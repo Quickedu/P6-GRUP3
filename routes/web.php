@@ -21,6 +21,8 @@ Route::middleware('guest')->group(function () {
     Route::post('admin/login', [LoginAdminController::class, 'store'])->name('admin.login.store');
 });
 
+Route::get('/loginWorker', [LoginAdminController::class, 'show'])->name('loginWorker');
+
 Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::post('admin/logout', [LoginAdminController::class, 'destroy'])->name('admin.logout');
 });

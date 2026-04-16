@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import { dashboard, login, register } from '@/routes';
+import { dashboard, login, register, loginWorker } from '@/routes';
 
 withDefaults(
     defineProps<{
@@ -45,12 +45,12 @@ withDefaults(
                     >
                         Register
                     </Link>
-                    <!-- <Link
-                        :href="login2()"
+                    <Link
+                        :href="loginWorker()"
                         class="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
                     >
                         Panell d'administradors
-                    </Link> -->
+                    </Link>
                 </template>
             </nav>
         </header>

@@ -9,6 +9,12 @@ use Illuminate\Validation\ValidationException;
 
 class LoginAdminController extends Controller
 {
+    public function show(Request $request){
+        return Inertia::render('auth/LoginWorker', [
+            'status' => $request->session()->get('status'),
+        ]);
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
