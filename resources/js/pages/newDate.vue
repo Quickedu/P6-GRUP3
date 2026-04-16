@@ -19,6 +19,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { ref, computed } from 'vue';
 
 defineOptions({
     layout: {
@@ -34,6 +35,21 @@ defineOptions({
         ],
     },
 });
+
+const cip = ref('');
+const dataCita = ref<number | null>(null);
+const professional = ref<string | null>(null);
+
+const resumPacient = computed(() =>
+    cip.value.trim() ? cip.value.trim() : "Pendent d'identificació",
+);
+const resumData = computed(() =>
+    dataCita.value ? new Date(dataCita.value).toLocaleString() : 'Pendent de data',
+);
+const resumProfessional = computed(() => 
+    professional.value ? professional.value : 'Pendent de professional',
+);
+
 </script>
 
 <template>
@@ -41,6 +57,7 @@ defineOptions({
 
     <div class="min-h-svh overflow-y-hidden">
         <div class="mt-6 flex h-full flex-1 flex-col gap-4 px-4 pb-8 sm:mt-8 sm:px-6 lg:mt-10 lg:px-8">
+        <form action="" method="post">
             <div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12">
                 <div class="lg:col-span-8">
                     <h1 class="text-3xl font-extrabold tracking-tight text-pmf-primary sm:text-4xl">
@@ -50,7 +67,6 @@ defineOptions({
                         Empleneu els detalls per programar una nova cita al
                         sistema Vital Flux.
                     </p>
-
                     <Card class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none">
                         <CardHeader class="pb-0">
                             <div class="flex items-start gap-3">
@@ -76,6 +92,8 @@ defineOptions({
                                 </Label>
                                 <Input
                                     id="patient-id"
+                                    v-model="cip"
+                                    type="text"
                                     class="mt-3 h-9 bg-background"
                                     placeholder="Ex: ABCD 0123456789"
                                     autocomplete="off"
@@ -112,6 +130,7 @@ defineOptions({
                                     <Input
                                         id="patient-id"
                                         type="datetime-local"
+                                        v-model="dataCita"
                                         class="mt-3 h-9 bg-background"
                                         placeholder="Ex: ABCD 0123456789"
                                         autocomplete="off"
@@ -127,6 +146,7 @@ defineOptions({
                                     <Select
                                         name="worker"
                                         id="worker"
+                                        v-model="professional"
                                     >
                                         <SelectTrigger class="w-full bg-white">
                                             <SelectValue
@@ -194,7 +214,7 @@ defineOptions({
                                         <CardTitle
                                             class="text-xl font-semibold"
                                         >
-                                            PROVES DIAGNÒTIQUES
+                                            Proves Diagnòstiques
                                         </CardTitle>
                                     </div>
                                 </div>
@@ -314,7 +334,7 @@ defineOptions({
                                             Pacient
                                         </div>
                                         <div class="truncate font-semibold">
-                                            ghd
+                                            {{ resumPacient }}
                                         </div>
                                     </div>
                                 </div>
@@ -330,7 +350,7 @@ defineOptions({
                                             Data
                                         </div>
                                         <div class="truncate font-semibold">
-                                            dfdh
+                                            {{ resumData }}
                                         </div>
                                     </div>
                                 </div>
@@ -346,14 +366,16 @@ defineOptions({
                                             Professional
                                         </div>
                                         <div class="truncate font-semibold">
-                                            dfh
+                                            {{ resumProfessional }}
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="flex items-center gap-3">
                                     <div class="min-w-0">
-                                        <button class="inline-flex w-full items-center justify-center rounded-full bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green sm:w-auto cursor-pointer">
+                                        <button class="inline-flex w-full items-center justify-center rounded-full bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green sm:w-auto cursor-pointer"
+                                        type="submit"
+                                        >
                                             <CircleCheck class="size-5 mr-3" />
                                             Confirmar Nova Cita
                                         </button>
@@ -361,10 +383,15 @@ defineOptions({
 
                                 </div>
                             </div>
+                            
                         </CardContent>
                     </Card>
+                    
                 </div>
             </div>
+            </form>
         </div>
+        
     </div>
+    
 </template>
