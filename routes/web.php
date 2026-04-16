@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginAdminController;
+use App\Http\Controllers\DashboardPatientController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Inertia\Inertia;
@@ -16,6 +17,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'role' => Auth::user()->role
         ]);
     })->name('dashboard');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
 });
 
 Route::get('/nova-cita', function () {
