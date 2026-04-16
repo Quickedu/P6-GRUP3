@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
-class isSecretary
+class isWorker
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class isSecretary
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && (Auth::user()->role === 'secretary' || Auth::user()->role === 'admin')) {
+        if (Auth::check() && (Auth::user()->role === 'doctor' || Auth::user()->role === 'admin' || Auth::user()->role === 'secretary')) {
             return $next($request);
         }
         return redirect()->route('loginWorker');
