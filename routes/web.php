@@ -4,13 +4,18 @@ use App\Http\Controllers\LoginAdminController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 Route::inertia('/', 'Welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::get('/dashboard', function (){
+        return Inertia::render('Dashboard', [
+            'role' => Auth::user()->role
+        ]);
+    })->name('dashboard');
 });
 
 Route::get('/nova-cita', function () {
