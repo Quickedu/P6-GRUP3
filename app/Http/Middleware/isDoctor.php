@@ -19,6 +19,6 @@ class isDoctor
         if (Auth::check() && (Auth::user()->role === 'doctor' || Auth::user()->role === 'admin')) {
             return $next($request);
         }
-        return redirect()->route('login');
+        return redirect()->route('loginWorker');
     }
 }
