@@ -20,7 +20,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-<<<<<<< HEAD
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
 });
@@ -28,14 +27,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/nova-cita', function () {
     return Inertia::render('newDate');
 })->name('nova-cita');
-=======
 // Route::get('/nova-cita', function () {
 //     return Inertia::render('newDate');
 // })->name('nova-cita');
 
 Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
 Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
->>>>>>> develop
 
 Route::middleware('guest')->group(function () {
     Route::post('admin/login', [LoginAdminController::class, 'store'])->name('admin.login.store');
