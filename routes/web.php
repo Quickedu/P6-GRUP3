@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginAdminController;
+use App\Http\Controllers\DatesController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Inertia\Inertia;
@@ -13,9 +14,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 });
 
-Route::get('/nova-cita', function () {
-    return Inertia::render('newDate');
-})->name('nova-cita');
+// Route::get('/nova-cita', function () {
+//     return Inertia::render('newDate');
+// })->name('nova-cita');
+
+Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
+Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
 
 Route::middleware('guest')->group(function () {
     Route::post('admin/login', [LoginAdminController::class, 'store'])->name('admin.login.store');
