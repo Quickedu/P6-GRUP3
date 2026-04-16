@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginAdminController;
+use App\Http\Controllers\LoginPatientController;
 use App\Http\Controllers\DatesController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -27,11 +28,19 @@ Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
 Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
 
 Route::middleware('guest')->group(function () {
-    Route::post('admin/login', [LoginAdminController::class, 'store'])->name('admin.login.store');
+    Route::post('work/login', [LoginAdminController::class, 'store'])->name('loginworkerStore');
 });
 
 Route::middleware(['auth', 'isAdmin'])->group(function () {
-    Route::post('admin/logout', [LoginAdminController::class, 'destroy'])->name('admin.logout');
+    Route::post('work/logout', [LoginAdminController::class, 'destroy'])->name('loginworkerDestroy');
+});
+
+Route::middleware('guest:patient')->group(function () {
+    Route::post('patient/login', [LoginPatientController::class, 'store'])->name('loginpatientStore');
+});
+
+Route::middleware('auth:patient')->group(function () {
+    Route::post('patient/logout', [LoginPatientController::class, 'destroy'])->name('loginpatientDestroy');
 });
 
 require __DIR__.'/settings.php';
