@@ -23,6 +23,6 @@ console.log(dates)
 <template>
     <Head title="Escriptori" />
     <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-      Escriptori Pacient
+      Escriptori Pacient 
     </div>
 </template>
