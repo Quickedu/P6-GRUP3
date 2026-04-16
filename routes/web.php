@@ -3,6 +3,7 @@
 use App\Http\Controllers\LoginAdminController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use Inertia\Inertia;
 
 Route::inertia('/', 'Welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -11,6 +12,10 @@ Route::inertia('/', 'Welcome', [
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 });
+
+Route::get('/nova-cita', function () {
+    return Inertia::render('newDate');
+})->name('nova-cita');
 
 Route::middleware('guest')->group(function () {
     Route::post('admin/login', [LoginAdminController::class, 'store'])->name('admin.login.store');
