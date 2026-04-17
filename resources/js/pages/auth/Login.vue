@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { register } from '@/routes';
+import { loginpatientStore } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 import { ref } from 'vue';
@@ -24,7 +25,8 @@ const authMethod = ref<'dni' | 'targeta'>('dni');
 <template>
     <Head title="Iniciar sessió" />
     <Form
-        v-bind="store.form()"
+        :action="loginpatientStore.url()"
+        method="post"
         :reset-on-success="['password']"
         v-slot="{ errors, processing }"
         class="flex flex-col gap-6"

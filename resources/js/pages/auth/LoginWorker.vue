@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import { store } from '@/routes/login';
+import { loginworkerStore } from '@/routes';
 import { request } from '@/routes/password';
 
 defineProps<{
@@ -20,7 +20,8 @@ defineProps<{
 <template>
     <Head title="Iniciar sessió" />
     <Form
-        v-bind="store.form()"
+        :action="loginworkerStore.url()"
+        method="post"
         :reset-on-success="['password']"
         v-slot="{ errors, processing }"
         class="flex flex-col gap-6"
