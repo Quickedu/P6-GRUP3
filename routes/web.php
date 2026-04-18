@@ -13,13 +13,13 @@ Route::inertia('/', 'Welcome', [
 ])->name('home');
 
 Route::get('/dashboard', function (){
-    $user = Auth::user() ?? Auth::guard('patient')->user();
+    $user = Auth::guard('admin')->user() ?? Auth::guard('patient')->user();
     $role = $user?->role ?? 'patient';
     
     return Inertia::render('Dashboard', [
         'role' => $role
     ]);
-})->middleware('auth:web,patient')->name('dashboard');
+})->middleware('auth:admin,patient')->name('dashboard');
 
 Route::middleware('guest')->group(function () {
     //Patients Login

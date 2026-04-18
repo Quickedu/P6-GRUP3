@@ -11,14 +11,17 @@ import { Spinner } from '@/components/ui/spinner';
 import { loginworkerStore } from '@/routes';
 import { request } from '@/routes/password';
 
-defineProps<{
-    canResetPassword: boolean;
-    canRegister: boolean;
-}>();
 </script>
 
 <template>
     <Head title="Iniciar sessió" />
+
+    <!-- Title -->
+    <div class="text-center">
+        <h1 class="text-3xl font-bold text-gray-900">Inicia sessió</h1>
+        <p class="mt-2 text-sm text-gray-600">Introdueix les teves credencials per accedir al portal.</p>
+    </div>
+
     <Form
         :action="loginworkerStore.url()"
         method="post"
@@ -37,7 +40,8 @@ defineProps<{
                     autofocus
                     :tabindex="1"
                     autocomplete="email"
-                    placeholder="email@example.com"
+                    placeholder="email@exemple.com"
+                    class="focus:ring-0 focus:outline-none !focus-visible:ring-0 !focus-visible:shadow-none"
                 />
                 <InputError :message="errors.email" />
             </div>
@@ -46,14 +50,6 @@ defineProps<{
             <div class="grid gap-2">
                 <div class="flex items-center justify-between">
                     <Label for="password">Contrasenya</Label>
-                    <TextLink
-                        v-if="canResetPassword"
-                        :href="request()"
-                        class="text-sm forgot-link"
-                        :tabindex="5"
-                    >
-                        Has oblidat la contrasenya?
-                    </TextLink>
                 </div>
                 <PasswordInput
                     id="password"
@@ -62,16 +58,16 @@ defineProps<{
                     :tabindex="2"
                     autocomplete="current-password"
                     placeholder="Contrasenya"
+                    class="focus:ring-0 focus:outline-none !focus-visible:ring-0 !focus-visible:shadow-none"
                 />
                 <InputError :message="errors.password" />
-            </div>
-
-            <!-- Remember me -->
-            <div class="flex items-center justify-between">
-                <Label for="remember" class="flex items-center space-x-3 cursor-pointer">
-                    <Checkbox id="remember" name="remember" :tabindex="3" />
-                    <span class="text-sm" style="color: var(--pmf-grey-light)">Recordar sessió</span>
-                </Label>
+                <TextLink
+                    :href="request()"
+                    class="text-sm forgot-link text-pmf-primary text-right"
+                    :tabindex="5"
+                >
+                    Has oblidat la contrasenya?
+                </TextLink>
             </div>
 
             <!-- Submit -->
