@@ -7,16 +7,32 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 
 class LoginPatientController extends Controller
 {
+    public function show(Request $request)
+    {
+        return Inertia::render('auth/Login', [
+            'status' => $request->session()->get('status'),
+        ]);
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'nts' => ['required', 'string'],
+            'nts' => ['nullable', 'string'],
+            'dni' => ['nullable', 'string'],
         ]);
+        // dd($credentials);
 
-        $patient = Patient::where('nts', $credentials['nts'])->first();
+        $patient = null;
+        if (!empty($credentials['nts'])) {
+            $patient = Patient::where('nts', $credentials['nts'])->first();
+        }
+        if (!$patient && !empty($credentials['dni'])) {
+            $patient = Patient::where('dni', $credentials['dni'])->first();
+        }
 
         if (! $patient) {
             throw ValidationException::withMessages([
