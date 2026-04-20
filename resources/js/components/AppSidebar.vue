@@ -12,7 +12,7 @@ import {
     SidebarFooter,
     SidebarHeader,
 } from '@/components/ui/sidebar';
-import { dashboard, novaCita } from '@/routes';
+import { dashboard, novaCita, patientDashboard } from '@/routes';
 import type { NavItem } from '@/types';
 import { Microscope, Users, BookUser, History, Cross } from 'lucide-vue-next';
 import { Settings } from 'lucide-vue-next';
@@ -24,15 +24,12 @@ const isPatient = computed(() => !user.value?.role);
 const isAdmin = computed(() => user.value?.role === 'admin');
 const isWorker = computed(() => user.value?.role === 'doctor' || user.value?.role === 'secretary');
 
-const mainNavItems: NavItem[] = [
+const AdminNavItems: NavItem[] = [
     {
         title: 'Inici',
         href: dashboard(),
         icon: LayoutGrid,
     },
-];
-
-const AdminNavItems: NavItem[] = [
     {
         title: 'Proves diagnostic',
         href: '/',
@@ -43,17 +40,47 @@ const AdminNavItems: NavItem[] = [
         href: '/',
         icon: BookUser,
     },
+    {
+        title: 'Nova Cita',
+        href: novaCita(),
+        icon: CalendarPlus,
+    },
+    {
+        title: 'Pacients',
+        href: '/',
+        icon: Users,
+    },
+    {
+        title: 'Necessitats dels pacients',
+        href: '/',
+        icon: Cross,
+    },
+    {
+        title: 'Historial de cites',
+        href: '/',
+        icon: History,
+    },
 ];
 
 const PatientNavItems: NavItem[] = [
     {
+        title: 'Inici',
+        href: patientDashboard(),
+        icon: LayoutGrid,
+    },
+    {
         title: 'Historial de cites',
-        href: novaCita(),
+        href: '/',
         icon: History,
     },
 ];
 
 const WorkerNavItems: NavItem[] = [
+    {
+        title: 'Inici',
+        href: dashboard(),
+        icon: LayoutGrid,
+    },
     {
         title: 'Nova Cita',
         href: novaCita(),
@@ -94,7 +121,7 @@ const footerNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent class="pmf-sidebar-content">
-            <NavMain :items="mainNavItems" />
+            <!-- <NavMain :items="mainNavItems" /> -->
             <NavMain label="Administració" v-if="isAdmin" :items="AdminNavItems" />
             <NavMain label="Treballadors" v-if="isWorker" :items="WorkerNavItems" />
             <NavMain label="Pacients" v-if="isPatient" :items="PatientNavItems" />

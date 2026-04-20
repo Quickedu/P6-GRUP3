@@ -21,7 +21,7 @@ Route::get('/dashboard', function (){
     
         'role' => $role
     ]);
-})->middleware('auth:admin,patient')->name('dashboard');
+})->middleware('auth')->name('dashboard');
 
 //PUBLIC
 Route::middleware('guest')->group(function () {
@@ -39,13 +39,13 @@ Route::middleware('guest')->group(function () {
 //PRIVATE
 
 //PATIENT AREA
-Route::middleware(['auth:patient', 'patient'])->group(function () {
+Route::middleware(['auth:patient'])->group(function () {
+    Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
     Route::post('patient/logout', [LoginPatientController::class, 'destroy'])->name('loginpatientDestroy');
 });
 
-//Més endavant utilitzar prefixos -> Route::prefix('/worker')->middleware(['auth', 'verified'])->group(function () {
 //WORKERS COMMON AREA
-Route::middleware(['auth', 'Worker', 'verified'])->group(function () {
+Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
     //New Appointment
     Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
     Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
@@ -53,18 +53,18 @@ Route::middleware(['auth', 'Worker', 'verified'])->group(function () {
     Route::post('work/logout', [LoginAdminController::class, 'destroy'])->name('loginworkerDestroy');
 });
 
-//when login is implemented, use middleware to chech that user is a patient
-Route::middleware(['auth:patient', 'verified'])->group(function () {
-    Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
+//ADMIN AREA
+Route::middleware(['auth:admin', 'Admin', 'verified'])->group(function () {
+
 });
 
 //SECRETARY AREA
-Route::middleware(['auth', 'Secretary', 'verified'])->group(function () {
+Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
 
 });
 
 //DOCTOR AREA
-Route::middleware(['auth', 'Doctor', 'verified'])->group(function () {
+Route::middleware(['auth:admin', 'Doctor', 'verified'])->group(function () {
 
 });
 require __DIR__.'/settings.php';
