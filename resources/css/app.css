@@ -120,6 +120,13 @@
     transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     color: var(--pmf-grey-light);
     user-select: none;
+    position: relative;
+}
+
+.auth-tab-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .auth-tab-option:hover:not(.active) {
@@ -200,6 +207,41 @@
     border-width: 0;
 }
 
+/*two blurred blue circles in the corners diagonally*/
+.form-side {
+    background-color: #ffffff;
+    background-image:
+        radial-gradient(ellipse 55% 45% at 0% 0%, rgba(0, 163, 142, 0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 55% 45% at 100% 100%, rgba(0, 163, 142, 0.18) 0%, transparent 70%);
+}
+
+/*Animation form fade slide up*/
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-slide-up {
+    animation: fadeSlideUp 0.4s ease-out both;
+}
+
+/*With delay, just in case we need it */
+.animate-fade-slide-up-delay-1 {
+    animation: fadeSlideUp 0.4s ease-out 0.1s both;
+}
+.animate-fade-slide-up-delay-2 {
+    animation: fadeSlideUp 0.4s ease-out 0.2s both;
+}
+.animate-fade-slide-up-delay-3 {
+    animation: fadeSlideUp 0.4s ease-out 0.3s both;
+}
+
 :root {
     --background: hsl(0 0% 100%);
     --foreground: hsl(0 0% 3.9%);
@@ -236,13 +278,13 @@
     --sidebar-ring: hsl(217.2 91.2% 59.8%);
     --sidebar: hsl(0 0% 98%);
 
-    --pmf-primary: #006B5C;
+    --pmf-primary: #006557;
     --pmf-secondary: #D8E5E3;
-    --pmf-turquoise: #00A38E;
+    --pmf-turquoise: /*#00A38E; */ #006457;
     --pmf-green-light: #83F2E3;
     --pmf-green: #006F65;
     --pmf-green-dark: #003029;
-    --pmf-grey-light: #6B7280;
+    --pmf-grey-light: #414856;
 }
 
 @layer base {
