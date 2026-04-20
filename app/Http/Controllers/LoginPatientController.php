@@ -24,7 +24,6 @@ class LoginPatientController extends Controller
             'nts' => ['nullable', 'string'],
             'dni' => ['nullable', 'string'],
         ]);
-        // dd($credentials);
 
         $patient = null;
         if (!empty($credentials['nts'])) {
@@ -39,12 +38,12 @@ class LoginPatientController extends Controller
                 'nts' => [trans('auth.failed')],
             ]);
         }
-
+        //dd($patient);
         Auth::guard('patient')->login($patient, $request->boolean('remember'));
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->route('patientDashboard');
     }
 
     public function destroy(Request $request): RedirectResponse

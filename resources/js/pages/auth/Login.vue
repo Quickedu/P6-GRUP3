@@ -14,9 +14,7 @@ import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 import { ref } from 'vue';
 import AuthTabs from '@/components/AuthTabs.vue';
-import { IdCard, CreditCard 
-    
-} from 'lucide-vue-next';
+import { IdCard, CreditCard } from 'lucide-vue-next';
 
 defineProps<{
     canResetPassword: boolean;

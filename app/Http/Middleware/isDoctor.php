@@ -11,6 +11,7 @@ class isDoctor
 {
     /**
      * Handle an incoming request.
+     * Los doctores tienen el role 'doctor'. También admin puede acceder.
      *
      * @param  Closure(Request): (Response)  $next
      */

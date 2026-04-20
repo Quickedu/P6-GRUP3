@@ -1,37 +1,60 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { ref, watch, computed } from 'vue';
 import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
-    SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import type { NavItem } from '@/types';
 
-defineProps<{
+const props = defineProps<{
     items: NavItem[];
+    label?: string;
 }>();
 
 const { isCurrentUrl } = useCurrentUrl();
+
+const activeIndex = computed(() =>
+    props.items.findIndex(item => isCurrentUrl(item.href))
+);
+
+const direction = ref<'down' | 'up'>('down');
+
+watch(activeIndex, (newIndex, oldIndex) => {
+    if (newIndex === -1 || oldIndex === -1) return;
+    direction.value = newIndex > oldIndex ? 'down' : 'up';
+});
 </script>
 
 <template>
-    <SidebarGroup class="px-2 py-0">
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
-        <SidebarMenu>
-            <SidebarMenuItem v-for="item in items" :key="item.title">
-                <SidebarMenuButton
-                    as-child
-                    :is-active="isCurrentUrl(item.href)"
-                    :tooltip="item.title"
+    <SidebarGroup class="px-0 py-0">
+        <SidebarGroupLabel v-if="label" class="px-4 py-2">{{ label }}</SidebarGroupLabel>
+        <SidebarMenu class="gap-2">
+            <SidebarMenuItem
+                v-for="item in items"
+                :key="item.title"
+                class="relative"
+            >
+                <Transition :name="direction === 'down' ? 'bar-down' : 'bar-up'">
+                    <span
+                        v-if="isCurrentUrl(item.href)"
+                        class="pointer-events-none absolute right-0 top-1/2 z-10 h-[80%] w-1 -translate-y-1/2 rounded-l-sm bg-[var(--pmf-primary)]"
+                    />
+                </Transition>
+
+                <Link
+                    :href="item.href"
+                    class="flex w-full items-center gap-3 rounded px-4 py-3 text-sm font-medium text-sidebar-foreground no-underline transition-colors duration-150 ease-in hover:bg-[color:rgba(0,163,142,0.08)] hover:text-[var(--pmf-primary)]"
+                    :class="isCurrentUrl(item.href)
+                        ? 'bg-[color:rgba(0,163,142,0.12)] font-semibold text-[var(--pmf-primary)]'
+                        : ''"
                 >
-                    <Link :href="item.href">
-                        <component :is="item.icon" />
-                        <span>{{ item.title }}</span>
-                    </Link>
-                </SidebarMenuButton>
+                    <component :is="item.icon" class="h-5 w-5 shrink-0" />
+                    <span>{{ item.title }}</span>
+                </Link>
             </SidebarMenuItem>
         </SidebarMenu>
     </SidebarGroup>
