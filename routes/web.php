@@ -21,6 +21,7 @@ Route::get('/dashboard', function (){
     ]);
 })->middleware('auth:admin,patient')->name('dashboard');
 
+//PUBLIC
 Route::middleware('guest')->group(function () {
     //Patients Login
     Route::get('/login', [LoginPatientController::class, 'show'])->name('login');
@@ -31,20 +32,36 @@ Route::middleware('guest')->group(function () {
     Route::post('/work/login', [LoginAdminController::class, 'store'])->name('loginworkerStore');
 });
 
-Route::middleware('auth:patient')->group(function () {
+
+//PRIVATE
+
+//PATIENT AREA
+Route::middleware(['auth', 'Patient', 'verified'])->group(function () {
     Route::post('patient/logout', [LoginPatientController::class, 'destroy'])->name('loginpatientDestroy');
 });
 
-Route::middleware(['auth', 'Admin'])->group(function () {
+//Més endavant utilitzar prefixos -> Route::prefix('/worker')->middleware(['auth', 'verified'])->group(function () {
+//WORKERS COMMON AREA
+Route::middleware(['auth', 'Worker', 'verified'])->group(function () {
+    //New Appointment
+    Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
+    Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
+    //Logout (disponible para todos los workers: admin, doctor, secretary)
     Route::post('work/logout', [LoginAdminController::class, 'destroy'])->name('loginworkerDestroy');
 });
 
-// Route::get('/nova-cita', function () {
-//     return Inertia::render('newDate');
-// })->name('nova-cita');
+//ADMIN AREA
+Route::middleware(['auth', 'Admin', 'verified'])->group(function () {
 
-//New Appointment
-Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
-Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
+});
 
+//SECRETARY AREA
+Route::middleware(['auth', 'Secretary', 'verified'])->group(function () {
+
+});
+
+//DOCTOR AREA
+Route::middleware(['auth', 'Doctor', 'verified'])->group(function () {
+
+});
 require __DIR__.'/settings.php';

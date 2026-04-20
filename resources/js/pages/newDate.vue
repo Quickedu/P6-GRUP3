@@ -101,8 +101,7 @@ const visibleItems = computed(() => {
                             Crear Nova Cita
                         </h1>
                         <p class="mt-2 text-muted-foreground">
-                            Empleneu els detalls per programar una nova cita al
-                            sistema Vital Flux.
+                            Empleneu els detalls per programar una nova cita
                         </p>
                         <Card
                             class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"

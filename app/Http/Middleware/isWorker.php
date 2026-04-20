@@ -16,7 +16,7 @@ class isWorker
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && (Auth::user()->role === 'doctor' || Auth::user()->role === 'admin' || Auth::user()->role === 'secretary')) {
+        if (Auth::check() && (Auth::user()->role === 'doctor' || Auth::user()->role === 'secretary')) {
             return $next($request);
         }
         return redirect()->route('loginWorker');
