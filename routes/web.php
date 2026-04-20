@@ -1,11 +1,8 @@
 <?php
 
 use App\Http\Controllers\LoginAdminController;
-<<<<<<< HEAD
 use App\Http\Controllers\DashboardPatientController;
-=======
 use App\Http\Controllers\LoginPatientController;
->>>>>>> develop
 use App\Http\Controllers\DatesController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -20,7 +17,7 @@ Route::get('/dashboard', function (){
     $user = Auth::guard('admin')->user() ?? Auth::guard('patient')->user();
     $role = $user?->role ?? 'patient';
     
-    return Inertia::render('Dashboard', [.
+    return Inertia::render('Dashboard', [
     
         'role' => $role
     ]);
