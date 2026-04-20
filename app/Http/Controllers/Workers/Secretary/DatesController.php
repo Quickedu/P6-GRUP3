@@ -27,4 +27,8 @@ class DatesController extends Controller
 
     return redirect()->back()->with('success', 'Cita creada correctamente');
   }
+
+  public function ajaxPatient($nts){
+    
+  }
 }

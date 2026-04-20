@@ -42,6 +42,7 @@ class LoginPatientController extends Controller
         Auth::guard('patient')->login($patient, $request->boolean('remember'));
 
         $request->session()->regenerate();
+        $request->session()->put('role', 'patient');
 
         return redirect()->route('patientDashboard');
     }

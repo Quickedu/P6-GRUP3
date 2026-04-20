@@ -4,6 +4,7 @@ use App\Http\Middleware\isAdmin;
 use App\Http\Middleware\isDoctor;
 use App\Http\Middleware\isSecretary;
 use App\Http\Middleware\isWorker;
+use App\Http\Middleware\isPatient;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
@@ -25,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'Doctor' => isDoctor::class,
             'Secretary' => isSecretary::class,
             'Worker' => isWorker::class,
+            'Patient' => isPatient::class,
         ]);
 
         $middleware->web(append: [
