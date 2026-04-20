@@ -8,82 +8,100 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { register } from '@/routes';
+import { loginpatientStore } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
+import { ref } from 'vue';
+import AuthTabs from '@/components/AuthTabs.vue';
+import { IdCard, CreditCard 
+    
+} from 'lucide-vue-next';
 
 defineProps<{
     canResetPassword: boolean;
     canRegister: boolean;
 }>();
+
+const authMethod = ref<'dni' | 'targeta'>('dni');
+
+const authOptions = [
+    { value: 'dni', label: 'DNI', icon: IdCard },
+    { value: 'targeta', label: 'Targeta sanitària', icon: CreditCard }
+];
 </script>
 
 <template>
     <Head title="Iniciar sessió" />
+
+    <!-- Title -->
+    <div class="text-center">
+        <h1 class="text-3xl font-bold text-gray-900">Inicia sessió</h1>
+        <p class="mt-2 text-sm text-gray-600">Introdueix les teves credencials per accedir al portal.</p>
+    </div>
+
     <Form
-        v-bind="store.form()"
+        :action="loginpatientStore.url()"
+        method="post"
         :reset-on-success="['password']"
         v-slot="{ errors, processing }"
-        class="flex flex-col gap-6"
+        class="flex flex-col gap-5 animate-fade-slide-up-delay-2"
     >
-        <div class="grid gap-6">
-            <div class="grid gap-2">
-                <Label for="email">Correu electrónic</Label>
-                <Input
-                    id="email"
-                    type="email"
-                    name="email"
-                    required
-                    autofocus
-                    :tabindex="1"
-                    autocomplete="email"
-                    placeholder="email@example.com"
-                />
-                <InputError :message="errors.email" />
-            </div>
+        <!-- Auth method tabs -->
+        <AuthTabs
+            v-model="authMethod"
+            :options="authOptions"
+            label="Mètode d'autenticació"
+        />
 
-            <!-- Password -->
-            <div class="grid gap-2">
-                <div class="flex items-center justify-between">
-                    <Label for="password">Contrasenya</Label>
-                    <TextLink
-                        v-if="canResetPassword"
-                        :href="request()"
-                        class="text-sm forgot-link"
-                        :tabindex="5"
-                    >
-                        Has oblidat la contrasenya?
-                    </TextLink>
-                </div>
-                <PasswordInput
-                    id="password"
-                    name="password"
-                    required
-                    :tabindex="2"
-                    autocomplete="current-password"
-                    placeholder="Contrasenya"
-                />
-                <InputError :message="errors.password" />
-            </div>
+        <!-- Para enviar el valor -->
+        <input type="hidden" name="auth_method" :value="authMethod" />
 
-            <!-- Remember me -->
-            <div class="flex items-center justify-between">
-                <Label for="remember" class="flex items-center space-x-3 cursor-pointer">
-                    <Checkbox id="remember" name="remember" :tabindex="3" />
-                    <span class="text-sm" style="color: var(--pmf-grey-light)">Recordar sessió</span>
-                </Label>
-            </div>
-
-            <!-- Submit -->
-            <Button
-                type="submit"
-                class="submit-btn mt-2 w-full"
-                :tabindex="4"
-                :disabled="processing"
-                data-test="login-button"
-            >
-                <Spinner v-if="processing" />
-                Accedir
-            </Button>
+        <!-- DNI field -->
+        <div
+            v-if="authMethod === 'dni'"
+            id="panel-dni"
+            class="flex flex-col gap-1.5"
+        >
+            <Label for="dni">DNI</Label>
+            <Input
+                id="dni"
+                type="text"
+                name="dni"
+                required
+                autofocus
+                placeholder="12345678A"
+            />
+            <InputError :message="errors.dni" />
         </div>
+
+        <!-- Targeta field -->
+        <div
+            v-else
+            id="panel-targeta"
+            class="flex flex-col gap-1.5"
+        >
+            <Label for="nts">Número targeta sanitària</Label>
+            <Input
+                id="nts"
+                type="text"
+                name="nts"
+                required
+                autofocus
+                placeholder="ABCD1234567890"
+            />
+            <InputError :message="errors.nts" />
+        </div>
+
+        <!-- Submit -->
+        <Button
+            type="submit"
+            class="submit-btn w-full mt-1"
+            :disabled="processing"
+            data-test="login-button"
+        >
+            <Spinner v-if="processing" />
+            Accedir
+        </Button>
     </Form>
 </template>

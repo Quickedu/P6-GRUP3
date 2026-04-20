@@ -10,32 +10,44 @@ defineProps<{
 </script>
 
 <template>
-    <div
-        class="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10"
-    >
-        <div class="w-full max-w-sm">
-            <div class="flex flex-col gap-8">
-                <div class="flex flex-col items-center gap-4">
-                    <Link
-                        :href="home()"
-                        class="flex flex-col items-center gap-2 font-medium"
-                    >
-                        <div
-                            class="mb-1 flex h-32 w-40 items-center justify-center rounded-md"
-                        >
-                            <AppLogoIcon
-                                class="fill-current text-[var(--foreground)] dark:text-white"                            />
+    <div class="flex min-h-svh w-full">
+
+        <!-- LEFT: Photo (hidden on mobile) -->
+        <div class="hidden md:block md:w-1/2 overflow-hidden">
+            <img
+                src="/images/grup2.jpeg"
+                alt="Team photo"
+                class="w-full h-full object-cover object-center"
+            />
+        </div>
+
+        <!-- RIGHT: Form side -->
+        <div class="form-side flex flex-1 items-center justify-center px-6 py-10">
+            <div class="w-full max-w-md flex flex-col gap-6">
+
+                <!-- Logo — outside card-->
+                <Link
+                    :href="home()"
+                    class="flex items-center justify-center gap-4 animate-fade-slide-up"
+                >
+                    <AppLogoIcon class="h-23 w-26 fill-current text-pmf-primary" />
+                    <span class="text-5xl font-bold tracking-wide text-pmf-primary">PMF</span>
+                </Link>
+
+                <!-- Form Card -->
+                <div class="bg-white rounded-2xl shadow-lg px-8 py-4 animate-fade-slide-up">
+                    <div class="flex flex-col gap-6">
+
+                        <!-- Title + description-->
+                        <div class="flex flex-col gap-1.5 text-center">
+                            <h1 class="text-2xl font-bold text-gray-900">{{ title }}</h1>
+                            <p class="text-sm text-muted-foreground leading-relaxed">{{ description }}</p>
                         </div>
-                        <span class="sr-only">{{ title }}</span>
-                    </Link>
-                    <div class="space-y-2 text-center">
-                        <h1 class="text-xl font-medium">{{ title }}</h1>
-                        <p class="text-center text-sm text-muted-foreground">
-                            {{ description }}
-                        </p>
+
+                        <slot />
                     </div>
                 </div>
-                <slot />
+
             </div>
         </div>
     </div>
