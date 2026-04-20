@@ -34,6 +34,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/work/login', [LoginAdminController::class, 'store'])->name('loginworkerStore');
 });
 
+
+
 //PRIVATE
 
 //PATIENT AREA

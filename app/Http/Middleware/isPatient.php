@@ -11,16 +11,16 @@ class isPatient
 {
     /**
      * Handle an incoming request.
-     * Los pacientes son usuarios autenticados SIN role.
+    * Los pacientes son usuarios autenticados con role 'patient'.
      *
      * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && !Auth::user()->role) {
+        if (Auth::check() && Auth::user()->role === 'patient') {
             return $next($request);
         }
 
-        return redirect('/');
+        return redirect()->route('login');
     }
 }
