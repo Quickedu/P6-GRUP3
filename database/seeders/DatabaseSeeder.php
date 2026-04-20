@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             TestTypeSeeder::class,
             NeedsSeeder::class,
             UsersSeeder::class,
+            DatesSeeder::class,
         ]);
 
     }

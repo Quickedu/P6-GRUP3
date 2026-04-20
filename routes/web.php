@@ -20,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
+//when login is implemented, use middleware to chech that user is a patient
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
 });
