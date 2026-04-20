@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginAdminController;
+use App\Http\Controllers\DashboardPatientController;
 use App\Http\Controllers\LoginPatientController;
 use App\Http\Controllers\DatesController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,7 @@ Route::get('/dashboard', function (){
     $role = $user?->role ?? 'patient';
     
     return Inertia::render('Dashboard', [
+    
         'role' => $role
     ]);
 })->middleware('auth:admin,patient')->name('dashboard');
@@ -50,9 +52,9 @@ Route::middleware(['auth', 'Worker', 'verified'])->group(function () {
     Route::post('work/logout', [LoginAdminController::class, 'destroy'])->name('loginworkerDestroy');
 });
 
-//ADMIN AREA
-Route::middleware(['auth', 'Admin', 'verified'])->group(function () {
-
+//when login is implemented, use middleware to chech that user is a patient
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
 });
 
 //SECRETARY AREA
