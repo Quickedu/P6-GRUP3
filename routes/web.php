@@ -34,11 +34,10 @@ Route::middleware('guest')->group(function () {
     Route::post('/work/login', [LoginAdminController::class, 'store'])->name('loginworkerStore');
 });
 
-
 //PRIVATE
 
 //PATIENT AREA
-Route::middleware(['auth', 'Patient', 'verified'])->group(function () {
+Route::middleware(['auth:patient', 'verified'])->group(function () {
     Route::post('patient/logout', [LoginPatientController::class, 'destroy'])->name('loginpatientDestroy');
 });
 
