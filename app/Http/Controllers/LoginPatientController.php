@@ -43,7 +43,7 @@ class LoginPatientController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('patientDashboard');
+        return redirect()->intended(route('patientDashboard'));
     }
 
     public function destroy(Request $request): RedirectResponse
