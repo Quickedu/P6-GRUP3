@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\LoginAdminController;
+<<<<<<< HEAD
+use App\Http\Controllers\DashboardPatientController;
+=======
 use App\Http\Controllers\LoginPatientController;
+>>>>>>> develop
 use App\Http\Controllers\DatesController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -16,7 +20,8 @@ Route::get('/dashboard', function (){
     $user = Auth::guard('admin')->user() ?? Auth::guard('patient')->user();
     $role = $user?->role ?? 'patient';
     
-    return Inertia::render('Dashboard', [
+    return Inertia::render('Dashboard', [.
+    
         'role' => $role
     ]);
 })->middleware('auth:admin,patient')->name('dashboard');
@@ -39,9 +44,10 @@ Route::middleware(['auth', 'Admin'])->group(function () {
     Route::post('work/logout', [LoginAdminController::class, 'destroy'])->name('loginworkerDestroy');
 });
 
-// Route::get('/nova-cita', function () {
-//     return Inertia::render('newDate');
-// })->name('nova-cita');
+//when login is implemented, use middleware to chech that user is a patient
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
+});
 
 //New Appointment
 Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
