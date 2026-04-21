@@ -1,47 +1,36 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
-import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
+import { Head, Link, usePage } from '@inertiajs/vue3'
+import SecretaryDashboard from '@/components/Dashboard/SecretaryDashboard.vue';
+import DoctorDashboard from '@/components/Dashboard/DoctorDashboard.vue';
+import AdminDashboard from '@/components/Dashboard/AdminDashboard.vue';
 import { dashboard } from '@/routes';
 
 defineOptions({
     layout: {
         breadcrumbs: [
             {
-                title: 'Dashboard',
+                title: 'Escriptori',
                 href: dashboard(),
             },
         ],
     },
 });
+
+const page = usePage();
+const user = page.props.auth.user
+
+const isSecretry = user.role === 'secretary'
+const isDoctor = user.role === 'doctor'
+const isAdmin = user.role === 'admin'
+
+//check user role using session and make 3 v-if components depending on the role
 </script>
 
 <template>
-    <Head title="Dashboard" />
-
-    <div
-        class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
-    >
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
-            </div>
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
-            </div>
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
-            </div>
-        </div>
-        <div
-            class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border"
-        >
-            <PlaceholderPattern />
-        </div>
+    <Head title="Escriptori" />
+    <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+        <SecretaryDashboard v-if="isSecretry"/>
+        <DoctorDashboard v-if="isDoctor"/>
+        <AdminDashboard v-if="isAdmin"/>
     </div>
 </template>

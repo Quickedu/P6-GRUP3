@@ -97,7 +97,7 @@
     }
 }
 
-/*tab*/
+/* Authentication Tab Styles */
 .auth-tab-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -147,18 +147,19 @@
     flex-shrink: 0;
 }
 
-/*Forgot password link*/
+/* Forgot Password Link */
 .forgot-link {
     color: var(--pmf-turquoise) !important;
     font-weight: 500;
     text-decoration: none;
     transition: color 0.15s;
 }
+
 .forgot-link:hover {
     color: var(--pmf-primary) !important;
 }
 
-/*Submit button*/
+/* Submit Button */
 .submit-btn {
     background-color: var(--pmf-turquoise) !important;
     color: #ffffff !important;
@@ -171,26 +172,30 @@
     transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease !important;
     box-shadow: 0 2px 8px rgba(0, 163, 142, 0.3) !important;
 }
+
 .submit-btn:hover:not(:disabled) {
     background-color: var(--pmf-primary) !important;
     box-shadow: 0 4px 14px rgba(0, 107, 92, 0.35) !important;
     transform: translateY(-1px);
 }
+
 .submit-btn:active:not(:disabled) {
     transform: translateY(0);
     box-shadow: 0 1px 4px rgba(0, 107, 92, 0.2) !important;
 }
+
 .submit-btn:disabled {
     opacity: 0.65 !important;
     cursor: not-allowed !important;
 }
 
-/*Register link*/
+/* Register Link */
 .register-link {
     color: var(--pmf-turquoise) !important;
     text-decoration: none;
     transition: color 0.15s;
 }
+
 .register-link:hover {
     color: var(--pmf-primary) !important;
 }
@@ -207,7 +212,7 @@
     border-width: 0;
 }
 
-/*two blurred blue circles in the corners diagonally*/
+/* Form Side Gradient Background */
 .form-side {
     background-color: #ffffff;
     background-image:
@@ -215,7 +220,134 @@
         radial-gradient(ellipse 55% 45% at 100% 100%, rgba(0, 163, 142, 0.18) 0%, transparent 70%);
 }
 
-/*Animation form fade slide up*/
+/* AppSidebar Styles */
+.pmf-sidebar {
+    background-color: #DCE7ED;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.pmf-sidebar-header {
+    background-color: #ffffff;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    margin-bottom: 0.5rem;
+}
+
+.pmf-sidebar-content {
+    padding: 0.5rem 0;
+    gap: 0;
+    background-color: transparent;
+}
+
+.pmf-sidebar-footer {
+    padding: 0.75rem 1rem;
+    background-color: transparent;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin-top: auto;
+}
+
+/* Sidebar Group Styles */
+[data-sidebar="group"],
+[data-sidebar="content"],
+[data-sidebar="footer"],
+[data-sidebar="header"] {
+    background-color: transparent;
+}
+
+[data-slot="sidebar-group"],
+[data-slot="sidebar-content"],
+[data-slot="sidebar-footer"],
+[data-slot="sidebar-header"] {
+    background-color: transparent;
+}
+
+/* Navigation Link */
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--pmf-grey-light, #6b7280);
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    position: relative;
+    width: 100%;
+}
+
+.nav-link:hover {
+    background-color: rgba(0, 163, 142, 0.08);
+    color: var(--pmf-primary);
+}
+
+.nav-link--active {
+    background-color: rgba(0, 163, 142, 0.1);
+    color: var(--pmf-primary);
+    font-weight: 600;
+}
+
+.nav-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* Active Bar Animation */
+.active-bar {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background-color: var(--pmf-primary);
+    border-radius: 0 3px 3px 0;
+    z-index: 1;
+}
+
+.active-bar-fade-enter-active,
+.active-bar-fade-leave-active {
+    transition: opacity 0.25s ease;
+}
+
+.active-bar-fade-enter-from,
+.active-bar-fade-leave-to {
+    opacity: 0;
+}
+
+.bar-down-enter-active,
+.bar-down-leave-active {
+    transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.bar-down-enter-from {
+    transform: translateY(calc(-50% + 10px));
+    opacity: 0;
+}
+
+.bar-down-leave-to {
+    transform: translateY(calc(-50% - 10px));
+    opacity: 0;
+}
+
+.bar-up-enter-active,
+.bar-up-leave-active {
+    transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.bar-up-enter-from {
+    transform: translateY(calc(-50% - 10px));
+    opacity: 0;
+}
+
+.bar-up-leave-to {
+    transform: translateY(calc(-50% + 10px));
+    opacity: 0;
+}
+
+/* Fade Slide Up Animation */
 @keyframes fadeSlideUp {
     from {
         opacity: 0;
@@ -231,17 +363,19 @@
     animation: fadeSlideUp 0.4s ease-out both;
 }
 
-/*With delay, just in case we need it */
 .animate-fade-slide-up-delay-1 {
     animation: fadeSlideUp 0.4s ease-out 0.1s both;
 }
+
 .animate-fade-slide-up-delay-2 {
     animation: fadeSlideUp 0.4s ease-out 0.2s both;
 }
+
 .animate-fade-slide-up-delay-3 {
     animation: fadeSlideUp 0.4s ease-out 0.3s both;
 }
 
+/* CSS Variables */
 :root {
     --background: hsl(0 0% 100%);
     --foreground: hsl(0 0% 3.9%);
@@ -280,7 +414,7 @@
 
     --pmf-primary: #006557;
     --pmf-secondary: #D8E5E3;
-    --pmf-turquoise: /*#00A38E; */ #006457;
+    --pmf-turquoise: #006457;
     --pmf-green-light: #83F2E3;
     --pmf-green: #006F65;
     --pmf-green-dark: #003029;
