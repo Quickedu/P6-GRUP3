@@ -9,6 +9,8 @@ class Test extends Model
 {
     protected $table = 'test_types';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'name',
         'time',

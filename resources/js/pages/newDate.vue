@@ -75,7 +75,7 @@ function validatePatient() {
             'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
         return;
     }
-    fetch(`/patients?id=${encodeURIComponent(currentCip)}`)
+    fetch(`/patientConsult/${currentCip}`)
         .then((response) => response.json())
         .then((data) => {
             patientAvailable.value = Boolean(data.available);
@@ -96,10 +96,33 @@ function validateTimeTest(testId: number) {
         return;
     }
 
-    fetch(`/tests?id=${testId}`)
+    fetch(`/testConsult/${testId}`)
         .then((response) => response.json())
         .then((data) => {
+            const status = data?.status;
+            const message = data?.message;
+            const extraTime = Number(data?.data?.number);
 
+
+            if (status !== 'ok') {
+                console.error('Error validant el temps de la prova:', message);
+
+                estimatedMinutes.value = null;
+                timeValidationMessage.value =
+                    message || "No s'ha pogut validar el temps de la prova.";
+                return;
+            }
+
+
+            estimatedMinutes.value = selectedTest.time + extraTime;
+            timeValidationMessage.value =
+                message || `Temps estimat ${estimatedMinutes.value} min`;
+
+        })
+        .catch(() => {
+            estimatedMinutes.value = null;
+            timeValidationMessage.value =
+                'Error de connexió validant el temps de la prova.';
         });
 }
 
@@ -108,9 +131,12 @@ const resumPacient = computed(
 );
 
 const resumData = computed(() =>
-    dataCita.value ? new Date(dataCita.value).toLocaleString() : 'Pendent de data',
+    dataCita.value
+        ? new Date(dataCita.value).toLocaleString()
+        : 'Pendent de data',
 );
-const resumProfessional = computed(() => professional.value ? professional.value : 'Pendent de professional',
+const resumProfessional = computed(() =>
+    professional.value ? professional.value : 'Pendent de professional',
 );
 
 const visibleItems = computed(() => {
