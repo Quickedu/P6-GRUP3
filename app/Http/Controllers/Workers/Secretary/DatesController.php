@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Workers\Secretary;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Worker\StoreDateRequest;
 use App\Models\Date;
-use App\Models\Need;
 use App\Models\Patient;
 use App\Models\Test;
 use App\Models\User;
@@ -33,56 +32,55 @@ class DatesController extends Controller
         return redirect()->back()->with('success', 'Cita creada correctamente');
     }
 
-    public function ajaxPatient($nts)
+    public function ajaxPatient(string $nts)
     {
-        $patient = Patient::where('nts', $nts)->first();
+        $patient = Patient::query()->where('nts', $nts)->first();
+
         if (! $patient) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Pacient no trobat',
-                'data' => [],
-            ]);
-        }
-        if ($patient) {
-            $needs = Patient::where('nts', $nts)->first()->needs()->get();
-            if ($needs->isEmpty()) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Pacient trobat, no té necessitats associades',
-                    'data' => [],
-                ]);
-            }
-            $needsTime = 0;
-            foreach ($needs as $need) {
-                $times = Need::where('id', $need->id)->time->get();
-                $needsTime += $times->sum('time');
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Pacient trobat, necessitats associades trobades',
+                'available' => false,
                 'data' => [
-                    'number' => $needsTime,
+                    'number' => 0,
                 ],
             ]);
         }
+
+        $needsTime = (int) $patient->needs()->sum('time');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $needsTime > 0
+                ? 'Pacient trobat, necessitats associades trobades'
+                : 'Pacient trobat, no té necessitats associades',
+            'available' => true,
+            'data' => [
+                'number' => $needsTime,
+            ],
+        ]);
     }
 
-    public function ajaxTest($id) {
-      $test = Test::where('id', $id)->time->get();
-      if ($test->isEmpty()) {
+    public function ajaxTest(int $id)
+    {
+        $testType = Test::query()->find($id);
+
+        if (! $testType) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Test no trobat',
+                'data' => [
+                    'number' => 0,
+                ],
+            ]);
+        }
+
         return response()->json([
-          'status' => 'error',
-          'message' => 'Test no trobat',
-          'data' => [],
+            'status' => 'success',
+            'message' => 'Test trobat',
+            'data' => [
+                'number' => (int) $testType->time,
+            ],
         ]);
-      }
-      return response()->json([
-        'status' => 'success',
-        'message' => 'Test trobat',
-        'data' => [
-          'number' => $test->sum('time'),
-        ],
-      ]);
     }
 }
