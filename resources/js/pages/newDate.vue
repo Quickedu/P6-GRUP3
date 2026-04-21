@@ -54,24 +54,63 @@ const props = defineProps<{
     testTypes: TestType[];
 }>();
 
-console.log('Doctors:', props.doctors);
-console.log('Test Types:', props.testTypes);
-
-const cip = ref('');
-const dataCita = ref<number | null>(null);
+const dataCita = ref('');
 const professional = ref<string | null>(null);
 const showAll = ref(false);
 
-const resumPacient = computed(() =>
-    cip.value.trim() ? cip.value.trim() : "Pendent d'identificació",
+const cip = ref('');
+const patientAvailable = ref(true);
+const confirmedPatient = ref('');
+const timeValidationMessage = ref('');
+const estimatedMinutes = ref<number | null>(null);
+const validatedClass = ref(
+    'border-gray-200 focus:border-gray-900 focus:ring-gray-900',
 );
+
+function validatePatient() {
+    const currentCip = cip.value.trim();
+    if (!currentCip) {
+        confirmedPatient.value = '';
+        validatedClass.value =
+            'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
+        return;
+    }
+    fetch(`/patients?id=${encodeURIComponent(currentCip)}`)
+        .then((response) => response.json())
+        .then((data) => {
+            patientAvailable.value = Boolean(data.available);
+            validatedClass.value = patientAvailable.value
+                ? '!border-green-500 !focus:border-green-500 !focus:ring-green-500'
+                : '!border-red-500 !focus:border-red-500 !focus:ring-red-500';
+
+            confirmedPatient.value = patientAvailable.value ? currentCip : '';
+        });
+}
+
+function validateTimeTest(testId: number) {
+    const selectedTest = props.testTypes.find((test) => test.id === testId);
+
+    if (!selectedTest) {
+        estimatedMinutes.value = null;
+        timeValidationMessage.value = "No s'ha trobat la prova seleccionada.";
+        return;
+    }
+
+    fetch(`/tests?id=${testId}`)
+        .then((response) => response.json())
+        .then((data) => {
+
+        });
+}
+
+const resumPacient = computed(
+    () => confirmedPatient.value || "Pendent d'identificació",
+);
+
 const resumData = computed(() =>
-    dataCita.value
-        ? new Date(dataCita.value).toLocaleString()
-        : 'Pendent de data',
+    dataCita.value ? new Date(dataCita.value).toLocaleString() : 'Pendent de data',
 );
-const resumProfessional = computed(() =>
-    professional.value ? professional.value : 'Pendent de professional',
+const resumProfessional = computed(() => professional.value ? professional.value : 'Pendent de professional',
 );
 
 const visibleItems = computed(() => {
@@ -90,7 +129,7 @@ const visibleItems = computed(() => {
         <div
             class="mt-6 flex h-full flex-1 flex-col gap-4 px-4 pb-8 sm:mt-8 sm:px-6 lg:mt-10 lg:px-8"
         >
-            <form action="" v-on:submit.prevent="" method="post">
+            <form action="" @submit.prevent method="post">
                 <div
                     class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12"
                 >
@@ -131,15 +170,29 @@ const visibleItems = computed(() => {
                                     >
                                         TARGETA SANITÀRIA (CIP)
                                     </Label>
-                                    <Input
-                                        id="patient_id"
-                                        v-model="cip"
-                                        name="patient_id"
-                                        type="text"
-                                        class="mt-3 h-9 bg-background"
-                                        placeholder="Ex: ABCD 0123456789"
-                                        autocomplete="off"
-                                    />
+                                    <div
+                                        class="mt-3 flex w-full items-center gap-3"
+                                    >
+                                        <Input
+                                            id="patient_id"
+                                            name="patient_id"
+                                            v-model="cip"
+                                            @input="confirmedPatient = ''"
+                                            type="text"
+                                            class="h-9 flex-1 bg-background"
+                                            :class="validatedClass"
+                                            placeholder="Ex: ABCD 0123456789"
+                                            autocomplete="off"
+                                        />
+                                        <button
+                                            class="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green"
+                                            type="button"
+                                            @click="validatePatient"
+                                        >
+                                            <CircleCheck class="mr-3 size-5" />
+                                            Comprovar usuari
+                                        </button>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
@@ -155,7 +208,9 @@ const visibleItems = computed(() => {
                                         <CalendarRange class="size-6" />
                                     </div>
                                     <div class="min-w-0">
-                                        <CardTitle class="text-xl font-semibold">
+                                        <CardTitle
+                                            class="text-xl font-semibold"
+                                        >
                                             Detalls de la Cita
                                         </CardTitle>
                                     </div>
@@ -270,10 +325,12 @@ const visibleItems = computed(() => {
                                         class="cursor-pointer"
                                     >
                                         <input
-                                            type="checkbox"
+                                            type="radio"
+                                            max="1"
                                             name="test_id"
                                             class="peer sr-only"
                                             aria-label="Seleccionar categoria"
+                                            @click="validateTimeTest(test.id)"
                                         />
 
                                         <div
@@ -285,7 +342,9 @@ const visibleItems = computed(() => {
                                             >
                                         </div>
                                     </label>
-                                    <div class="col-span-full flex items-center justify-center">
+                                    <div
+                                        class="col-span-full flex items-center justify-center"
+                                    >
                                         <button
                                             v-if="!showAll"
                                             @click="showAll = true"
@@ -295,6 +354,18 @@ const visibleItems = computed(() => {
                                             Veure totes les proves
                                         </button>
                                     </div>
+                                    <p
+                                        v-if="timeValidationMessage"
+                                        class="col-span-full text-center text-sm text-muted-foreground"
+                                    >
+                                        {{ timeValidationMessage }}
+                                        <span
+                                            v-if="estimatedMinutes !== null"
+                                            class="font-semibold text-pmf-primary"
+                                        >
+                                            ({{ estimatedMinutes }} min)
+                                        </span>
+                                    </p>
                                 </div>
                             </Card>
                         </div>
@@ -360,8 +431,10 @@ const visibleItems = computed(() => {
                                         </div>
                                     </div>
 
-                                    <div class="flex items-center gap-3">
-                                        <div class="min-w-0">
+                                    <div
+                                        class="mt-6 flex w-full items-center justify-center"
+                                    >
+                                        <div class="w-full sm:w-auto">
                                             <button
                                                 class="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green sm:w-auto"
                                                 type="submit"
