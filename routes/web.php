@@ -17,8 +17,9 @@ Route::get('/dashboard', function () {
     $user = Auth::guard('admin')->user() ?? Auth::guard('patient')->user();
     $role = $user?->role ?? 'patient';
 
-    return Inertia::render('Dashboard', [
-        'role' => $role
+    return Inertia::render('Workers/Dashboard', [
+
+        'role' => $role,
     ]);
 })->middleware('auth')->name('dashboard');
 
