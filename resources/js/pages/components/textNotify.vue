@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { computed, ref, watch } from 'vue';
 
 const STATUS = ['correcte', 'error', 'avís', 'informació'] as const;
 type Stats = typeof STATUS[number];
 
 type Props = {
 	message: string;
-	status?: Stats;
+	status?: Stats | (string & {});
 };
 
 const props = withDefaults(defineProps<Props>(), {
@@ -16,6 +16,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 const visible = ref(true);
 const page = usePage();
+
+const isKnownStatus = (status: string): status is Stats => {
+	return (STATUS as readonly string[]).includes(status);
+};
+
+const statusForClasses = computed<Stats>(() => {
+	return isKnownStatus(props.status) ? props.status : 'correcte';
+});
 
 watch(
 	() => [props.message, props.status, (page.props.flash as any)],
@@ -41,7 +49,7 @@ const statusClasses = computed(() => {
 		'informació': 'border-blue-200 bg-blue-50 text-blue-800',
 	};
 
-	return classes[props.status];
+	return classes[statusForClasses.value];
 });
 
 const statusBadgeClasses = computed(() => {
@@ -52,7 +60,7 @@ const statusBadgeClasses = computed(() => {
 		'informació': 'bg-blue-100 text-blue-800',
 	};
 
-	return classes[props.status];
+	return classes[statusForClasses.value];
 });
 </script>
 

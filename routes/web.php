@@ -58,7 +58,9 @@ Route::middleware(['auth:admin', 'Admin', 'verified'])->group(function () {});
 
 // SECRETARY AREA
 Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
-   
+    Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
+    Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
+    Route::get('/doctorConsult/{id}', [DatesController::class, 'ajaxDoctor'])->name('ajax-doctor');
 });
 
 // DOCTOR AREA
