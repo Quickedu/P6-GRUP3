@@ -7,6 +7,7 @@ import {
     UserRoundSearch,
     CalendarRange,
     CircleCheck,
+    Clock,
 } from 'lucide-vue-next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,11 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { ref, computed } from 'vue';
+import { novaCitaStore as store } from '@/routes';
+import { Form, usePage } from '@inertiajs/vue3';
+import textNotify from '@/pages/components/textNotify.vue';
+
+const page = usePage();
 
 defineOptions({
     layout: {
@@ -54,24 +60,113 @@ const props = defineProps<{
     testTypes: TestType[];
 }>();
 
-console.log('Doctors:', props.doctors);
-console.log('Test Types:', props.testTypes);
-
-const cip = ref('');
-const dataCita = ref<number | null>(null);
-const professional = ref<string | null>(null);
+const dataCita = ref('');
+const professionalId = ref('');
 const showAll = ref(false);
-
-const resumPacient = computed(() =>
-    cip.value.trim() ? cip.value.trim() : "Pendent d'identificació",
+const patientId = ref<number | null>(null);
+const selectedTestId = ref<number | null>(null);
+const isAvaible = ref(false);
+const cip = ref('');
+const patientAvailable = ref(true);
+const confirmedPatient = ref('');
+const testMinutes = ref<number | null>(null);
+const timeValidationMessage = ref('');
+const estimatedMinutes = ref<number | null>(null);
+const validatedClass = ref(
+    'border-gray-200 focus:border-gray-900 focus:ring-gray-900',
 );
+const extraTime = ref(0);
+const flashMessage = computed(() => (page.props.flash as any)?.message);
+const flashStatus = computed(() => (page.props.flash as any)?.status);
+
+function validatePatient() {
+    const currentCip = cip.value.trim();
+    if (!currentCip) {
+        confirmedPatient.value = '';
+        patientId.value = null;
+        extraTime.value = 0;
+        estimatedMinutes.value = testMinutes.value;
+        validatedClass.value = 'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
+        return;
+    }
+    fetch(`/patientConsult/${currentCip}`)
+        .then((response) => response.json())
+        .then((data) => {
+            patientAvailable.value = Boolean(data.available);
+            validatedClass.value = patientAvailable.value
+                ? '!border-green-500 !focus:border-green-500 !focus:ring-green-500'
+                : '!border-red-500 !focus:border-red-500 !focus:ring-red-500';
+
+            patientId.value = patientAvailable.value ? (data?.data?.id ?? null) : null;
+            confirmedPatient.value = patientAvailable.value ? currentCip : '';
+            extraTime.value = data.data.number;
+            estimatedMinutes.value = testMinutes.value !== null ? testMinutes.value + extraTime.value : null;
+            isAvaible.value = true;
+        });
+}
+
+function validateTimeTest(testId: number) {
+    selectedTestId.value = testId;
+    fetch(`/testConsult/${testId}`)
+        .then((response) => response.json())
+        .then((data) => {
+            const status = data?.status;
+            const message = data?.message;
+            const timeTest = data?.data?.number;
+
+            if (status !== 'success') {
+                testMinutes.value = null;
+                estimatedMinutes.value = null;
+                timeValidationMessage.value =
+                    message || "No s'ha pogut validar el temps de la prova.";
+                return;
+            }
+
+            const testDuration = Number(timeTest) || 0;
+
+            testMinutes.value = testDuration;
+            estimatedMinutes.value = testDuration + extraTime.value;
+            timeValidationMessage.value =
+                message || `Temps estimat ${estimatedMinutes.value} min`;
+        })
+        .catch(() => {
+            testMinutes.value = null;
+            estimatedMinutes.value = null;
+            timeValidationMessage.value =
+                'Error de connexió validant el temps de la prova.';
+        });
+}
+
+const resumPacient = computed(
+    () => confirmedPatient.value || "Pendent d'identificació",
+);
+
+const resumProfessional = computed(() => {
+    const selectedDoctor = props.doctors.find(
+        (doctor) => doctor.id.toString() === professionalId.value,
+    );
+
+    return selectedDoctor?.name || 'Pendent de professional';
+});
+
 const resumData = computed(() =>
     dataCita.value
-        ? new Date(dataCita.value).toLocaleString()
+        ? new Date(dataCita.value).toLocaleDateString('ca-ES', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+          })
         : 'Pendent de data',
 );
-const resumProfessional = computed(() =>
-    professional.value ? professional.value : 'Pendent de professional',
+
+const resumMinutsProva = computed(() =>
+    testMinutes.value !== null ? `${testMinutes.value} min` : 'Pendent',
+);
+const resumMinutsNecessitats = computed(() => `${extraTime.value} min`);
+const resumMinutsTotals = computed(() =>
+    estimatedMinutes.value !== null
+        ? `${estimatedMinutes.value} min`
+        : 'Pendent',
 );
 
 const visibleItems = computed(() => {
@@ -90,7 +185,10 @@ const visibleItems = computed(() => {
         <div
             class="mt-6 flex h-full flex-1 flex-col gap-4 px-4 pb-8 sm:mt-8 sm:px-6 lg:mt-10 lg:px-8"
         >
-            <form action="" v-on:submit.prevent="" method="post">
+            <Form v-bind="store.form()" class="flex flex-col gap-6">
+                <input type="hidden" name="time" :value="estimatedMinutes" />
+                <input type="hidden" name="estat" value="programada" />
+                <input type="hidden" name="worker_id" :value="professionalId" />
                 <div
                     class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12"
                 >
@@ -130,112 +228,33 @@ const visibleItems = computed(() => {
                                     >
                                         TARGETA SANITÀRIA (CIP)
                                     </Label>
-                                    <Input
-                                        id="patient_id"
-                                        v-model="cip"
-                                        name="patient_id"
-                                        type="text"
-                                        class="mt-3 h-9 bg-background"
-                                        placeholder="Ex: ABCD 0123456789"
-                                        autocomplete="off"
-                                    />
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card
-                            class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
-                        >
-                            <CardHeader class="pb-0">
-                                <div class="flex items-center gap-3">
                                     <div
-                                        class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
+                                        class="mt-3 flex w-full items-center gap-3"
                                     >
-                                        <CalendarRange class="size-6" />
-                                    </div>
-                                    <div class="min-w-0">
-                                        <CardTitle class="text-xl font-semibold">
-                                            Detalls de la Cita
-                                        </CardTitle>
-                                    </div>
-                                </div>
-                            </CardHeader>
-
-                            <CardContent class="pt-0">
-                                <div class="mt-4 grid gap-4 md:grid-cols-2">
-                                    <div class="w-full">
-                                        <Label
-                                            for="date-time"
-                                            class="text-xs font-semibold tracking-widest text-muted-foreground"
-                                        >
-                                            DATA DE LA CITA
-                                        </Label>
                                         <Input
-                                            id="date-time"
-                                            type="datetime-local"
-                                            name="date_time"
-                                            v-model="dataCita"
-                                            class="mt-3 h-9 bg-background"
+                                            id="patient_id"
+                                            v-model="cip"
+                                            @input="confirmedPatient = ''"
+                                            type="text"
+                                            class="h-9 flex-1 bg-background"
+                                            :class="validatedClass"
                                             placeholder="Ex: ABCD 0123456789"
                                             autocomplete="off"
                                         />
-                                    </div>
-                                    <div class="w-full">
-                                        <Label
-                                            for="worker_id"
-                                            class="mb-3 text-xs font-semibold tracking-widest text-muted-foreground"
+                                        <input
+                                            type="hidden"
+                                            name="patient_id"
+                                            :value="patientId ?? ''"
+                                        />
+                                        <button
+                                            class="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green"
+                                            type="button"
+                                            @click="validatePatient"
                                         >
-                                            METGE / DOCTOR
-                                        </Label>
-                                        <Select
-                                            name="worker_id"
-                                            id="worker_id"
-                                            v-model="professional"
-                                        >
-                                            <SelectTrigger
-                                                class="w-full bg-white"
-                                            >
-                                                <SelectValue
-                                                    placeholder="Selecciona un professional de la salut"
-                                                />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem
-                                                    v-for="doctor in doctors"
-                                                    :key="doctor.id"
-                                                    :value="doctor.name"
-                                                >
-                                                    {{ doctor.name }}
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                            <CircleCheck class="mr-3 size-5" />
+                                            Comprovar usuari
+                                        </button>
                                     </div>
-                                </div>
-                                <div class="mt-4 w-full">
-                                    <Label
-                                        for="urgencia"
-                                        class="mb-3 text-xs font-semibold tracking-widest text-muted-foreground"
-                                    >
-                                        PRIORITAT DE LA CITA
-                                    </Label>
-                                    <Select name="urgencia" id="urgencia">
-                                        <SelectTrigger class="w-full bg-white">
-                                            <SelectValue
-                                                placeholder="Selecciona la prioritat de la cita"
-                                            />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="preferent">
-                                                Preferent
-                                            </SelectItem>
-                                            <SelectItem value="urgent">
-                                                Urgent
-                                            </SelectItem>
-                                            <SelectItem value="none">
-                                                No urgent
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
                                 </div>
                             </CardContent>
                         </Card>
@@ -269,10 +288,15 @@ const visibleItems = computed(() => {
                                         class="cursor-pointer"
                                     >
                                         <input
-                                            type="checkbox"
+                                            v-if="isAvaible === true"
+                                            type="radio"
+                                            max="1"
                                             name="test_id"
+                                            :value="test.id"
+                                            v-model="selectedTestId"
                                             class="peer sr-only"
                                             aria-label="Seleccionar categoria"
+                                            @change="validateTimeTest(test.id)"
                                         />
 
                                         <div
@@ -284,7 +308,9 @@ const visibleItems = computed(() => {
                                             >
                                         </div>
                                     </label>
-                                    <div class="col-span-full flex items-center justify-center">
+                                    <div
+                                        class="col-span-full flex items-center justify-center"
+                                    >
                                         <button
                                             v-if="!showAll"
                                             @click="showAll = true"
@@ -294,11 +320,132 @@ const visibleItems = computed(() => {
                                             Veure totes les proves
                                         </button>
                                     </div>
+                                    <p
+                                        v-if="timeValidationMessage"
+                                        class="col-span-full text-center text-sm text-muted-foreground"
+                                    >
+                                        Temps estimat
+                                        <span
+                                            v-if="estimatedMinutes !== null"
+                                            class="font-semibold text-pmf-primary"
+                                        >
+                                            {{ estimatedMinutes }} min
+                                        </span>
+                                    </p>
                                 </div>
                             </Card>
                         </div>
+
+                        <Card
+                            class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
+                        >
+                            <CardHeader class="pb-0">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
+                                    >
+                                        <CalendarRange class="size-6" />
+                                    </div>
+                                    <div class="min-w-0">
+                                        <CardTitle
+                                            class="text-xl font-semibold"
+                                        >
+                                            Detalls de la Cita
+                                        </CardTitle>
+                                    </div>
+                                </div>
+                            </CardHeader>
+
+                            <CardContent class="pt-0">
+                                <div class="mt-4 grid gap-4 md:grid-cols-2">
+                                    <div class="w-full">
+                                        <Label
+                                            for="date-time"
+                                            class="text-xs font-semibold tracking-widest text-muted-foreground"
+                                        >
+                                            DATA DE LA CITA
+                                        </Label>
+                                        <Input
+                                            id="date-time"
+                                            type="date"
+                                            name="date_time"
+                                            v-model="dataCita"
+                                            class="mt-3 h-9 bg-background"
+                                            placeholder="Ex: ABCD 0123456789"
+                                            autocomplete="off"
+                                        />
+                                    </div>
+                                    <div class="w-full">
+                                        <Label
+                                            for="worker_id"
+                                            class="mb-3 text-xs font-semibold tracking-widest text-muted-foreground"
+                                        >
+                                            METGE / DOCTOR
+                                        </Label>
+                                        <Select
+                                            id="worker_id"
+                                            name="worker_id"
+                                            v-model="professionalId"
+                                        >
+                                            <SelectTrigger
+                                                class="w-full bg-white"
+                                            >
+                                                <SelectValue
+                                                    placeholder="Selecciona un professional de la salut"
+                                                />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem
+                                                    v-for="doctor in doctors"
+                                                    :key="doctor.id"
+                                                    :value="
+                                                        doctor.id.toString()
+                                                    "
+                                                >
+                                                    {{ doctor.name }}
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div class="mt-4 w-full">
+                                    <Label
+                                        for="urgencia"
+                                        class="mb-3 text-xs font-semibold tracking-widest text-muted-foreground"
+                                    >
+                                        PRIORITAT DE LA CITA
+                                    </Label>
+                                    <Select id="urgencia" name="urgencia">
+                                        <SelectTrigger class="w-full bg-white">
+                                            <SelectValue
+                                                placeholder="Selecciona la prioritat de la cita"
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="preferent">
+                                                Preferent
+                                            </SelectItem>
+                                            <SelectItem value="urgent">
+                                                Urgent
+                                            </SelectItem>
+                                            <SelectItem value="no urgent">
+                                                No urgent
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
-                    <div class="lg:sticky lg:top-6 lg:col-span-4 lg:self-start">
+                    <div
+                        class="lg:sticky lg:top-34 lg:col-span-4 lg:self-start"
+                    >
+                        <textNotify
+                            class="mb-4"
+                            v-if="flashMessage"
+                            :message="flashMessage"
+                            :status="flashStatus"
+                        />
                         <Card
                             class="gap-4 border-0 bg-pmf-secondary/50 py-6 shadow-none"
                         >
@@ -360,7 +507,30 @@ const visibleItems = computed(() => {
                                     </div>
 
                                     <div class="flex items-center gap-3">
+                                        <div
+                                            class="rounded-full bg-pmf-secondary p-3 text-pmf-primary"
+                                        >
+                                            <Clock class="size-5" />
+                                        </div>
                                         <div class="min-w-0">
+                                            <div class="text-sm text-pmf-green">
+                                                Temps Estimat de la Cita
+                                            </div>
+                                            <div class="truncate font-semibold">
+                                                {{ resumMinutsProva }}
+                                                <span class="text-pmf-green"
+                                                    >(+{{
+                                                        resumMinutsNecessitats
+                                                    }})</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="mt-6 flex w-full items-center justify-center"
+                                    >
+                                        <div class="w-full sm:w-auto">
                                             <button
                                                 class="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green sm:w-auto"
                                                 type="submit"
@@ -377,7 +547,7 @@ const visibleItems = computed(() => {
                         </Card>
                     </div>
                 </div>
-            </form>
+            </Form>
         </div>
     </div>
 </template>

@@ -20,7 +20,7 @@ class DatesController extends Controller
         $doctors = User::where('role', '=', 'doctor')->get();
         $testTypes = Test::get();
 
-        return Inertia::render('newDate', [
+        return Inertia::render('Workers/newDate', [
             'doctors' => $doctors,
             'testTypes' => $testTypes,
         ]);
@@ -29,20 +29,24 @@ class DatesController extends Controller
     public function store(StoreDateRequest $request)
     {
         $data = $request->validated();
-
+    
         Date::create($data);
 
-        return redirect()->back()->with('success', 'Cita creada correctamente');
+        return redirect()->back()->with(['status' => 'correcte', 'message' => 'Cita creada correctamente']);
     }
 
-    public function ajaxPatient($nts)
+    public function ajaxPatient(string $nts)
     {
-        $patient = Patient::where('nts', $nts)->first();
+        $patient = Patient::query()->where('nts', $nts)->first();
+
         if (! $patient) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Pacient no trobat',
-                'data' => [],
+                'available' => false,
+                'data' => [
+                    'number' => 0,
+                ],
             ]);
         }
         if ($patient) {
@@ -56,15 +60,32 @@ class DatesController extends Controller
             }
             $needsTime = (int) $needs->sum('time');
 
+        return response()->json([
+            'status' => 'success',
+            'message' => $needsTime > 0
+                ? 'Pacient trobat, necessitats associades trobades'
+                : 'Pacient trobat, no té necessitats associades',
+            'available' => true,
+            'data' => [
+                'id' => $patient->id,
+                'number' => $needsTime,
+            ],
+        ]);
+    }
+
+    public function ajaxTest(int $id)
+    {
+        $testType = Test::query()->find($id);
+
+        if (! $testType) {
             return response()->json([
-                'status' => 'success',
-                'message' => 'Pacient trobat, necessitats associades trobades',
+                'status' => 'error',
+                'message' => 'Test no trobat',
                 'data' => [
-                    'number' => $needsTime,
+                    'number' => 0,
                 ],
             ]);
         }
-    }
 
     public function ajaxTest($id)
     {
