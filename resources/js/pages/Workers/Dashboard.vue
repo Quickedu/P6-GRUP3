@@ -5,6 +5,10 @@ import DoctorDashboard from '@/components/Dashboard/DoctorDashboard.vue';
 import AdminDashboard from '@/components/Dashboard/AdminDashboard.vue';
 import { dashboard } from '@/routes';
 
+defineProps({
+    dates: Array,
+});
+
 defineOptions({
     layout: {
         breadcrumbs: [
@@ -29,7 +33,7 @@ const isAdmin = user.role === 'admin'
 <template>
     <Head title="Escriptori" />
     <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-        <SecretaryDashboard v-if="isSecretry"/>
+        <SecretaryDashboard v-if="isSecretry" :dates="dates"/>
         <DoctorDashboard v-if="isDoctor"/>
         <AdminDashboard v-if="isAdmin"/>
     </div>

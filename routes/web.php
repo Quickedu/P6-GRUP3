@@ -13,14 +13,18 @@ Route::inertia('/', 'Welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
-Route::get('/dashboard', function () {
+Route::get('/dashboard', function (DatesController $datesController) {
     $user = Auth::guard('admin')->user() ?? Auth::guard('patient')->user();
     $role = $user?->role ?? 'patient';
 
-    return Inertia::render('Workers/Dashboard', [
+    $dates = $role === 'secretary' ? $datesController->seeDates() : [];
 
+    return Inertia::render('Workers/Dashboard', [
         'role' => $role,
+        'dates' => $dates,
     ]);
+
+
 })->middleware('auth')->name('dashboard');
 
 // PUBLIC

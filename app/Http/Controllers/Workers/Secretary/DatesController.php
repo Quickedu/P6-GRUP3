@@ -83,4 +83,11 @@ class DatesController extends Controller
             ],
         ]);
     }
+
+    public function seeDates()
+    {
+        $dates = Date::with(['patient', 'worker.user', 'test'])->get();
+
+        return $dates;
+    }
 }

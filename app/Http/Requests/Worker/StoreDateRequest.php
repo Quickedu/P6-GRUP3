@@ -21,6 +21,7 @@ class StoreDateRequest extends FormRequest
         'time' => 'required|integer|min:1',
         'estat' => 'required|in:programada,cancel·lada,realitzada',
         'urgencia' => 'required|in:no urgent,preferent,urgent',
+        'descripcio' => 'text'
       ];
     }
 }
