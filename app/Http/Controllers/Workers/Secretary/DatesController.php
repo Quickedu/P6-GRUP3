@@ -72,6 +72,7 @@ class DatesController extends Controller
             ],
         ]);
     }
+    }
 
 
     public function ajaxTest($id)
