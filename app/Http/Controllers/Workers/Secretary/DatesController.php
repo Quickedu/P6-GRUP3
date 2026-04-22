@@ -73,20 +73,6 @@ class DatesController extends Controller
         ]);
     }
 
-    public function ajaxTest(int $id)
-    {
-        $testType = Test::query()->find($id);
-
-        if (! $testType) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Test no trobat',
-                'data' => [
-                    'number' => 0,
-                ],
-            ]);
-        }
-    }
 
     public function ajaxTest($id)
     {
