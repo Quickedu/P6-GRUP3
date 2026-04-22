@@ -1,6 +1,8 @@
 name: Laravel Pint
 
 on:
+    workflow_dispatch:
+        
     push:
         branches: 
             - deploy
