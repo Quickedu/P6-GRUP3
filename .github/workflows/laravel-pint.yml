@@ -2,11 +2,10 @@ name: Laravel Pint
 
 on:
     workflow_dispatch:
-
+        
     push:
         branches: 
             - deploy
-
 jobs:
     laravel-pint:
         runs-on: ubuntu-latest
