@@ -17,7 +17,7 @@ class DatesController extends Controller
         $doctors = User::where('role', '=', 'doctor')->get();
         $testTypes = Test::get();
 
-        return Inertia::render('newDate', [
+        return Inertia::render('Workers/newDate', [
             'doctors' => $doctors,
             'testTypes' => $testTypes,
         ]);
