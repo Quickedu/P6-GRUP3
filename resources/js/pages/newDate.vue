@@ -121,14 +121,10 @@ function validateTimeTest(testId: number) {
                 return;
             }
 
-<<<<<<< HEAD:resources/js/pages/newDate.vue
             const testDuration = Number(timeTest) || 0;
 
             testMinutes.value = testDuration;
             estimatedMinutes.value = testDuration + extraTime.value;
-=======
-            estimatedMinutes.value = selectedTest.time + extraTime;
->>>>>>> e441d4c5782b0883f47b191453091d19bb760027:resources/js/pages/Workers/newDate.vue
             timeValidationMessage.value =
                 message || `Temps estimat ${estimatedMinutes.value} min`;
         })
@@ -277,7 +273,6 @@ const visibleItems = computed(() => {
                                     >
                                         <input
                                         v-if="isAvaible === true"
-                                            :class
                                             type="radio"
                                             max="1"
                                             name="test_id"
