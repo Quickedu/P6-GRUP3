@@ -113,7 +113,6 @@ function validateTimeTest(testId: number) {
                 return;
             }
 
-
             estimatedMinutes.value = selectedTest.time + extraTime;
             timeValidationMessage.value =
                 message || `Temps estimat ${estimatedMinutes.value} min`;
