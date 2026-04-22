@@ -7,6 +7,7 @@ import {
     UserRoundSearch,
     CalendarRange,
     CircleCheck,
+    Clock,
 } from 'lucide-vue-next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { ref, computed } from 'vue';
+import { novaCitaStore as store } from '@/routes';
 
 defineOptions({
     layout: {
@@ -58,19 +60,28 @@ const dataCita = ref('');
 const professional = ref<string | null>(null);
 const showAll = ref(false);
 
+
+const isAvaible = ref(false);
+
 const cip = ref('');
 const patientAvailable = ref(true);
 const confirmedPatient = ref('');
+const testMinutes = ref<number | null>(null);
 const timeValidationMessage = ref('');
 const estimatedMinutes = ref<number | null>(null);
 const validatedClass = ref(
     'border-gray-200 focus:border-gray-900 focus:ring-gray-900',
 );
+const extraTime = ref(0);
+const classTrue = 'disabled:border-green-500 disabled:focus:border-green-500 disabled:focus:ring-green-500';
+
 
 function validatePatient() {
     const currentCip = cip.value.trim();
     if (!currentCip) {
         confirmedPatient.value = '';
+        extraTime.value = 0;
+        estimatedMinutes.value = testMinutes.value;
         validatedClass.value =
             'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
         return;
@@ -84,42 +95,41 @@ function validatePatient() {
                 : '!border-red-500 !focus:border-red-500 !focus:ring-red-500';
 
             confirmedPatient.value = patientAvailable.value ? currentCip : '';
+            extraTime.value = data.data.number;
+            estimatedMinutes.value =
+                testMinutes.value !== null
+                    ? testMinutes.value + extraTime.value
+                    : null;
+            isAvaible.value = true;
+            console.log(isAvaible.value);
         });
 }
 
 function validateTimeTest(testId: number) {
-    const selectedTest = props.testTypes.find((test) => test.id === testId);
-
-    if (!selectedTest) {
-        estimatedMinutes.value = null;
-        timeValidationMessage.value = "No s'ha trobat la prova seleccionada.";
-        return;
-    }
-
     fetch(`/testConsult/${testId}`)
         .then((response) => response.json())
         .then((data) => {
             const status = data?.status;
             const message = data?.message;
-            const extraTime = Number(data?.data?.number);
+            const timeTest = data?.data?.number;
 
-
-            if (status !== 'ok') {
-                console.error('Error validant el temps de la prova:', message);
-
+            if (status !== 'success') {
+                testMinutes.value = null;
                 estimatedMinutes.value = null;
                 timeValidationMessage.value =
                     message || "No s'ha pogut validar el temps de la prova.";
                 return;
             }
 
+            const testDuration = Number(timeTest) || 0;
 
-            estimatedMinutes.value = selectedTest.time + extraTime;
+            testMinutes.value = testDuration;
+            estimatedMinutes.value = testDuration + extraTime.value;
             timeValidationMessage.value =
                 message || `Temps estimat ${estimatedMinutes.value} min`;
-
         })
         .catch(() => {
+            testMinutes.value = null;
             estimatedMinutes.value = null;
             timeValidationMessage.value =
                 'Error de connexió validant el temps de la prova.';
@@ -132,11 +142,21 @@ const resumPacient = computed(
 
 const resumData = computed(() =>
     dataCita.value
-        ? new Date(dataCita.value).toLocaleString()
-        : 'Pendent de data',
+        ? new Date(dataCita.value).toLocaleDateString('ca-ES', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+          }) : 'Pendent de data',
 );
 const resumProfessional = computed(() =>
     professional.value ? professional.value : 'Pendent de professional',
+);
+const resumMinutsProva = computed(() =>
+    testMinutes.value !== null ? `${testMinutes.value} min` : 'Pendent',
+);
+const resumMinutsNecessitats = computed(() => `${extraTime.value} min`);
+const resumMinutsTotals = computed(() =>
+    estimatedMinutes.value !== null ? `${estimatedMinutes.value} min` : 'Pendent',
 );
 
 const visibleItems = computed(() => {
@@ -156,6 +176,7 @@ const visibleItems = computed(() => {
             class="mt-6 flex h-full flex-1 flex-col gap-4 px-4 pb-8 sm:mt-8 sm:px-6 lg:mt-10 lg:px-8"
         >
             <form action="" @submit.prevent method="post">
+
                 <div
                     class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12"
                 >
@@ -222,6 +243,82 @@ const visibleItems = computed(() => {
                             </CardContent>
                         </Card>
 
+                        <div class="lg:col-span-4">
+                            <Card
+                                class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
+                            >
+                                <CardHeader class="pb-0">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
+                                        >
+                                            <UserRoundSearch class="size-6" />
+                                        </div>
+                                        <div class="min-w-0">
+                                            <CardTitle
+                                                class="flex text-xl font-semibold"
+                                            >
+                                                Proves Diagnòstiques
+                                            </CardTitle>
+                                        </div>
+                                    </div>
+                                </CardHeader>
+                                <div
+                                    class="grid grid-cols-1 flex-wrap items-center justify-center gap-4 p-5 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
+                                >
+                                    <label
+                                        v-for="test in visibleItems"
+                                        :key="test.id"
+                                        class="cursor-pointer"
+                                    >
+                                        <input
+                                        v-if="isAvaible === true"
+                                            :class
+                                            type="radio"
+                                            max="1"
+                                            name="test_id"
+                                            class="peer sr-only"
+                                            aria-label="Seleccionar categoria"
+                                            @click="validateTimeTest(test.id)"
+                                        />
+
+                                        <div
+                                            class="flex min-h-29 flex-col items-center justify-center rounded-2xl border-2 bg-white p-5 text-center text-black transition peer-checked:border-pmf-turquoise hover:bg-gray-50"
+                                        >
+                                            <span
+                                                class="mt-2 text-sm font-bold"
+                                                >{{ test.name }}</span
+                                            >
+                                        </div>
+                                    </label>
+                                    <div
+                                        class="col-span-full flex items-center justify-center"
+                                    >
+                                        <button
+                                            v-if="!showAll"
+                                            @click="showAll = true"
+                                            class="mt-3 flex cursor-pointer items-center justify-center rounded-full bg-pmf-green px-5 py-3 text-pmf-secondary transition hover:bg-pmf-green/90"
+                                            type="button"
+                                        >
+                                            Veure totes les proves
+                                        </button>
+                                    </div>
+                                    <p
+                                        v-if="timeValidationMessage"
+                                        class="col-span-full text-center text-sm text-muted-foreground"
+                                    >
+                                        {{ timeValidationMessage }}
+                                        <span
+                                            v-if="estimatedMinutes !== null"
+                                            class="font-semibold text-pmf-primary"
+                                        >
+                                            ({{ estimatedMinutes }} min)
+                                        </span>
+                                    </p>
+                                </div>
+                            </Card>
+                        </div>
+
                         <Card
                             class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
                         >
@@ -253,7 +350,7 @@ const visibleItems = computed(() => {
                                         </Label>
                                         <Input
                                             id="date-time"
-                                            type="datetime-local"
+                                            type="date"
                                             name="date_time"
                                             v-model="dataCita"
                                             class="mt-3 h-9 bg-background"
@@ -321,79 +418,7 @@ const visibleItems = computed(() => {
                             </CardContent>
                         </Card>
 
-                        <div class="lg:col-span-4">
-                            <Card
-                                class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
-                            >
-                                <CardHeader class="pb-0">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
-                                        >
-                                            <UserRoundSearch class="size-6" />
-                                        </div>
-                                        <div class="min-w-0">
-                                            <CardTitle
-                                                class="flex text-xl font-semibold"
-                                            >
-                                                Proves Diagnòstiques
-                                            </CardTitle>
-                                        </div>
-                                    </div>
-                                </CardHeader>
-                                <div
-                                    class="grid grid-cols-1 flex-wrap items-center justify-center gap-4 p-5 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
-                                >
-                                    <label
-                                        v-for="test in visibleItems"
-                                        :key="test.id"
-                                        class="cursor-pointer"
-                                    >
-                                        <input
-                                            type="radio"
-                                            max="1"
-                                            name="test_id"
-                                            class="peer sr-only"
-                                            aria-label="Seleccionar categoria"
-                                            @click="validateTimeTest(test.id)"
-                                        />
-
-                                        <div
-                                            class="flex min-h-29 flex-col items-center justify-center rounded-2xl border-2 bg-white p-5 text-center text-black transition peer-checked:border-pmf-turquoise hover:bg-gray-50"
-                                        >
-                                            <span
-                                                class="mt-2 text-sm font-bold"
-                                                >{{ test.name }}</span
-                                            >
-                                        </div>
-                                    </label>
-                                    <div
-                                        class="col-span-full flex items-center justify-center"
-                                    >
-                                        <button
-                                            v-if="!showAll"
-                                            @click="showAll = true"
-                                            class="mt-3 flex cursor-pointer items-center justify-center rounded-full bg-pmf-green px-5 py-3 text-pmf-secondary transition hover:bg-pmf-green/90"
-                                            type="button"
-                                        >
-                                            Veure totes les proves
-                                        </button>
-                                    </div>
-                                    <p
-                                        v-if="timeValidationMessage"
-                                        class="col-span-full text-center text-sm text-muted-foreground"
-                                    >
-                                        {{ timeValidationMessage }}
-                                        <span
-                                            v-if="estimatedMinutes !== null"
-                                            class="font-semibold text-pmf-primary"
-                                        >
-                                            ({{ estimatedMinutes }} min)
-                                        </span>
-                                    </p>
-                                </div>
-                            </Card>
-                        </div>
+                        
                     </div>
                     <div class="lg:sticky lg:top-6 lg:col-span-4 lg:self-start">
                         <Card
@@ -452,6 +477,22 @@ const visibleItems = computed(() => {
                                             </div>
                                             <div class="truncate font-semibold">
                                                 {{ resumProfessional }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="rounded-full bg-pmf-secondary p-3 text-pmf-primary"
+                                        >
+                                            <Clock class="size-5" />
+                                    </div>
+                                        <div class="min-w-0">
+                                            <div class="text-sm text-pmf-green">
+                                                Temps Estimat (Prova + necessitats)
+                                            </div>
+                                            <div class="truncate font-semibold">
+                                                {{ resumMinutsProva }} + {{ resumMinutsNecessitats }} = {{ resumMinutsTotals }}
                                             </div>
                                         </div>
                                     </div>
