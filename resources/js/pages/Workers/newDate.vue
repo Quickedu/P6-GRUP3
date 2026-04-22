@@ -22,6 +22,10 @@ import {
 } from '@/components/ui/select';
 import { ref, computed } from 'vue';
 import { novaCitaStore as store } from '@/routes';
+import { Form, usePage } from '@inertiajs/vue3';
+import textNotify from '@/pages/components/textNotify.vue';
+
+const page = usePage();
 
 defineOptions({
     layout: {
@@ -57,12 +61,11 @@ const props = defineProps<{
 }>();
 
 const dataCita = ref('');
-const professional = ref<string | null>(null);
+const professionalId = ref('');
 const showAll = ref(false);
-
-
+const patientId = ref<number | null>(null);
+const selectedTestId = ref<number | null>(null);
 const isAvaible = ref(false);
-
 const cip = ref('');
 const patientAvailable = ref(true);
 const confirmedPatient = ref('');
@@ -73,17 +76,17 @@ const validatedClass = ref(
     'border-gray-200 focus:border-gray-900 focus:ring-gray-900',
 );
 const extraTime = ref(0);
-const classTrue = 'disabled:border-green-500 disabled:focus:border-green-500 disabled:focus:ring-green-500';
-
+const flashMessage = computed(() => (page.props.flash as any)?.message);
+const flashStatus = computed(() => (page.props.flash as any)?.status);
 
 function validatePatient() {
     const currentCip = cip.value.trim();
     if (!currentCip) {
         confirmedPatient.value = '';
+        patientId.value = null;
         extraTime.value = 0;
         estimatedMinutes.value = testMinutes.value;
-        validatedClass.value =
-            'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
+        validatedClass.value = 'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
         return;
     }
     fetch(`/patientConsult/${currentCip}`)
@@ -94,18 +97,16 @@ function validatePatient() {
                 ? '!border-green-500 !focus:border-green-500 !focus:ring-green-500'
                 : '!border-red-500 !focus:border-red-500 !focus:ring-red-500';
 
+            patientId.value = patientAvailable.value ? (data?.data?.id ?? null) : null;
             confirmedPatient.value = patientAvailable.value ? currentCip : '';
             extraTime.value = data.data.number;
-            estimatedMinutes.value =
-                testMinutes.value !== null
-                    ? testMinutes.value + extraTime.value
-                    : null;
+            estimatedMinutes.value = testMinutes.value !== null ? testMinutes.value + extraTime.value : null;
             isAvaible.value = true;
-            console.log(isAvaible.value);
         });
 }
 
 function validateTimeTest(testId: number) {
+    selectedTestId.value = testId;
     fetch(`/testConsult/${testId}`)
         .then((response) => response.json())
         .then((data) => {
@@ -140,23 +141,32 @@ const resumPacient = computed(
     () => confirmedPatient.value || "Pendent d'identificació",
 );
 
+const resumProfessional = computed(() => {
+    const selectedDoctor = props.doctors.find(
+        (doctor) => doctor.id.toString() === professionalId.value,
+    );
+
+    return selectedDoctor?.name || 'Pendent de professional';
+});
+
 const resumData = computed(() =>
     dataCita.value
         ? new Date(dataCita.value).toLocaleDateString('ca-ES', {
               day: '2-digit',
               month: '2-digit',
               year: 'numeric',
-          }) : 'Pendent de data',
+          })
+        : 'Pendent de data',
 );
-const resumProfessional = computed(() =>
-    professional.value ? professional.value : 'Pendent de professional',
-);
+
 const resumMinutsProva = computed(() =>
     testMinutes.value !== null ? `${testMinutes.value} min` : 'Pendent',
 );
 const resumMinutsNecessitats = computed(() => `${extraTime.value} min`);
 const resumMinutsTotals = computed(() =>
-    estimatedMinutes.value !== null ? `${estimatedMinutes.value} min` : 'Pendent',
+    estimatedMinutes.value !== null
+        ? `${estimatedMinutes.value} min`
+        : 'Pendent',
 );
 
 const visibleItems = computed(() => {
@@ -175,20 +185,29 @@ const visibleItems = computed(() => {
         <div
             class="mt-6 flex h-full flex-1 flex-col gap-4 px-4 pb-8 sm:mt-8 sm:px-6 lg:mt-10 lg:px-8"
         >
-            <form action="" @submit.prevent method="post">
-
+            <Form v-bind="store.form()" class="flex flex-col gap-6">
+                <input type="hidden" name="time" :value="estimatedMinutes" />
+                <input type="hidden" name="estat" value="programada" />
+                <input type="hidden" name="worker_id" :value="professionalId" />
                 <div
                     class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12"
                 >
-                    <div class="lg:col-span-8">
-                        <h1
-                            class="text-3xl font-extrabold tracking-tight text-pmf-primary sm:text-4xl"
-                        >
-                            Crear Nova Cita
-                        </h1>
-                        <p class="mt-2 text-muted-foreground">
-                            Empleneu els detalls per programar una nova cita
-                        </p>
+                    <div class="lg:col-span-8 flex flex-col">
+                        <div class="">
+                            <h1 class="text-3xl font-extrabold tracking-tight text-pmf-primary sm:text-4xl"
+                            >Crear Nova Cita
+                            </h1>
+                            <p class="mt-2 text-muted-foreground">
+                                Empleneu els detalls per programar una nova citatext
+                            </p>
+                        </div>
+                        <!-- Detall de la cita -->
+                        <textNotify
+                            class="mb-4"
+                            v-if="flashMessage"
+                            :message="flashMessage"
+                            :status="flashStatus"
+                        />
                         <Card
                             class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
                         >
@@ -221,7 +240,6 @@ const visibleItems = computed(() => {
                                     >
                                         <Input
                                             id="patient_id"
-                                            name="patient_id"
                                             v-model="cip"
                                             @input="confirmedPatient = ''"
                                             type="text"
@@ -229,6 +247,11 @@ const visibleItems = computed(() => {
                                             :class="validatedClass"
                                             placeholder="Ex: ABCD 0123456789"
                                             autocomplete="off"
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="patient_id"
+                                            :value="patientId ?? ''"
                                         />
                                         <button
                                             class="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green"
@@ -272,13 +295,15 @@ const visibleItems = computed(() => {
                                         class="cursor-pointer"
                                     >
                                         <input
-                                        v-if="isAvaible === true"
+                                            v-if="isAvaible === true"
                                             type="radio"
                                             max="1"
                                             name="test_id"
+                                            :value="test.id"
+                                            v-model="selectedTestId"
                                             class="peer sr-only"
                                             aria-label="Seleccionar categoria"
-                                            @click="validateTimeTest(test.id)"
+                                            @change="validateTimeTest(test.id)"
                                         />
 
                                         <div
@@ -306,12 +331,12 @@ const visibleItems = computed(() => {
                                         v-if="timeValidationMessage"
                                         class="col-span-full text-center text-sm text-muted-foreground"
                                     >
-                                        {{ timeValidationMessage }}
+                                        Temps estimat
                                         <span
                                             v-if="estimatedMinutes !== null"
                                             class="font-semibold text-pmf-primary"
                                         >
-                                            ({{ estimatedMinutes }} min)
+                                            {{ estimatedMinutes }} min
                                         </span>
                                     </p>
                                 </div>
@@ -365,9 +390,9 @@ const visibleItems = computed(() => {
                                             METGE / DOCTOR
                                         </Label>
                                         <Select
-                                            name="worker_id"
                                             id="worker_id"
-                                            v-model="professional"
+                                            name="worker_id"
+                                            v-model="professionalId"
                                         >
                                             <SelectTrigger
                                                 class="w-full bg-white"
@@ -380,7 +405,9 @@ const visibleItems = computed(() => {
                                                 <SelectItem
                                                     v-for="doctor in doctors"
                                                     :key="doctor.id"
-                                                    :value="doctor.name"
+                                                    :value="
+                                                        doctor.id.toString()
+                                                    "
                                                 >
                                                     {{ doctor.name }}
                                                 </SelectItem>
@@ -395,7 +422,7 @@ const visibleItems = computed(() => {
                                     >
                                         PRIORITAT DE LA CITA
                                     </Label>
-                                    <Select name="urgencia" id="urgencia">
+                                    <Select id="urgencia" name="urgencia">
                                         <SelectTrigger class="w-full bg-white">
                                             <SelectValue
                                                 placeholder="Selecciona la prioritat de la cita"
@@ -408,7 +435,7 @@ const visibleItems = computed(() => {
                                             <SelectItem value="urgent">
                                                 Urgent
                                             </SelectItem>
-                                            <SelectItem value="none">
+                                            <SelectItem value="no urgent">
                                                 No urgent
                                             </SelectItem>
                                         </SelectContent>
@@ -416,10 +443,10 @@ const visibleItems = computed(() => {
                                 </div>
                             </CardContent>
                         </Card>
-
-                        
                     </div>
-                    <div class="lg:sticky lg:top-6 lg:col-span-4 lg:self-start">
+                    <div
+                        class="lg:sticky lg:top-34 lg:col-span-4 lg:self-start"
+                    >
                         <Card
                             class="gap-4 border-0 bg-pmf-secondary/50 py-6 shadow-none"
                         >
@@ -485,13 +512,18 @@ const visibleItems = computed(() => {
                                             class="rounded-full bg-pmf-secondary p-3 text-pmf-primary"
                                         >
                                             <Clock class="size-5" />
-                                    </div>
+                                        </div>
                                         <div class="min-w-0">
                                             <div class="text-sm text-pmf-green">
-                                                Temps Estimat (Prova + necessitats)
+                                                Temps Estimat de la Cita
                                             </div>
                                             <div class="truncate font-semibold">
-                                                {{ resumMinutsProva }} + {{ resumMinutsNecessitats }} = {{ resumMinutsTotals }}
+                                                {{ resumMinutsProva }}
+                                                <span class="text-pmf-green"
+                                                    >(+{{
+                                                        resumMinutsNecessitats
+                                                    }})</span
+                                                >
                                             </div>
                                         </div>
                                     </div>
@@ -516,7 +548,7 @@ const visibleItems = computed(() => {
                         </Card>
                     </div>
                 </div>
-            </form>
+            </Form>
         </div>
     </div>
 </template>
