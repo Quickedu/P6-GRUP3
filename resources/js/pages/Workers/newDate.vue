@@ -86,8 +86,7 @@ function validatePatient() {
         patientId.value = null;
         extraTime.value = 0;
         estimatedMinutes.value = testMinutes.value;
-        validatedClass.value =
-            'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
+        validatedClass.value = 'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
         return;
     }
     fetch(`/patientConsult/${currentCip}`)
@@ -98,20 +97,16 @@ function validatePatient() {
                 ? '!border-green-500 !focus:border-green-500 !focus:ring-green-500'
                 : '!border-red-500 !focus:border-red-500 !focus:ring-red-500';
 
-            patientId.value = patientAvailable.value ? data?.data?.id ?? null : null;
+            patientId.value = patientAvailable.value ? (data?.data?.id ?? null) : null;
             confirmedPatient.value = patientAvailable.value ? currentCip : '';
             extraTime.value = data.data.number;
-            estimatedMinutes.value =
-                testMinutes.value !== null
-                    ? testMinutes.value + extraTime.value
-                    : null;
+            estimatedMinutes.value = testMinutes.value !== null ? testMinutes.value + extraTime.value : null;
             isAvaible.value = true;
         });
 }
 
 function validateTimeTest(testId: number) {
     selectedTestId.value = testId;
-
     fetch(`/testConsult/${testId}`)
         .then((response) => response.json())
         .then((data) => {
@@ -160,7 +155,8 @@ const resumData = computed(() =>
               day: '2-digit',
               month: '2-digit',
               year: 'numeric',
-          }) : 'Pendent de data',
+          })
+        : 'Pendent de data',
 );
 
 const resumMinutsProva = computed(() =>
@@ -168,7 +164,9 @@ const resumMinutsProva = computed(() =>
 );
 const resumMinutsNecessitats = computed(() => `${extraTime.value} min`);
 const resumMinutsTotals = computed(() =>
-    estimatedMinutes.value !== null ? `${estimatedMinutes.value} min` : 'Pendent',
+    estimatedMinutes.value !== null
+        ? `${estimatedMinutes.value} min`
+        : 'Pendent',
 );
 
 const visibleItems = computed(() => {
@@ -187,25 +185,14 @@ const visibleItems = computed(() => {
         <div
             class="mt-6 flex h-full flex-1 flex-col gap-4 px-4 pb-8 sm:mt-8 sm:px-6 lg:mt-10 lg:px-8"
         >
-        
-                <Form
-                    v-bind="store.form()"
-                    class="flex flex-col gap-6"
-                >
+            <Form v-bind="store.form()" class="flex flex-col gap-6">
                 <input type="hidden" name="time" :value="estimatedMinutes" />
-                <input type="hidden" name="estat" value="programada">
+                <input type="hidden" name="estat" value="programada" />
                 <input type="hidden" name="worker_id" :value="professionalId" />
                 <div
                     class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12"
                 >
-                
-                
                     <div class="lg:col-span-8">
-                        <textNotify
-                v-if="flashMessage"
-                :message="flashMessage"
-                :status="flashStatus"
-            />
                         <h1
                             class="text-3xl font-extrabold tracking-tight text-pmf-primary sm:text-4xl"
                         >
@@ -301,7 +288,7 @@ const visibleItems = computed(() => {
                                         class="cursor-pointer"
                                     >
                                         <input
-                                        v-if="isAvaible === true"
+                                            v-if="isAvaible === true"
                                             type="radio"
                                             max="1"
                                             name="test_id"
@@ -411,7 +398,9 @@ const visibleItems = computed(() => {
                                                 <SelectItem
                                                     v-for="doctor in doctors"
                                                     :key="doctor.id"
-                                                    :value="doctor.id.toString()"
+                                                    :value="
+                                                        doctor.id.toString()
+                                                    "
                                                 >
                                                     {{ doctor.name }}
                                                 </SelectItem>
@@ -426,7 +415,7 @@ const visibleItems = computed(() => {
                                     >
                                         PRIORITAT DE LA CITA
                                     </Label>
-                                    <Select id="urgencia" name="urgencia" v-model="urgency">
+                                    <Select id="urgencia" name="urgencia">
                                         <SelectTrigger class="w-full bg-white">
                                             <SelectValue
                                                 placeholder="Selecciona la prioritat de la cita"
@@ -447,10 +436,16 @@ const visibleItems = computed(() => {
                                 </div>
                             </CardContent>
                         </Card>
-
-                        
                     </div>
-                    <div class="lg:sticky lg:top-6 lg:col-span-4 lg:self-start">
+                    <div
+                        class="lg:sticky lg:top-34 lg:col-span-4 lg:self-start"
+                    >
+                        <textNotify
+                            class="mb-4"
+                            v-if="flashMessage"
+                            :message="flashMessage"
+                            :status="flashStatus"
+                        />
                         <Card
                             class="gap-4 border-0 bg-pmf-secondary/50 py-6 shadow-none"
                         >
@@ -516,13 +511,18 @@ const visibleItems = computed(() => {
                                             class="rounded-full bg-pmf-secondary p-3 text-pmf-primary"
                                         >
                                             <Clock class="size-5" />
-                                    </div>
+                                        </div>
                                         <div class="min-w-0">
                                             <div class="text-sm text-pmf-green">
                                                 Temps Estimat de la Cita
                                             </div>
                                             <div class="truncate font-semibold">
-                                                {{ resumMinutsProva }} <span class="text-pmf-green">(+{{ resumMinutsNecessitats }})</span>
+                                                {{ resumMinutsProva }}
+                                                <span class="text-pmf-green"
+                                                    >(+{{
+                                                        resumMinutsNecessitats
+                                                    }})</span
+                                                >
                                             </div>
                                         </div>
                                     </div>
@@ -547,7 +547,7 @@ const visibleItems = computed(() => {
                         </Card>
                     </div>
                 </div>
-                    </Form>
+            </Form>
         </div>
     </div>
 </template>
