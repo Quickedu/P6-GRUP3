@@ -23,7 +23,11 @@ jobs:
             - name: Install Laravel Pint
             run: composer global require laravel/pint
             - name: Run Laravel Pint
-            run: pint
-            - name: Write token information 
-            run: echo ${{GITHUB_TOKEN}}
-            
+            run: pint --test --verbose
+            # - name: Commit and Push Changes
+            # run: |
+            #     git config user.email "action@github.com"
+            #     git config user.name "GitHub Action"
+            #     git add .
+            #     git commit -m "Fix coding standards" || exit 0
+            #     git push origin ${{ github.head_ref }}
