@@ -14,7 +14,7 @@ class DashboardPatientController extends Controller
     {
         $dates = Date::get(); /* where('user_id', Auth::user()->id); */
 
-        return Inertia::render('patientDashboard', [
+        return Inertia::render('Patient/patientDashboard', [
             'dates' => $dates,
         ]);
     }

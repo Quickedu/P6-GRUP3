@@ -11,7 +11,7 @@ withDefaults(
         breadcrumbs: () => [],
     },
 );
-</script>
+</script> 645
 
 <template>
     <header
