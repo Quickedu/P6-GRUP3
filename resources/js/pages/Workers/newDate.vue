@@ -1,29 +1,17 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import {
-    CalendarDays,
-    IdCard,
-    Stethoscope,
-    UserRoundSearch,
-    CalendarRange,
-    CircleCheck,
-    Clock,
-} from 'lucide-vue-next';
+import { CalendarDays, IdCard, Stethoscope, UserRoundSearch, CalendarRange, CircleCheck, Clock, Microscope, FileText, } from 'lucide-vue-next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { dashboard, home } from '@/routes';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/components/ui/select';
 import { ref, computed } from 'vue';
 import { novaCitaStore as store } from '@/routes';
 import { Form, usePage } from '@inertiajs/vue3';
 import textNotify from '@/pages/components/textNotify.vue';
+import { QuillEditor } from '@vueup/vue-quill';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 const page = usePage();
 
@@ -86,7 +74,8 @@ function validatePatient() {
         patientId.value = null;
         extraTime.value = 0;
         estimatedMinutes.value = testMinutes.value;
-        validatedClass.value = 'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
+        validatedClass.value =
+            'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
         return;
     }
     fetch(`/patientConsult/${currentCip}`)
@@ -97,10 +86,15 @@ function validatePatient() {
                 ? '!border-green-500 !focus:border-green-500 !focus:ring-green-500'
                 : '!border-red-500 !focus:border-red-500 !focus:ring-red-500';
 
-            patientId.value = patientAvailable.value ? (data?.data?.id ?? null) : null;
+            patientId.value = patientAvailable.value
+                ? (data?.data?.id ?? null)
+                : null;
             confirmedPatient.value = patientAvailable.value ? currentCip : '';
             extraTime.value = data.data.number;
-            estimatedMinutes.value = testMinutes.value !== null ? testMinutes.value + extraTime.value : null;
+            estimatedMinutes.value =
+                testMinutes.value !== null
+                    ? testMinutes.value + extraTime.value
+                    : null;
             isAvaible.value = true;
         });
 }
@@ -136,7 +130,6 @@ function validateTimeTest(testId: number) {
                 'Error de connexió validant el temps de la prova.';
         });
 }
-
 const resumPacient = computed(
     () => confirmedPatient.value || "Pendent d'identificació",
 );
@@ -176,6 +169,7 @@ const visibleItems = computed(() => {
 
     return props.testTypes.slice(0, 6);
 });
+
 </script>
 
 <template>
@@ -268,7 +262,7 @@ const visibleItems = computed(() => {
                                         <div
                                             class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
                                         >
-                                            <UserRoundSearch class="size-6" />
+                                            <Microscope class="size-6" />
                                         </div>
                                         <div class="min-w-0">
                                             <CardTitle
@@ -335,6 +329,44 @@ const visibleItems = computed(() => {
                                 </div>
                             </Card>
                         </div>
+
+                        <Card
+                            class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
+                        >
+                            <CardHeader class="pb-0">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
+                                    >
+                                        <FileText class="size-6" />
+                                    </div>
+                                    <div class="min-w-0">
+                                        <CardTitle
+                                            class="text-xl font-semibold"
+                                        >
+                                            Observacions de la Cita
+                                        </CardTitle>
+                                    </div>
+                                </div>
+                            </CardHeader>
+
+                            <CardContent class="pt-0">
+                                <div class="mt-4 grid gap-4">
+                                    
+                                    <QuillEditor
+                                        id="descripcio"
+                                        contentType="text"
+                                        theme="snow"
+                                        name="descripcio"
+                                        rows="4"
+                                        class="min-h-24 w-full min-w-0 overflow-hidden rounded-md border border-pmf-primary/30 bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:border-pmf-primary focus-within:ring-2 focus-within:ring-pmf-primary/30 md:text-sm [&_.ql-toolbar.ql-snow]:border-0 [&_.ql-toolbar.ql-snow]:border-b [&_.ql-toolbar.ql-snow]:border-pmf-primary/20 [&_.ql-toolbar.ql-snow]:bg-pmf-secondary/40 [&_.ql-container.ql-snow]:border-0 [&_.ql-editor]:relative [&_.ql-editor]:min-h-32 [&_.ql-editor]:px-3 [&_.ql-editor]:py-2 [&_.ql-editor]:text-foreground [&_.ql-editor.ql-blank::before]:left-3 [&_.ql-editor.ql-blank::before]:right-3 [&_.ql-editor.ql-blank::before]:top-2 [&_.ql-editor.ql-blank::before]:text-muted-foreground [&_.ql-editor.ql-blank::before]:not-italic [&_.ql-stroke]:stroke-pmf-primary [&_.ql-fill]:fill-pmf-primary [&_.ql-picker]:text-pmf-primary [&_.ql-snow_.ql-picker-options]:border-pmf-primary/20"
+                                        placeholder="Afegeix observacions de la cita..."
+                                    />
+                                    
+
+                                </div>
+                             </CardContent>
+                        </Card>
 
                         <Card
                             class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
