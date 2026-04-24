@@ -1,29 +1,16 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
-import {
-    CalendarDays,
-    IdCard,
-    Stethoscope,
-    UserRoundSearch,
-    CalendarRange,
-    CircleCheck,
-    Clock,
-} from 'lucide-vue-next';
+import { Form, Head, usePage } from '@inertiajs/vue3';
+import { QuillEditor } from '@vueup/vue-quill';
+import { CalendarDays, IdCard, Stethoscope, UserRoundSearch, CalendarRange, CircleCheck, Clock, Microscope, FileText, } from 'lucide-vue-next';
+import { ref, computed } from 'vue';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { dashboard, home } from '@/routes';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { ref, computed } from 'vue';
-import { novaCitaStore as store } from '@/routes';
-import { Form, usePage } from '@inertiajs/vue3';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/components/ui/select';
+import { useNewDateAppointment } from '@/composables/useNewDateAppointment';
 import textNotify from '@/pages/components/textNotify.vue';
+import { dashboard, home, novaCitaStore as store } from '@/routes';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 const page = usePage();
 
@@ -60,82 +47,32 @@ const props = defineProps<{
     testTypes: TestType[];
 }>();
 
-const dataCita = ref('');
-const professionalId = ref('');
 const showAll = ref(false);
-const patientId = ref<number | null>(null);
-const selectedTestId = ref<number | null>(null);
-const isAvaible = ref(false);
-const cip = ref('');
-const patientAvailable = ref(true);
-const confirmedPatient = ref('');
-const testMinutes = ref<number | null>(null);
-const timeValidationMessage = ref('');
-const estimatedMinutes = ref<number | null>(null);
-const validatedClass = ref(
-    'border-gray-200 focus:border-gray-900 focus:ring-gray-900',
-);
-const extraTime = ref(0);
+const description = ref('');
+const {
+    dataCita,
+    professionalId,
+    patientId,
+    selectedTestId,
+    isAvaible,
+    cip,
+    confirmedPatient,
+    testMinutes,
+    timeValidationMessage,
+    estimatedMinutes,
+    validatedClass,
+    slotsMessage,
+    startTimeOptions,
+    selectedStartTime,
+    extraTime,
+    selectedDateTime,
+    validatePatient,
+    validateTimeTest,
+    validateDoctorSlots,
+} = useNewDateAppointment();
+
 const flashMessage = computed(() => (page.props.flash as any)?.message);
 const flashStatus = computed(() => (page.props.flash as any)?.status);
-
-function validatePatient() {
-    const currentCip = cip.value.trim();
-    if (!currentCip) {
-        confirmedPatient.value = '';
-        patientId.value = null;
-        extraTime.value = 0;
-        estimatedMinutes.value = testMinutes.value;
-        validatedClass.value = 'border-gray-200 focus:border-gray-900 focus:ring-gray-900';
-        return;
-    }
-    fetch(`/patientConsult/${currentCip}`)
-        .then((response) => response.json())
-        .then((data) => {
-            patientAvailable.value = Boolean(data.available);
-            validatedClass.value = patientAvailable.value
-                ? '!border-green-500 !focus:border-green-500 !focus:ring-green-500'
-                : '!border-red-500 !focus:border-red-500 !focus:ring-red-500';
-
-            patientId.value = patientAvailable.value ? (data?.data?.id ?? null) : null;
-            confirmedPatient.value = patientAvailable.value ? currentCip : '';
-            extraTime.value = data.data.number;
-            estimatedMinutes.value = testMinutes.value !== null ? testMinutes.value + extraTime.value : null;
-            isAvaible.value = true;
-        });
-}
-
-function validateTimeTest(testId: number) {
-    selectedTestId.value = testId;
-    fetch(`/testConsult/${testId}`)
-        .then((response) => response.json())
-        .then((data) => {
-            const status = data?.status;
-            const message = data?.message;
-            const timeTest = data?.data?.number;
-
-            if (status !== 'success') {
-                testMinutes.value = null;
-                estimatedMinutes.value = null;
-                timeValidationMessage.value =
-                    message || "No s'ha pogut validar el temps de la prova.";
-                return;
-            }
-
-            const testDuration = Number(timeTest) || 0;
-
-            testMinutes.value = testDuration;
-            estimatedMinutes.value = testDuration + extraTime.value;
-            timeValidationMessage.value =
-                message || `Temps estimat ${estimatedMinutes.value} min`;
-        })
-        .catch(() => {
-            testMinutes.value = null;
-            estimatedMinutes.value = null;
-            timeValidationMessage.value =
-                'Error de connexió validant el temps de la prova.';
-        });
-}
 
 const resumPacient = computed(
     () => confirmedPatient.value || "Pendent d'identificació",
@@ -149,25 +86,24 @@ const resumProfessional = computed(() => {
     return selectedDoctor?.name || 'Pendent de professional';
 });
 
-const resumData = computed(() =>
-    dataCita.value
-        ? new Date(dataCita.value).toLocaleDateString('ca-ES', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-          })
-        : 'Pendent de data',
-);
-
 const resumMinutsProva = computed(() =>
     testMinutes.value !== null ? `${testMinutes.value} min` : 'Pendent',
 );
 const resumMinutsNecessitats = computed(() => `${extraTime.value} min`);
-const resumMinutsTotals = computed(() =>
-    estimatedMinutes.value !== null
-        ? `${estimatedMinutes.value} min`
-        : 'Pendent',
-);
+
+const resumDataTime = computed(() => {
+    if (selectedDateTime.value) {
+        const date = new Date(selectedDateTime.value);
+        return date.toLocaleString('ca-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    }
+    return 'Pendent de data i hora';
+})
 
 const visibleItems = computed(() => {
     if (showAll.value) {
@@ -176,6 +112,7 @@ const visibleItems = computed(() => {
 
     return props.testTypes.slice(0, 6);
 });
+
 </script>
 
 <template>
@@ -186,9 +123,12 @@ const visibleItems = computed(() => {
             class="mt-6 flex h-full flex-1 flex-col gap-4 px-4 pb-8 sm:mt-8 sm:px-6 lg:mt-10 lg:px-8"
         >
             <Form v-bind="store.form()" class="flex flex-col gap-6">
+                <input type="hidden" name="date_time" :value="selectedDateTime" />
                 <input type="hidden" name="time" :value="estimatedMinutes" />
                 <input type="hidden" name="estat" value="programada" />
                 <input type="hidden" name="worker_id" :value="professionalId" />
+                <input type="hidden" name="description" :value="description" />
+
                 <div
                     class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12"
                 >
@@ -229,7 +169,7 @@ const visibleItems = computed(() => {
                                         TARGETA SANITÀRIA (CIP)
                                     </Label>
                                     <div
-                                        class="mt-3 flex w-full items-center gap-3"
+                                        class="mt-3 flex w-full flex-col gap-3 md:flex-row md:items-center"
                                     >
                                         <Input
                                             id="patient_id"
@@ -247,7 +187,7 @@ const visibleItems = computed(() => {
                                             :value="patientId ?? ''"
                                         />
                                         <button
-                                            class="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green"
+                                            class="inline-flex h-9 w-full shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green md:w-auto"
                                             type="button"
                                             @click="validatePatient"
                                         >
@@ -268,7 +208,7 @@ const visibleItems = computed(() => {
                                         <div
                                             class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
                                         >
-                                            <UserRoundSearch class="size-6" />
+                                            <Microscope class="size-6" />
                                         </div>
                                         <div class="min-w-0">
                                             <CardTitle
@@ -344,6 +284,45 @@ const visibleItems = computed(() => {
                                     <div
                                         class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
                                     >
+                                        <FileText class="size-6" />
+                                    </div>
+                                    <div class="min-w-0">
+                                        <CardTitle
+                                            class="text-xl font-semibold"
+                                        >
+                                            Observacions de la Cita
+                                        </CardTitle>
+                                    </div>
+                                </div>
+                            </CardHeader>
+
+                            <CardContent class="pt-0">
+                                <div class="mt-4 grid gap-4">
+                                    
+                                    <QuillEditor
+                                        id="description"
+                                        v-model:content="description"
+                                        contentType="html"
+                                        theme="snow"
+                                        name="description"
+                                        rows="4"
+                                        class="min-h-24 w-full min-w-0 overflow-hidden rounded-md border border-pmf-primary/30 bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:border-pmf-primary focus-within:ring-2 focus-within:ring-pmf-primary/30 md:text-sm [&_.ql-toolbar.ql-snow]:border-0 [&_.ql-toolbar.ql-snow]:border-b [&_.ql-toolbar.ql-snow]:border-pmf-primary/20 [&_.ql-toolbar.ql-snow]:bg-pmf-secondary/40 [&_.ql-container.ql-snow]:border-0 [&_.ql-editor]:relative [&_.ql-editor]:min-h-32 [&_.ql-editor]:px-3 [&_.ql-editor]:py-2 [&_.ql-editor]:text-foreground [&_.ql-editor.ql-blank::before]:left-3 [&_.ql-editor.ql-blank::before]:right-3 [&_.ql-editor.ql-blank::before]:top-2 [&_.ql-editor.ql-blank::before]:text-muted-foreground [&_.ql-editor.ql-blank::before]:not-italic [&_.ql-stroke]:stroke-pmf-primary [&_.ql-fill]:fill-pmf-primary [&_.ql-picker]:text-pmf-primary [&_.ql-snow_.ql-picker-options]:border-pmf-primary/20"
+                                        placeholder="Afegeix observacions de la cita..."
+                                    />
+                                    
+
+                                </div>
+                             </CardContent>
+                        </Card>
+
+                        <Card
+                            class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
+                        >
+                            <CardHeader class="pb-0">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
+                                    >
                                         <CalendarRange class="size-6" />
                                     </div>
                                     <div class="min-w-0">
@@ -357,7 +336,7 @@ const visibleItems = computed(() => {
                             </CardHeader>
 
                             <CardContent class="pt-0">
-                                <div class="mt-4 grid gap-4 md:grid-cols-2">
+                                <div class="mt-4 grid gap-4 md:grid-cols-3">
                                     <div class="w-full">
                                         <Label
                                             for="date-time"
@@ -368,7 +347,6 @@ const visibleItems = computed(() => {
                                         <Input
                                             id="date-time"
                                             type="date"
-                                            name="date_time"
                                             v-model="dataCita"
                                             class="mt-3 h-9 bg-background"
                                             placeholder="Ex: ABCD 0123456789"
@@ -380,7 +358,7 @@ const visibleItems = computed(() => {
                                             for="worker_id"
                                             class="mb-3 text-xs font-semibold tracking-widest text-muted-foreground"
                                         >
-                                            METGE / DOCTOR
+                                            DOCTOR
                                         </Label>
                                         <Select
                                             id="worker_id"
@@ -391,7 +369,7 @@ const visibleItems = computed(() => {
                                                 class="w-full bg-white"
                                             >
                                                 <SelectValue
-                                                    placeholder="Selecciona un professional de la salut"
+                                                    placeholder="Selecciona un professional"
                                                 />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -407,7 +385,54 @@ const visibleItems = computed(() => {
                                             </SelectContent>
                                         </Select>
                                     </div>
+                                    <button
+                                            class="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green mt-7 text-sm"
+                                            type="button"
+                                            @click="validateDoctorSlots"
+                                        >
+                                            <CircleCheck class="mr-3 size-5" />
+                                            Veure dates disponibles
+                                        </button>
+                                    
                                 </div>
+                                <div class="mt-4 rounded-md border border-pmf-primary/20 bg-white p-4">
+                                    <p class="text-sm font-medium text-pmf-primary">
+                                        Franges horaries del doctor
+                                    </p>
+
+                                    <p class="mt-2 text-sm text-muted-foreground">
+                                        {{ slotsMessage }}
+                                    </p>
+
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <label
+                                            v-for="startTime in startTimeOptions"
+                                            :key="startTime"
+                                            class="cursor-pointer"
+                                        >
+                                            <input
+                                                v-model="selectedStartTime"
+                                                type="radio"
+                                                name="start_time"
+                                                :value="startTime"
+                                                class="peer sr-only"
+                                            />
+                                            <span
+                                                class="inline-flex items-center rounded-md border border-pmf-primary/25 px-3 py-1.5 text-sm text-pmf-primary transition hover:bg-pmf-secondary/70 peer-checked:border-pmf-primary peer-checked:bg-pmf-primary peer-checked:text-pmf-secondary"
+                                            >
+                                                {{ startTime }}
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <p
+                                        v-if="selectedDateTime"
+                                        class="mt-3 text-sm font-medium text-pmf-primary"
+                                    >
+                                        Data i hora seleccionada: {{ selectedDateTime }}
+                                    </p>
+                                </div>
+
                                 <div class="mt-4 w-full">
                                     <Label
                                         for="urgencia"
@@ -485,7 +510,7 @@ const visibleItems = computed(() => {
                                                 Data
                                             </div>
                                             <div class="truncate font-semibold">
-                                                {{ resumData }}
+                                                {{ resumDataTime }}
                                             </div>
                                         </div>
                                     </div>

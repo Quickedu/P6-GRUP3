@@ -52,8 +52,8 @@ Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
     Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
     Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
     // Logout (disponible para todos los workers: admin, doctor, secretary)
-    Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
-    Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
+    // Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
+    // Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
     Route::post('work/logout', [LoginAdminController::class, 'destroy'])->name('loginworkerDestroy');
 });
 
