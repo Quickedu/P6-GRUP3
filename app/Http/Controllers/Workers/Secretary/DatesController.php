@@ -29,7 +29,7 @@ class DatesController extends Controller
     public function store(StoreDateRequest $request)
     {
         $data = $request->validated();
-    
+
         Date::create($data);
 
         return redirect()->back()->with(['status' => 'correcte', 'message' => 'Cita creada correctamente']);
