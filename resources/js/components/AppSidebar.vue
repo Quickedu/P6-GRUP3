@@ -12,7 +12,7 @@ import {
     SidebarFooter,
     SidebarHeader,
 } from '@/components/ui/sidebar';
-import { dashboard, novaCita, patientDashboard } from '@/routes';
+import { dashboard, novaCita, patientDashboard, patientsList } from '@/routes';
 import type { NavItem } from '@/types';
 import { Microscope, Users, BookUser, History, Cross } from 'lucide-vue-next';
 import { Settings } from 'lucide-vue-next';
@@ -47,7 +47,7 @@ const AdminNavItems: NavItem[] = [
     },
     {
         title: 'Pacients',
-        href: '/',
+        href: patientsList(),
         icon: Users,
     },
     {
@@ -88,7 +88,7 @@ const WorkerNavItems: NavItem[] = [
     },
     {
         title: 'Pacients',
-        href: '/',
+        href: patientsList(),
         icon: Users,
     },
     {

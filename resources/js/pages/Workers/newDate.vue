@@ -132,15 +132,22 @@ const visibleItems = computed(() => {
                 <div
                     class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12"
                 >
-                    <div class="lg:col-span-8">
-                        <h1
-                            class="text-3xl font-extrabold tracking-tight text-pmf-primary sm:text-4xl"
-                        >
-                            Crear Nova Cita
-                        </h1>
-                        <p class="mt-2 text-muted-foreground">
-                            Empleneu els detalls per programar una nova cita
-                        </p>
+                    <div class="lg:col-span-8 flex flex-col">
+                        <div class="">
+                            <h1 class="text-3xl font-extrabold tracking-tight text-pmf-primary sm:text-4xl"
+                            >Crear Nova Cita
+                            </h1>
+                            <p class="mt-2 text-muted-foreground">
+                                Empleneu els detalls per programar una nova citatext
+                            </p>
+                        </div>
+                        <!-- Detall de la cita -->
+                        <textNotify
+                            class="mb-4"
+                            v-if="flashMessage"
+                            :message="flashMessage"
+                            :status="flashStatus"
+                        />
                         <Card
                             class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
                         >
@@ -465,12 +472,6 @@ const visibleItems = computed(() => {
                     <div
                         class="lg:sticky lg:top-34 lg:col-span-4 lg:self-start"
                     >
-                        <textNotify
-                            class="mb-4"
-                            v-if="flashMessage"
-                            :message="flashMessage"
-                            :status="flashStatus"
-                        />
                         <Card
                             class="gap-4 border-0 bg-pmf-secondary/50 py-6 shadow-none"
                         >
