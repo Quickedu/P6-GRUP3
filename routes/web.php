@@ -3,6 +3,7 @@
 use App\Http\Controllers\LoginAdminController;
 use App\Http\Controllers\LoginPatientController;
 use App\Http\Controllers\Patients\DashboardPatientController;
+use App\Http\Controllers\Workers\Secretary\PatientsListController;
 use App\Http\Controllers\Workers\Secretary\DatesController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,7 +40,6 @@ Route::middleware('guest')->group(function () {
 });
 
 // PRIVATE
-
 // PATIENT AREA
 Route::middleware(['auth:patient'])->group(function () {
     Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
@@ -48,12 +48,7 @@ Route::middleware(['auth:patient'])->group(function () {
 
 // WORKERS COMMON AREA
 Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
-    // New Appointment
-    Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
-    Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
-    // Logout (disponible para todos los workers: admin, doctor, secretary)
-    // Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
-    // Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
+    // Logout
     Route::post('work/logout', [LoginAdminController::class, 'destroy'])->name('loginworkerDestroy');
 });
 
@@ -62,9 +57,18 @@ Route::middleware(['auth:admin', 'Admin', 'verified'])->group(function () {});
 
 // SECRETARY AREA
 Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
+    // New Appointment
+    Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
+    Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
+    Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
+    Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
+    //
     Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
     Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
     Route::get('/doctorConsult/{id}', [DatesController::class, 'ajaxDoctor'])->name('ajax-doctor');
+    //Patients List
+    Route::get('/patientsList', [PatientsListController::class, 'index'])->name('patientsList');
+    Route::post('/patients/{id}', [PatientsListController::class, 'update']);
 });
 
 // DOCTOR AREA

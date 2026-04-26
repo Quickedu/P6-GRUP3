@@ -67,7 +67,7 @@ const statusBadgeClasses = computed(() => {
 <template>
 	<div
 		v-if="visible"
-		class="rounded-lg border px-4 py-3 text-sm"
+		class="rounded-lg border px-4 py-3 text-sm text-white bg-pmf-primary"
 		:class="statusClasses"
 		role="status"
 		aria-live="polite"
