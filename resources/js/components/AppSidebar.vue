@@ -22,6 +22,8 @@ const user = computed(() => page.props.auth?.user);
 
 const isPatient = computed(() => !user.value?.role);
 const isAdmin = computed(() => user.value?.role === 'admin');
+const isDoctor = computed(() => user.value?.role === 'doctor');
+const isSecretary = computed(() => user.value?.role === 'secretary');
 const isWorker = computed(() => user.value?.role === 'doctor' || user.value?.role === 'secretary');
 
 const AdminNavItems: NavItem[] = [
@@ -75,7 +77,29 @@ const PatientNavItems: NavItem[] = [
     },
 ];
 
-const WorkerNavItems: NavItem[] = [
+const DoctorNavItems: NavItem[] = [
+    {
+        title: 'Inici',
+        href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Pacients',
+        href: patientsList(),
+        icon: Users,
+    },
+    {
+        title: 'Necessitats dels pacients',
+        href: '/',
+        icon: Cross,
+    },
+    {
+        title: 'Historial de cites',
+        href: '/',
+        icon: History,
+    },
+];
+const SecretaryNavItems: NavItem[] = [
     {
         title: 'Inici',
         href: dashboard(),
@@ -96,12 +120,7 @@ const WorkerNavItems: NavItem[] = [
         href: '/',
         icon: Cross,
     },
-    {
-        title: 'Historial de cites',
-        href: '/',
-        icon: History,
-    },
-];
+]
 
 const footerNavItems: NavItem[] = [
     {
@@ -123,8 +142,9 @@ const footerNavItems: NavItem[] = [
         <SidebarContent class="pmf-sidebar-content">
             <!-- <NavMain :items="mainNavItems" /> -->
             <NavMain label="Administració" v-if="isAdmin" :items="AdminNavItems" />
-            <NavMain label="Treballadors" v-if="isWorker" :items="WorkerNavItems" />
+            <NavMain label="Doctor" v-if="isDoctor" :items="DoctorNavItems" />
             <NavMain label="Pacients" v-if="isPatient" :items="PatientNavItems" />
+            <NavMain label="Secretary" v-if="isSecretary" :items="SecretaryNavItems" />
         </SidebarContent>
 
         <SidebarFooter class="pmf-sidebar-footer">

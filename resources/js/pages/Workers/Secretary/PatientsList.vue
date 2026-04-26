@@ -8,6 +8,8 @@ import textNotify from '@/pages/components/textNotify.vue';
 
 const search = ref('');
 const page = usePage();
+const user = computed(() => page.props.auth?.user)
+const isSecretary = computed(() => user.value?.role === 'secretary');
 
 interface Patient {
     id: number;
@@ -40,6 +42,7 @@ const handleSearch = () => {
         replace: true,
     });
 };
+
 </script>
 
 <template>
@@ -98,7 +101,7 @@ const handleSearch = () => {
                         <td class="px-4 py-3 text-pmf-grey-light">{{ patient.nts }}</td>
                         <td class="px-4 py-3 text-pmf-grey-light">{{ patient.phone }}</td>
                         <td class="px-4 py-3 text-pmf-grey-light">{{ patient.email }}</td>
-                        <td class="px-4 py-3">
+                        <td v-if="isSecretary" class="px-4 py-3">
                             <button
                                 @click="openEditModal(patient)"
                                 class="inline-flex items-center gap-1.5 rounded-lg border border-[#b0ceca] bg-pmf-primary px-2.5 py-1.5 text-md font-medium text-white transition-colors hover:bg-pmf-primary cursor-pointer"
