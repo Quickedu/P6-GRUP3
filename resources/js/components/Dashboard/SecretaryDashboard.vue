@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { Head, Link, usePage } from '@inertiajs/vue3'
   import { computed } from 'vue';
-  import { Calendar, Clock, AlertCircle, User, FileText, Zap } from 'lucide-vue-next';
+  import { Calendar, Clock, AlertCircle, Stethoscope, User, FileText, Zap } from 'lucide-vue-next';
 
   interface Date {
     id: number;
@@ -46,11 +46,13 @@
     };
     return colors[urgency] || 'bg-gray-100 text-gray-800';
   };
+
+  //show only today dates, paginar
 </script>
 
 <template>
   <div class="w-full">
-    <h2 class="mb-4 text-2xl font-bold">Dashboard Secretari</h2>
+    <h2 class="mb-4 text-2xl font-bold">Agenda</h2>
     
     <div v-if="dates.length > 0" class="space-y-4">
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -58,33 +60,34 @@
           <div class="flex items-start justify-between mb-3">
             <div class="flex-1">
               <div class="flex items-center">
-                <span class="font-medium mr-1">Test:</span> {{ date.test?.name }}
+                <span class="font-medium font-semibold mr-1">Test:</span> {{ date.test?.name }}
               </div>
             </div>
             <span :class="`inline-block px-2 py-1 rounded text-xs font-medium ${getUrgencyColor(date.urgencia)}`">
               {{ date.urgencia }}
             </span>
           </div>
-          
-          <p class="text-sm text-gray-600 mb-3">
-            <span class="font-medium">Patient:</span> {{ date.patient?.name }} ({{ date.patient?.nts }})
-          </p>
 
-          <p class="text-sm text-gray-600 mb-3 flex inline-flex">
-            <User class="mr-2 h-5 w-5 text-blue-500" />
-            <span class="font-semibold text-gray-900">{{ date.worker?.user?.name || 'N/A' }}</span>
-          </p>
+          <div v-if="date.description" class="flex items-start text-sm mb-4">
+            <FileText class="mr-2 h-4 w-4 flex-shrink-0 text-gray-500" />
+            <p class="text-gray-600 line-clamp-2">{{ date.description }}</p>
+          </div>
+
+          <div class="flex flex-col font-medium text-gray-900">
+            <p class="text-sm mb-3 flex inline-flex">
+              <User class="mr-2 h-5 w-5 text-blue-500" />
+              <span>{{ date.patient?.name }} ({{ date.patient?.nts }})</span>
+            </p>
+
+            <p class="text-sm mb-3 flex inline-flex">
+              <Stethoscope class="mr-2 h-5 w-5 text-blue-500" />
+              <span>{{ date.worker?.user?.name || 'N/A' }}</span>
+            </p>
+          </div>
           
-          <div class="space-y-2">
-            <div class="flex items-center text-sm text-gray-500">
-              <Calendar class="mr-2 h-4 w-4" />
-              {{ new Date(date.date_time).toLocaleDateString('ca-ES') }}
-            </div>
-            
-            <div v-if="date.description" class="flex items-start text-sm">
-              <FileText class="mr-2 h-4 w-4 flex-shrink-0 text-gray-500" />
-              <p class="text-gray-600">{{ date.description }}</p>
-            </div>
+          <div class="flex items-center text-sm text-gray-500">
+            <Calendar class="mr-2 h-4 w-4" />
+            {{ new Date(date.date_time).toLocaleDateString('ca-ES') }} {{ new Date(date.date_time).toLocaleString('ca-ES', { hour: '2-digit', minute: '2-digit' }) }}
           </div>
         </div>
       </div>
