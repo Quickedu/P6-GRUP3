@@ -40,14 +40,16 @@ class GetDoctorAvailabilityAction
         }
 
         $requestedMinutes = $time + 10;
-        $day = CarbonImmutable::createFromFormat('Y-m-d', $date);
+        $day = CarbonImmutable::createFromFormat('Y-m-d', $date)->startOfDay();
         $workStart = $day->setTime(8, 0);
         $workEnd = $day->setTime(15, 0);
+        $dayStart = $day->startOfDay();
+        $dayEnd = $day->endOfDay();
 
         $appointments = Date::query()
             ->where('worker_id', $workerId)
-            ->whereDate('date_time', $date)
-            ->where('estat', 'programada')
+            ->whereBetween('date_time', [$dayStart, $dayEnd])
+            ->where('estat', '!=', 'cancel·lada')
             ->orderBy('date_time')
             ->get(['date_time', 'time']);
 

@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Inertia\Testing\AssertableInertia as Assert;
 
 uses(RefreshDatabase::class);
 
@@ -98,6 +99,110 @@ test('it returns free doctor slots that fit requested time plus ten minutes', fu
         '9:50 - 12:00',
         '13:00 - 15:00',
     ]);
+});
+
+test('it blocks start times inside an existing appointment on the selected day', function () {
+    $doctorUserId = DB::table('users')->insertGetId([
+        'name' => 'Doctor Busy',
+        'email' => 'doctor.busy@example.com',
+        'role' => 'doctor',
+        'password' => bcrypt('password'),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $doctorWorkerId = DB::table('workers')->insertGetId([
+        'user_id' => $doctorUserId,
+        'nss' => 'NSS900002',
+        'address' => 'Test address',
+        'dni' => '90000002A',
+        'phone' => 600100003,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $secretaryUser = User::factory()->create([
+        'role' => 'secretary',
+    ]);
+
+    DB::table('patients')->insert([
+        'id' => 1,
+        'name' => 'Patient Busy',
+        'nts' => 'NTS900002',
+        'address' => 'Test address',
+        'dni' => '10000002Z',
+        'phone' => 600100004,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    DB::table('test_types')->insert([
+        'id' => 1,
+        'name' => 'Test Type',
+        'time' => 5,
+    ]);
+
+    DB::table('dates')->insert([
+        'patient_id' => 1,
+        'worker_id' => $doctorWorkerId,
+        'test_id' => 1,
+        'date_time' => '2026-04-22 09:30:00',
+        'time' => 50,
+        'estat' => 'programada',
+        'urgencia' => 'no urgent',
+        'description' => 'Control de prova',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $response = $this
+        ->actingAs($secretaryUser, 'admin')
+        ->getJson(route('ajax-doctor', ['id' => $doctorUserId, 'date' => '2026-04-22', 'time' => 5]));
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('status', 'success');
+    $response->assertJsonPath('data.required_minutes', 15);
+    $response->assertJsonPath('data.slots', [
+        '8:00 - 9:30',
+        '10:20 - 15:00',
+    ]);
+});
+
+test('it provides worker mapping for doctors on new appointment page', function () {
+    $doctorUserId = DB::table('users')->insertGetId([
+        'name' => 'Doctor Mapping',
+        'email' => 'doctor.mapping@example.com',
+        'role' => 'doctor',
+        'password' => bcrypt('password'),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $doctorWorkerId = DB::table('workers')->insertGetId([
+        'user_id' => $doctorUserId,
+        'nss' => 'NSS900003',
+        'address' => 'Test address',
+        'dni' => '90000003A',
+        'phone' => 600100005,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $secretaryUser = User::factory()->create([
+        'role' => 'secretary',
+    ]);
+
+    $response = $this
+        ->actingAs($secretaryUser, 'admin')
+        ->get(route('nova-cita'));
+
+    $response->assertSuccessful();
+    $response->assertInertia(fn (Assert $page) => $page
+        ->component('Workers/newDate')
+        ->has('doctors', 1)
+        ->where('doctors.0.id', $doctorUserId)
+        ->where('doctors.0.worker_id', $doctorWorkerId)
+    );
 });
 
 test('it returns test time for an existing test type', function () {

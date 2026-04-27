@@ -3,6 +3,7 @@ import { Form, Head, usePage } from '@inertiajs/vue3';
 import { QuillEditor } from '@vueup/vue-quill';
 import { CalendarDays, IdCard, Stethoscope, UserRoundSearch, CalendarRange, CircleCheck, Clock, Microscope, FileText, } from 'lucide-vue-next';
 import { ref, computed } from 'vue';
+import InputError from '@/components/InputError.vue';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -31,6 +32,7 @@ defineOptions({
 
 interface Doctor {
     id: number;
+    worker_id: number;
     name: string;
     email: string;
     role: string;
@@ -86,6 +88,58 @@ const resumProfessional = computed(() => {
     return selectedDoctor?.name || 'Pendent de professional';
 });
 
+const selectedWorkerId = computed(() => {
+    const selectedDoctor = props.doctors.find(
+        (doctor) => doctor.id.toString() === professionalId.value,
+    );
+
+    return selectedDoctor ? selectedDoctor.worker_id.toString() : '';
+});
+
+const canSubmit = computed(() =>
+    Boolean(
+        patientId.value
+        && selectedTestId.value
+        && selectedDateTime.value
+        && selectedWorkerId.value
+        && estimatedMinutes.value !== null,
+    ),
+);
+
+const submitHint = computed(() => {
+    const missingSteps: string[] = [];
+
+    if (!patientId.value) {
+        missingSteps.push('validar pacient');
+    }
+
+    if (!selectedTestId.value) {
+        missingSteps.push('seleccionar prova');
+    }
+
+    if (!professionalId.value) {
+        missingSteps.push('seleccionar doctor');
+    }
+
+    if (!selectedDateTime.value) {
+        missingSteps.push('escollir hora d\'inici');
+    }
+
+    if (missingSteps.length === 0) {
+        return '';
+    }
+
+    return `Per confirmar la cita falta: ${missingSteps.join(', ')}`;
+});
+
+const plainDescription = computed(() => description.value
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim());
+
+const descriptionForSubmit = computed(() => plainDescription.value.slice(0, 255));
+
 const resumMinutsProva = computed(() =>
     testMinutes.value !== null ? `${testMinutes.value} min` : 'Pendent',
 );
@@ -94,6 +148,7 @@ const resumMinutsNecessitats = computed(() => `${extraTime.value} min`);
 const resumDataTime = computed(() => {
     if (selectedDateTime.value) {
         const date = new Date(selectedDateTime.value);
+
         return date.toLocaleString('ca-ES', {
             day: '2-digit',
             month: '2-digit',
@@ -102,8 +157,9 @@ const resumDataTime = computed(() => {
             minute: '2-digit',
         });
     }
+
     return 'Pendent de data i hora';
-})
+});
 
 const visibleItems = computed(() => {
     if (showAll.value) {
@@ -124,6 +180,7 @@ const visibleItems = computed(() => {
         >
             <Form
                 v-bind="store.form()"
+                v-slot="{ errors, processing }"
                 class="flex flex-col gap-6"
                 aria-describedby="appointment-form-help"
             >
@@ -134,8 +191,8 @@ const visibleItems = computed(() => {
                 <input type="hidden" name="date_time" :value="selectedDateTime" />
                 <input type="hidden" name="time" :value="estimatedMinutes" />
                 <input type="hidden" name="estat" value="programada" />
-                <input type="hidden" name="worker_id" :value="professionalId" />
-                <input type="hidden" name="description" :value="description" />
+                <input type="hidden" name="worker_id" :value="selectedWorkerId" />
+                <input type="hidden" name="description" :value="descriptionForSubmit" />
 
                 <div
                     class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12"
@@ -220,6 +277,7 @@ const visibleItems = computed(() => {
                                             Comprovar usuari
                                         </button>
                                     </div>
+                                    <InputError :message="errors.patient_id" class="mt-2" />
                                 </div>
                             </CardContent>
                         </Card>
@@ -315,6 +373,7 @@ const visibleItems = computed(() => {
                                             {{ estimatedMinutes }} min
                                         </span>
                                     </p>
+                                    <InputError :message="errors.test_id" class="col-span-full text-center" />
                                 </div>
                             </Card>
                         </div>
@@ -356,7 +415,6 @@ const visibleItems = computed(() => {
                                         v-model:content="description"
                                         contentType="html"
                                         theme="snow"
-                                        name="description"
                                         rows="4"
                                         class="min-h-24 w-full min-w-0 overflow-hidden rounded-md border border-pmf-primary/30 bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:border-pmf-primary focus-within:ring-2 focus-within:ring-pmf-primary/30 md:text-sm [&_.ql-toolbar.ql-snow]:border-0 [&_.ql-toolbar.ql-snow]:border-b [&_.ql-toolbar.ql-snow]:border-pmf-primary/20 [&_.ql-toolbar.ql-snow]:bg-pmf-secondary/40 [&_.ql-container.ql-snow]:border-0 [&_.ql-editor]:relative [&_.ql-editor]:min-h-32 [&_.ql-editor]:px-3 [&_.ql-editor]:py-2 [&_.ql-editor]:text-foreground [&_.ql-editor.ql-blank::before]:left-3 [&_.ql-editor.ql-blank::before]:right-3 [&_.ql-editor.ql-blank::before]:top-2 [&_.ql-editor.ql-blank::before]:text-muted-foreground [&_.ql-editor.ql-blank::before]:not-italic [&_.ql-stroke]:stroke-pmf-primary [&_.ql-fill]:fill-pmf-primary [&_.ql-picker]:text-pmf-primary [&_.ql-snow_.ql-picker-options]:border-pmf-primary/20"
                                         placeholder="Afegeix observacions de la cita..."
@@ -368,8 +426,9 @@ const visibleItems = computed(() => {
                                         class="text-xs text-muted-foreground"
                                     >
                                         Aquest camp es opcional i permet afegir notes
-                                        cliniques per al professional.
+                                        cliniques per al professional (maxim 255 caracters).
                                     </p>
+                                    <InputError :message="errors.description" />
                                 </div>
                              </CardContent>
                         </Card>
@@ -427,7 +486,6 @@ const visibleItems = computed(() => {
                                         </Label>
                                         <Select
                                             id="worker_id"
-                                            name="worker_id"
                                             v-model="professionalId"
                                         >
                                             <SelectTrigger
@@ -518,6 +576,7 @@ const visibleItems = computed(() => {
                                     >
                                         Data i hora seleccionada: {{ selectedDateTime }}
                                     </p>
+                                    <InputError :message="errors.date_time" class="mt-2" />
                                 </div>
 
                                 <div class="mt-4 w-full">
@@ -551,6 +610,7 @@ const visibleItems = computed(() => {
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
+                                    <InputError :message="errors.urgencia" class="mt-2" />
                                 </div>
                             </CardContent>
                         </Card>
@@ -655,15 +715,25 @@ const visibleItems = computed(() => {
                                         class="mt-6 flex w-full items-center justify-center"
                                     >
                                         <div class="w-full sm:w-auto">
+                                            <p
+                                                v-if="submitHint"
+                                                class="mb-3 text-sm text-muted-foreground"
+                                                role="status"
+                                                aria-live="polite"
+                                            >
+                                                {{ submitHint }}
+                                            </p>
+
                                             <button
-                                                class="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 sm:w-auto"
+                                                class="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                                                 type="submit"
+                                                :disabled="!canSubmit || processing"
                                             >
                                                 <CircleCheck
                                                     class="mr-3 size-5"
                                                     aria-hidden="true"
                                                 />
-                                                Confirmar Nova Cita
+                                                {{ processing ? 'Guardant...' : 'Confirmar Nova Cita' }}
                                             </button>
                                         </div>
                                     </div>

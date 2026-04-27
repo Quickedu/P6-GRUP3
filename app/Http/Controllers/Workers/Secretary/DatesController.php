@@ -18,7 +18,12 @@ class DatesController extends Controller
 {
     public function index()
     {
-        $doctors = User::where('role', '=', 'doctor')->get();
+        $doctors = User::query()
+            ->select('users.id', 'users.name', 'users.email', 'users.role', 'workers.id as worker_id')
+            ->join('workers', 'workers.user_id', '=', 'users.id')
+            ->where('users.role', 'doctor')
+            ->orderBy('users.name')
+            ->get();
         $testTypes = Test::get();
 
         return Inertia::render('Workers/newDate', [
@@ -30,7 +35,6 @@ class DatesController extends Controller
     public function store(StoreDateRequest $request)
     {
         $data = $request->validated();
-
         Date::create($data);
 
         return redirect()->back()->with(['status' => 'correcte', 'message' => 'Cita creada correctamente']);
