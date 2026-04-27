@@ -19,7 +19,7 @@ class GetPatientConsultationAction
                 'message' => 'Pacient no trobat',
                 'available' => false,
                 'data' => [
-                    
+
                 ],
             ];
         }
@@ -30,7 +30,9 @@ class GetPatientConsultationAction
             return [
                 'status' => 'success',
                 'message' => 'Pacient trobat, no té necessitats associades',
+                'available' => true,
                 'data' => [
+                    'id' => $patient->id,
                     'number' => 0,
                 ],
             ];
