@@ -375,6 +375,78 @@
     animation: fadeSlideUp 0.4s ease-out 0.3s both;
 }
 
+.event-popover {
+    position: fixed;
+    z-index: 50;
+    width: 240px;
+    background: white;
+    border: 0.5px solid #c5d8d5;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 4px 16px rgba(0, 48, 41, 0.12);
+    transform: translateX(-50%);
+}
+
+/*Calendar design*/
+.fc .fc-toolbar-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--pmf-green-dark);
+    text-transform: capitalize;
+}
+.fc .fc-button-primary {
+    background-color: var(--pmf-primary) !important;
+    border-color: var(--pmf-primary) !important;
+}
+.fc .fc-button-primary:hover {
+    background-color: var(--pmf-green) !important;
+}
+.fc .fc-day-today {
+    background-color: rgba(0, 101, 87, 0.06) !important;
+}
+.fc .fc-col-header-cell-cushion {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--pmf-green);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.fc-event-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 3px 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 100%;
+    cursor: pointer;
+}
+
+.fc-event-time-label {
+    font-size: 10px;
+    font-weight: 600;
+    opacity: 0.75;
+    white-space: nowrap;
+}
+
+.fc-event-title-label {
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fc-event-status-label {
+    font-size: 10px;
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: capitalize;
+}
+
 /* CSS Variables */
 :root {
     --background: hsl(0 0% 100%);
