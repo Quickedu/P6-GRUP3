@@ -122,7 +122,15 @@ const visibleItems = computed(() => {
         <div
             class="mt-6 flex h-full flex-1 flex-col gap-4 px-4 pb-8 sm:mt-8 sm:px-6 lg:mt-10 lg:px-8"
         >
-            <Form v-bind="store.form()" class="flex flex-col gap-6">
+            <Form
+                v-bind="store.form()"
+                class="flex flex-col gap-6"
+                aria-describedby="appointment-form-help"
+            >
+                <p id="appointment-form-help" class="sr-only">
+                    Completa les dades del pacient, prova i franja horaria abans de
+                    confirmar la cita.
+                </p>
                 <input type="hidden" name="date_time" :value="selectedDateTime" />
                 <input type="hidden" name="time" :value="estimatedMinutes" />
                 <input type="hidden" name="estat" value="programada" />
@@ -156,7 +164,10 @@ const visibleItems = computed(() => {
                                     <div
                                         class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
                                     >
-                                        <UserRoundSearch class="size-6" />
+                                        <UserRoundSearch
+                                            class="size-6"
+                                            aria-hidden="true"
+                                        />
                                     </div>
                                     <div class="min-w-0">
                                         <CardTitle
@@ -187,6 +198,9 @@ const visibleItems = computed(() => {
                                             :class="validatedClass"
                                             placeholder="Ex: ABCD 0123456789"
                                             autocomplete="off"
+                                            required
+                                            aria-required="true"
+                                            aria-describedby="patient-check-help patient-check-status"
                                         />
                                         <input
                                             type="hidden"
@@ -194,11 +208,15 @@ const visibleItems = computed(() => {
                                             :value="patientId ?? ''"
                                         />
                                         <button
-                                            class="inline-flex h-9 w-full shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green md:w-auto"
+                                            class="inline-flex h-9 w-full shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 md:w-auto"
                                             type="button"
                                             @click="validatePatient"
+                                            aria-describedby="patient-check-help"
                                         >
-                                            <CircleCheck class="mr-3 size-5" />
+                                            <CircleCheck
+                                                class="mr-3 size-5"
+                                                aria-hidden="true"
+                                            />
                                             Comprovar usuari
                                         </button>
                                     </div>
@@ -215,7 +233,10 @@ const visibleItems = computed(() => {
                                         <div
                                             class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
                                         >
-                                            <Microscope class="size-6" />
+                                            <Microscope
+                                                class="size-6"
+                                                aria-hidden="true"
+                                            />
                                         </div>
                                         <div class="min-w-0">
                                             <CardTitle
@@ -228,40 +249,52 @@ const visibleItems = computed(() => {
                                 </CardHeader>
                                 <div
                                     class="grid grid-cols-1 flex-wrap items-center justify-center gap-4 p-5 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
+                                    :aria-describedby="isAvaible ? 'test-selection-status' : 'test-selection-help'"
                                 >
+                                    <legend class="sr-only">
+                                        Seleccio de proves diagnostiques
+                                    </legend>
                                     <label
                                         v-for="test in visibleItems"
                                         :key="test.id"
-                                        class="cursor-pointer"
+                                        :class="isAvaible ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'"
                                     >
                                         <input
-                                            v-if="isAvaible === true"
                                             type="radio"
                                             max="1"
                                             name="test_id"
                                             :value="test.id"
                                             v-model="selectedTestId"
                                             class="peer sr-only"
-                                            aria-label="Seleccionar categoria"
+                                            :aria-label="`Seleccionar prova ${test.name}`"
+                                            :disabled="!isAvaible"
+                                            :aria-disabled="!isAvaible"
                                             @change="validateTimeTest(test.id)"
                                         />
 
                                         <div
-                                            class="flex min-h-29 flex-col items-center justify-center rounded-2xl border-2 bg-white p-5 text-center text-black transition peer-checked:border-pmf-turquoise hover:bg-gray-50"
+                                            class="flex min-h-29 flex-col items-center justify-center rounded-2xl border-2 bg-white p-5 text-center text-black transition hover:bg-gray-50 peer-checked:border-pmf-turquoise peer-focus-visible:ring-2 peer-focus-visible:ring-pmf-primary peer-focus-visible:ring-offset-2"
                                         >
-                                            <span
-                                                class="mt-2 text-sm font-bold"
-                                                >{{ test.name }}</span
-                                            >
+                                            <span class="mt-2 text-sm font-bold">{{ test.name }}</span>
                                         </div>
                                     </label>
+                                    <p
+                                        v-if="!isAvaible"
+                                        id="test-selection-help"
+                                        class="col-span-full text-center text-sm text-muted-foreground"
+                                        role="status"
+                                        aria-live="polite"
+                                    >
+                                        Primer valida el pacient per activar la selecció
+                                        de proves.
+                                    </p>
                                     <div
                                         class="col-span-full flex items-center justify-center"
                                     >
                                         <button
                                             v-if="!showAll"
                                             @click="showAll = true"
-                                            class="mt-3 flex cursor-pointer items-center justify-center rounded-full bg-pmf-green px-5 py-3 text-pmf-secondary transition hover:bg-pmf-green/90"
+                                            class="mt-3 flex cursor-pointer items-center justify-center rounded-full bg-pmf-green px-5 py-3 text-pmf-secondary transition hover:bg-pmf-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2"
                                             type="button"
                                         >
                                             Veure totes les proves
@@ -269,7 +302,10 @@ const visibleItems = computed(() => {
                                     </div>
                                     <p
                                         v-if="timeValidationMessage"
+                                        id="test-selection-status"
                                         class="col-span-full text-center text-sm text-muted-foreground"
+                                        role="status"
+                                        aria-live="polite"
                                     >
                                         Temps estimat
                                         <span
@@ -291,7 +327,10 @@ const visibleItems = computed(() => {
                                     <div
                                         class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
                                     >
-                                        <FileText class="size-6" />
+                                        <FileText
+                                            class="size-6"
+                                            aria-hidden="true"
+                                        />
                                     </div>
                                     <div class="min-w-0">
                                         <CardTitle
@@ -305,9 +344,15 @@ const visibleItems = computed(() => {
 
                             <CardContent class="pt-0">
                                 <div class="mt-4 grid gap-4">
-                                    
+                                    <Label
+                                        for="description-editor"
+                                        class="text-xs font-semibold tracking-widest text-muted-foreground"
+                                    >
+                                        OBSERVACIONS DE LA CITA
+                                    </Label>
+
                                     <QuillEditor
-                                        id="description"
+                                        id="description-editor"
                                         v-model:content="description"
                                         contentType="html"
                                         theme="snow"
@@ -315,9 +360,16 @@ const visibleItems = computed(() => {
                                         rows="4"
                                         class="min-h-24 w-full min-w-0 overflow-hidden rounded-md border border-pmf-primary/30 bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:border-pmf-primary focus-within:ring-2 focus-within:ring-pmf-primary/30 md:text-sm [&_.ql-toolbar.ql-snow]:border-0 [&_.ql-toolbar.ql-snow]:border-b [&_.ql-toolbar.ql-snow]:border-pmf-primary/20 [&_.ql-toolbar.ql-snow]:bg-pmf-secondary/40 [&_.ql-container.ql-snow]:border-0 [&_.ql-editor]:relative [&_.ql-editor]:min-h-32 [&_.ql-editor]:px-3 [&_.ql-editor]:py-2 [&_.ql-editor]:text-foreground [&_.ql-editor.ql-blank::before]:left-3 [&_.ql-editor.ql-blank::before]:right-3 [&_.ql-editor.ql-blank::before]:top-2 [&_.ql-editor.ql-blank::before]:text-muted-foreground [&_.ql-editor.ql-blank::before]:not-italic [&_.ql-stroke]:stroke-pmf-primary [&_.ql-fill]:fill-pmf-primary [&_.ql-picker]:text-pmf-primary [&_.ql-snow_.ql-picker-options]:border-pmf-primary/20"
                                         placeholder="Afegeix observacions de la cita..."
+                                        aria-label="Observacions de la cita"
+                                        aria-describedby="description-help"
                                     />
-                                    
-
+                                    <p
+                                        id="description-help"
+                                        class="text-xs text-muted-foreground"
+                                    >
+                                        Aquest camp es opcional i permet afegir notes
+                                        cliniques per al professional.
+                                    </p>
                                 </div>
                              </CardContent>
                         </Card>
@@ -330,7 +382,10 @@ const visibleItems = computed(() => {
                                     <div
                                         class="rounded-lg bg-pmf-secondary p-2 text-pmf-primary"
                                     >
-                                        <CalendarRange class="size-6" />
+                                        <CalendarRange
+                                            class="size-6"
+                                            aria-hidden="true"
+                                        />
                                     </div>
                                     <div class="min-w-0">
                                         <CardTitle
@@ -358,10 +413,13 @@ const visibleItems = computed(() => {
                                             class="mt-3 h-9 bg-background"
                                             placeholder="Ex: ABCD 0123456789"
                                             autocomplete="off"
+                                            required
+                                            aria-required="true"
                                         />
                                     </div>
                                     <div class="w-full">
                                         <Label
+                                            id="worker_id_label"
                                             for="worker_id"
                                             class="mb-3 text-xs font-semibold tracking-widest text-muted-foreground"
                                         >
@@ -373,6 +431,9 @@ const visibleItems = computed(() => {
                                             v-model="professionalId"
                                         >
                                             <SelectTrigger
+                                                id="worker_id_trigger"
+                                                aria-labelledby="worker_id_label worker_id_trigger"
+                                                aria-required="true"
                                                 class="w-full bg-white"
                                             >
                                                 <SelectValue
@@ -393,25 +454,41 @@ const visibleItems = computed(() => {
                                         </Select>
                                     </div>
                                     <button
-                                            class="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green mt-7 text-sm"
+                                            class="mt-7 inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-sm text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                                             type="button"
                                             @click="validateDoctorSlots"
+                                            :disabled="!professionalId || !dataCita || estimatedMinutes === null"
                                         >
-                                            <CircleCheck class="mr-3 size-5" />
+                                            <CircleCheck
+                                                class="mr-3 size-5"
+                                                aria-hidden="true"
+                                            />
                                             Veure dates disponibles
                                         </button>
-                                    
+
                                 </div>
                                 <div class="mt-4 rounded-md border border-pmf-primary/20 bg-white p-4">
-                                    <p class="text-sm font-medium text-pmf-primary">
+                                    <p id="slots-heading" class="text-sm font-medium text-pmf-primary">
                                         Franges horaries del doctor
                                     </p>
 
-                                    <p class="mt-2 text-sm text-muted-foreground">
+                                    <p
+                                        id="slots-message"
+                                        class="mt-2 text-sm text-muted-foreground"
+                                        role="status"
+                                        aria-live="polite"
+                                    >
                                         {{ slotsMessage }}
                                     </p>
 
-                                    <div class="mt-3 flex flex-wrap gap-2">
+                                    <div
+                                        class="mt-3 flex flex-wrap gap-2"
+                                        aria-labelledby="slots-heading"
+                                        aria-describedby="slots-message"
+                                    >
+                                        <legend class="sr-only">
+                                            Seleccio d'hora d'inici disponible
+                                        </legend>
                                         <label
                                             v-for="startTime in startTimeOptions"
                                             :key="startTime"
@@ -423,9 +500,10 @@ const visibleItems = computed(() => {
                                                 name="start_time"
                                                 :value="startTime"
                                                 class="peer sr-only"
+                                                :aria-label="`Seleccionar hora ${startTime}`"
                                             />
                                             <span
-                                                class="inline-flex items-center rounded-md border border-pmf-primary/25 px-3 py-1.5 text-sm text-pmf-primary transition hover:bg-pmf-secondary/70 peer-checked:border-pmf-primary peer-checked:bg-pmf-primary peer-checked:text-pmf-secondary"
+                                                class="inline-flex items-center rounded-md border border-pmf-primary/25 px-3 py-1.5 text-sm text-pmf-primary transition hover:bg-pmf-secondary/70 peer-checked:border-pmf-primary peer-checked:bg-pmf-primary peer-checked:text-pmf-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-pmf-primary peer-focus-visible:ring-offset-2"
                                             >
                                                 {{ startTime }}
                                             </span>
@@ -435,6 +513,8 @@ const visibleItems = computed(() => {
                                     <p
                                         v-if="selectedDateTime"
                                         class="mt-3 text-sm font-medium text-pmf-primary"
+                                        role="status"
+                                        aria-live="polite"
                                     >
                                         Data i hora seleccionada: {{ selectedDateTime }}
                                     </p>
@@ -442,13 +522,19 @@ const visibleItems = computed(() => {
 
                                 <div class="mt-4 w-full">
                                     <Label
+                                        id="urgencia_label"
                                         for="urgencia"
                                         class="mb-3 text-xs font-semibold tracking-widest text-muted-foreground"
                                     >
                                         PRIORITAT DE LA CITA
                                     </Label>
                                     <Select id="urgencia" name="urgencia">
-                                        <SelectTrigger class="w-full bg-white">
+                                        <SelectTrigger
+                                            id="urgencia_trigger"
+                                            aria-labelledby="urgencia_label urgencia_trigger"
+                                            aria-required="true"
+                                            class="w-full bg-white"
+                                        >
                                             <SelectValue
                                                 placeholder="Selecciona la prioritat de la cita"
                                             />
@@ -488,7 +574,10 @@ const visibleItems = computed(() => {
                                         <div
                                             class="rounded-full bg-pmf-secondary p-3 text-pmf-primary"
                                         >
-                                            <IdCard class="size-5" />
+                                            <IdCard
+                                                class="size-5"
+                                                aria-hidden="true"
+                                            />
                                         </div>
                                         <div class="min-w-0">
                                             <div class="text-sm text-pmf-green">
@@ -504,7 +593,10 @@ const visibleItems = computed(() => {
                                         <div
                                             class="rounded-full bg-pmf-secondary p-3 text-pmf-primary"
                                         >
-                                            <CalendarDays class="size-5" />
+                                            <CalendarDays
+                                                class="size-5"
+                                                aria-hidden="true"
+                                            />
                                         </div>
                                         <div class="min-w-0">
                                             <div class="text-sm text-pmf-green">
@@ -520,7 +612,10 @@ const visibleItems = computed(() => {
                                         <div
                                             class="rounded-full bg-pmf-secondary p-3 text-pmf-primary"
                                         >
-                                            <Stethoscope class="size-5" />
+                                            <Stethoscope
+                                                class="size-5"
+                                                aria-hidden="true"
+                                            />
                                         </div>
                                         <div class="min-w-0">
                                             <div class="text-sm text-pmf-green">
@@ -536,7 +631,10 @@ const visibleItems = computed(() => {
                                         <div
                                             class="rounded-full bg-pmf-secondary p-3 text-pmf-primary"
                                         >
-                                            <Clock class="size-5" />
+                                            <Clock
+                                                class="size-5"
+                                                aria-hidden="true"
+                                            />
                                         </div>
                                         <div class="min-w-0">
                                             <div class="text-sm text-pmf-green">
@@ -558,11 +656,12 @@ const visibleItems = computed(() => {
                                     >
                                         <div class="w-full sm:w-auto">
                                             <button
-                                                class="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green sm:w-auto"
+                                                class="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 sm:w-auto"
                                                 type="submit"
                                             >
                                                 <CircleCheck
                                                     class="mr-3 size-5"
+                                                    aria-hidden="true"
                                                 />
                                                 Confirmar Nova Cita
                                             </button>
