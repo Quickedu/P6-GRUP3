@@ -187,7 +187,7 @@ class DatesController extends Controller
 
     public function seeDates()
     {
-        $dates = Date::with(['patient', 'worker.user', 'test'])->get();
+        $dates = Date::with(['patient', 'worker.user', 'test'])->where('date_time', '>=', now())->orderBy('date_time')->get();
 
         return $dates;
     }
