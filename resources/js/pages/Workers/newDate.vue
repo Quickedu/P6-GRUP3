@@ -468,6 +468,7 @@ const visibleItems = computed(() => {
                                         <Input
                                             id="date-time"
                                             type="date"
+                                            :min="new Date().toISOString().split('T')[0]"
                                             v-model="dataCita"
                                             class="mt-3 h-9 bg-background"
                                             placeholder="Ex: ABCD 0123456789"

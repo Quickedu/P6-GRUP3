@@ -83,7 +83,7 @@
             
             <div v-if="date.description" class="flex items-start text-sm">
               <FileText class="mr-2 h-4 w-4 flex-shrink-0 text-gray-500" />
-              <p class="text-gray-600" contentType="text/html" v-html="date.description"></p>
+              <p class="text-gray-600" >{{ date.description }}</p>
             </div>
           </div>
         </div>
