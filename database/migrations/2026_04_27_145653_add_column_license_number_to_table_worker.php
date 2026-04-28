@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('dates', function (Blueprint $table) {
-            $table->text('description')->nullable();
+        Schema::table('workers', function (Blueprint $table) {
+            $table->string('license_number')->nullable()->after('dni');
         });
     }
 
@@ -21,10 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (Schema::hasColumn('dates', 'description')) {
-            Schema::table('dates', function (Blueprint $table) {
-                $table->dropColumn('description');
-            });
-        }
+        Schema::table('workers', function (Blueprint $table) {
+            $table->dropColumn('license_number');
+        });
     }
 };

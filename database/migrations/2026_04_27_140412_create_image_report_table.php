@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('dates', function (Blueprint $table) {
-            $table->text('description')->nullable();
+        Schema::create('image_report', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('reports_id')->constrained('reports')->cascadeOnDelete();
+            $table->text('image_path');  
+            $table->timestamps();
         });
     }
 
@@ -21,10 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (Schema::hasColumn('dates', 'description')) {
-            Schema::table('dates', function (Blueprint $table) {
-                $table->dropColumn('description');
-            });
-        }
+        Schema::dropIfExists('image_report');
     }
 };
