@@ -106,15 +106,15 @@
 <template>
   <div class="w-full">
     <div class="mb-3">
-      <h2 class="text-2xl font-bold mb-4">Agenda</h2>
+      <h2 class="text-2xl font-bold mb-4 text-pmf-primary">Agenda</h2>
       <!--filter controls -->
-      <div class="rounded-lg border border-gray-200 bg-white p-2">
+      <div class="rounded-lg p-2 border border-gray-200">
         <div class="flex flex-col">
           <!--delete filter-->
           <button
             v-if="selectedDate !== null"
             @click="clearFilter"
-            class="flex items-center gap-1 pt-1 px-1 text-sm font-medium text-blue-700 cursor-pointer rounded transition">
+            class="flex items-center gap-1 pt-1 px-1 text-sm font-medium text-pmf-primary cursor-pointer rounded transition">
             <X class="h-4 w-4"/>
             Esborrar filtre
           </button>
@@ -122,7 +122,7 @@
           <div class="flex items-center justify-between gap-2">
             <button
               @click="previousDay"
-              class="flex items-center gap-2 rounded px-2 text-sm font-medium transition hover:bg-gray-100 cursor-pointer">
+              class="flex items-center gap-2 rounded px-2 text-sm font-medium transition bg-pmf-green hover:bg-pmf-primary text-white cursor-pointer p-2">
               <ChevronLeft class="h-4 w-4"/>
               Anterior
             </button>
@@ -133,12 +133,12 @@
                 type="date"
                 :value="selectedDate || ''"
                 @change="setFilterDateFromInput"
-                class="rounded px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"/>
+                class="rounded px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pmf-primary bg-white cursor-pointer"/>
             </div>
 
             <button
               @click="nextDay"
-              class="flex items-center gap-2 rounded px-3 py-2 text-sm font-medium transition hover:bg-gray-100 cursor-pointer">
+              class="flex items-center gap-2 rounded px-3 py-2 text-sm font-medium transition bg-pmf-green hover:bg-pmf-primary text-white cursor-pointer p-2">
               Següent
               <ChevronRight class="h-4 w-4"/>
             </button>
@@ -147,7 +147,7 @@
       </div>
     </div>
     
-    <div v-if="dates.length > 0" class="space-y-4">
+    <div v-if="dates.length > 0" class="space-y-4 p-4">
         <div v-for="date in displayedDates" :key="date.id" class="rounded-lg border border-gray-200 bg-white p-3 gap-2">
           <div class="flex items-start justify-between mb-3">
             <div class="flex-1">
@@ -167,12 +167,12 @@
 
           <div class="font-medium text-gray-900 flex flex-inline gap-2">
             <p class="text-sm mb-3 flex">
-              <User class="mr-2 h-5 w-5 text-blue-500" />
+              <User class="mr-2 h-7 w-7 text-pmf-primary bg-pmf-secondary p-1 rounded-md" />
               <span>{{ date.patient?.name }} ({{ date.patient?.nts }})</span>
             </p>
 
             <p class="text-sm mb-3 flex">
-              <Stethoscope class="mr-2 h-5 w-5 text-blue-500" />
+              <Stethoscope class="mr-2 h-7 w-7 text-pmf-primary bg-pmf-secondary p-1 rounded-md" />
               <span>{{ date.worker?.user?.name || 'N/A' }}</span>
             </p>
           </div>
