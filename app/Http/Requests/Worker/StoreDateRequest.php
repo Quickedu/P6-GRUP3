@@ -3,12 +3,13 @@
 namespace App\Http\Requests\Worker;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreDateRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return Auth::check() && (Auth::user()->role === 'secretary' || Auth::user()->role === 'admin');
     }
 
     public function rules(): array
@@ -21,7 +22,7 @@ class StoreDateRequest extends FormRequest
         'time' => 'required|integer|min:1',
         'estat' => 'required|in:programada,cancel·lada,realitzada',
         'urgencia' => 'required|in:no urgent,preferent,urgent',
-        'descripcio' => 'text'
+        'description' => 'nullable|string|max:255',
       ];
     }
 }
