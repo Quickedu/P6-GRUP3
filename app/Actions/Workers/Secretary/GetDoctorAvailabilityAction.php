@@ -54,11 +54,12 @@ class GetDoctorAvailabilityAction
             ->get(['date_time', 'time']);
 
         $availableSlots = [];
+        $startTimes = [];
         $cursor = $workStart;
 
         foreach ($appointments as $appointment) {
             $appointmentStart = CarbonImmutable::parse($appointment->date_time);
-            $appointmentEnd = $appointmentStart->addMinutes((int) $appointment->time);
+            $appointmentEnd = $appointmentStart->addMinutes(((int) $appointment->time) + 10);
 
             if ($appointmentEnd->lessThanOrEqualTo($workStart) || $appointmentStart->greaterThanOrEqualTo($workEnd)) {
                 continue;
@@ -74,6 +75,10 @@ class GetDoctorAvailabilityAction
 
             if ($appointmentStart->greaterThan($cursor) && $cursor->diffInMinutes($appointmentStart) >= $requestedMinutes) {
                 $availableSlots[] = $cursor->format('G:i').' - '.$appointmentStart->format('G:i');
+                $startTimes = array_merge(
+                    $startTimes,
+                    $this->buildStartTimes($cursor, $appointmentStart, $requestedMinutes)
+                );
             }
 
             if ($appointmentEnd->greaterThan($cursor)) {
@@ -87,6 +92,10 @@ class GetDoctorAvailabilityAction
 
         if ($cursor->lessThan($workEnd) && $cursor->diffInMinutes($workEnd) >= $requestedMinutes) {
             $availableSlots[] = $cursor->format('G:i').' - '.$workEnd->format('G:i');
+            $startTimes = array_merge(
+                $startTimes,
+                $this->buildStartTimes($cursor, $workEnd, $requestedMinutes)
+            );
         }
 
         return [
@@ -95,7 +104,53 @@ class GetDoctorAvailabilityAction
             'data' => [
                 'required_minutes' => $requestedMinutes,
                 'slots' => $availableSlots,
+                'start_times' => array_values(array_unique($startTimes)),
             ],
         ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function buildStartTimes(
+        CarbonImmutable $slotStart,
+        CarbonImmutable $slotEnd,
+        int $requiredMinutes
+    ): array {
+        $startTimes = [];
+        $first = $this->roundUpToMinutes($slotStart, 5);
+
+        if ($this->fitsInSlot($first, $slotEnd, $requiredMinutes)) {
+            $startTimes[] = $first->format('G:i');
+        }
+
+        $cursor = $this->roundUpToMinutes($first, 15);
+
+        if ($cursor->equalTo($first)) {
+            $cursor = $first->addMinutes(15);
+        }
+
+        while ($this->fitsInSlot($cursor, $slotEnd, $requiredMinutes)) {
+            $startTimes[] = $cursor->format('G:i');
+            $cursor = $cursor->addMinutes(15);
+        }
+
+        return $startTimes;
+    }
+
+    private function roundUpToMinutes(CarbonImmutable $time, int $interval): CarbonImmutable
+    {
+        $remainder = $time->minute % $interval;
+
+        if ($remainder === 0) {
+            return $time;
+        }
+
+        return $time->addMinutes($interval - $remainder);
+    }
+
+    private function fitsInSlot(CarbonImmutable $start, CarbonImmutable $slotEnd, int $requiredMinutes): bool
+    {
+        return $start->addMinutes($requiredMinutes)->lessThanOrEqualTo($slotEnd);
     }
 }
