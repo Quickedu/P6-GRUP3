@@ -15,12 +15,12 @@ return new class extends Migration
             $table->unique(['patient_id', 'need_id']);
 
             $table->foreignId('patient_id')
-                  ->constrained('patients')
-                  ->onDelete('cascade');
+                ->constrained('patients')
+                ->onDelete('cascade');
 
             $table->foreignId('need_id')
-                  ->constrained('needs')
-                  ->onDelete('cascade');
+                ->constrained('needs')
+                ->onDelete('cascade');
         });
     }
 

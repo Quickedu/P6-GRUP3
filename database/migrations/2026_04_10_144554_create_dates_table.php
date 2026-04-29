@@ -16,24 +16,24 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreignId('patient_id')
-                  ->constrained('patients')
-                  ->onDelete('cascade');
-            
+                ->constrained('patients')
+                ->onDelete('cascade');
+
             $table->foreignId('worker_id')
-                  ->constrained('workers')
-                  ->onDelete('cascade');
-            
+                ->constrained('workers')
+                ->onDelete('cascade');
+
             $table->foreignId('test_id')
-                  ->constrained('test_types')
-                  ->onDelete('cascade');
+                ->constrained('test_types')
+                ->onDelete('cascade');
 
             $table->date('date_time');
-            
+
             $table->integer('time');
 
-            $table->enum ('estat',['programada', 'cancel·lada', 'realitzada']);
+            $table->enum('estat', ['programada', 'cancel·lada', 'realitzada']);
 
-            $table->enum ('urgencia',['no urgent', 'preferent', 'urgent']);
+            $table->enum('urgencia', ['no urgent', 'preferent', 'urgent']);
         });
     }
 

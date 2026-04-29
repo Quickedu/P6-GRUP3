@@ -26,10 +26,10 @@ class LoginPatientController extends Controller
         ]);
 
         $patient = null;
-        if (!empty($credentials['nts'])) {
+        if (! empty($credentials['nts'])) {
             $patient = Patient::where('nts', $credentials['nts'])->first();
         }
-        if (!$patient && !empty($credentials['dni'])) {
+        if (! $patient && ! empty($credentials['dni'])) {
             $patient = Patient::where('dni', $credentials['dni'])->first();
         }
 
@@ -38,7 +38,7 @@ class LoginPatientController extends Controller
                 'nts' => [trans('auth.failed')],
             ]);
         }
-        //dd($patient);
+        // dd($patient);
         Auth::guard('patient')->login($patient, $request->boolean('remember'));
 
         $request->session()->regenerate();

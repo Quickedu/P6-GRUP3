@@ -3,8 +3,8 @@
 use App\Http\Controllers\LoginAdminController;
 use App\Http\Controllers\LoginPatientController;
 use App\Http\Controllers\Patients\DashboardPatientController;
-use App\Http\Controllers\Workers\Secretary\PatientsListController;
 use App\Http\Controllers\Workers\Secretary\DatesController;
+use App\Http\Controllers\Workers\Secretary\PatientsListController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,7 +24,6 @@ Route::get('/dashboard', function (DatesController $datesController) {
         'role' => $role,
         'dates' => $dates,
     ]);
-
 
 })->middleware('auth')->name('dashboard');
 
@@ -50,7 +49,7 @@ Route::middleware(['auth:patient'])->group(function () {
 Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
     // Logout
     Route::post('work/logout', [LoginAdminController::class, 'destroy'])->name('loginworkerDestroy');
-    //Patients List
+    // Patients List
     Route::get('/patientsList', [PatientsListController::class, 'index'])->name('patientsList');
 });
 
@@ -68,7 +67,7 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
     Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
     Route::get('/doctorConsult/{id}', [DatesController::class, 'ajaxDoctor'])->name('ajax-doctor');
-    //Edit patient
+    // Edit patient
     Route::post('/patients/{id}', [PatientsListController::class, 'update']);
 });
 

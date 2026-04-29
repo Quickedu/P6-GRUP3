@@ -9,15 +9,15 @@ class UpdateDataRequest extends FormRequest
 {
     public function authorize(): bool
     {
-      return Auth::check() && Auth::user()->role === 'secretary';
+        return Auth::check() && Auth::user()->role === 'secretary';
     }
 
     public function rules(): array
     {
-      return [
-        'address' => 'nullable|string|max:255',
-        'phone' => 'nullable|numeric',
-        'email' => 'nullable|email|max:255',
-      ];
+        return [
+            'address' => 'nullable|string|max:255',
+            'phone' => 'nullable|numeric',
+            'email' => 'nullable|email|max:255',
+        ];
     }
 }

@@ -10,7 +10,8 @@ use Inertia\Inertia;
 
 class LoginAdminController extends Controller
 {
-    public function show(Request $request){
+    public function show(Request $request)
+    {
         return Inertia::render('auth/LoginWorker', [
             'status' => $request->session()->get('status'),
         ]);
@@ -26,7 +27,7 @@ class LoginAdminController extends Controller
         if (! Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
             throw ValidationException::withMessages([
                 'email' => [trans('auth.failed')],
-            ]); 
+            ]);
         }
 
         $request->session()->regenerate();
@@ -37,7 +38,7 @@ class LoginAdminController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('admin')->logout();
-        
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

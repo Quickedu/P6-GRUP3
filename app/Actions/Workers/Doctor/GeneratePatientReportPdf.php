@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\View;
 
 class GeneratePatientReportPdf
 {
-
     public function pdf(array $data)
     {
         $report = $this->createReport($data);
@@ -39,7 +38,7 @@ class GeneratePatientReportPdf
     {
         $renderer = new ImageRenderer(
             new RendererStyle(400),
-            new SvgImageBackEnd()
+            new SvgImageBackEnd
         );
 
         $writer = new Writer($renderer);
@@ -68,23 +67,21 @@ class GeneratePatientReportPdf
 
     private function generateHtml(array $data, string $Code): string
     {
-        
 
         ob_start();
-        include __DIR__ . '/resources/js/pages/Workers/Secretary';
+        include __DIR__.'/resources/js/pages/Workers/Secretary';
         View::make('Workers/Doctor/ReportPdfTemplate', [
             'data' => $data,
             'Code' => $Code,
         ])->render();
-        return ob_get_clean();
 
-       
+        return ob_get_clean();
 
     }
 
     private function streamPdf(string $htmlContent, array $data)
     {
-        $options = new Options();
+        $options = new Options;
         $options->set('isRemoteEnabled', true);
 
         $dompdf = new Dompdf($options);
