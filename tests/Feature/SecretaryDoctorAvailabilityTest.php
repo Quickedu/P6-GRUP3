@@ -95,9 +95,25 @@ test('it returns free doctor slots that fit requested time plus ten minutes', fu
     $response->assertJsonPath('status', 'success');
     $response->assertJsonPath('data.required_minutes', 40);
     $response->assertJsonPath('data.slots', [
-        '8:30 - 9:30',
-        '9:50 - 12:00',
-        '13:00 - 15:00',
+        '8:40 - 9:30',
+        '10:00 - 12:00',
+        '13:10 - 15:00',
+    ]);
+    $response->assertJsonPath('data.start_times', [
+        '8:40',
+        '8:45',
+        '10:00',
+        '10:15',
+        '10:30',
+        '10:45',
+        '11:00',
+        '11:15',
+        '13:10',
+        '13:15',
+        '13:30',
+        '13:45',
+        '14:00',
+        '14:15',
     ]);
 });
 
@@ -164,7 +180,33 @@ test('it blocks start times inside an existing appointment on the selected day',
     $response->assertJsonPath('data.required_minutes', 15);
     $response->assertJsonPath('data.slots', [
         '8:00 - 9:30',
-        '10:20 - 15:00',
+        '10:30 - 15:00',
+    ]);
+    $response->assertJsonPath('data.start_times', [
+        '8:00',
+        '8:15',
+        '8:30',
+        '8:45',
+        '9:00',
+        '9:15',
+        '10:30',
+        '10:45',
+        '11:00',
+        '11:15',
+        '11:30',
+        '11:45',
+        '12:00',
+        '12:15',
+        '12:30',
+        '12:45',
+        '13:00',
+        '13:15',
+        '13:30',
+        '13:45',
+        '14:00',
+        '14:15',
+        '14:30',
+        '14:45',
     ]);
 });
 

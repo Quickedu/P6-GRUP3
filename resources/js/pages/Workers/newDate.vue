@@ -214,7 +214,7 @@ const visibleItems = computed(() => {
                             :status="flashStatus"
                         />
                         <Card
-                            class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
+                            class="mt-6 gap-4 border-0 bg-muted py-6 shadow-none"
                         >
                             <CardHeader class="pb-0">
                                 <div class="flex items-center gap-3">
@@ -284,7 +284,7 @@ const visibleItems = computed(() => {
 
                         <div class="lg:col-span-4">
                             <Card
-                                class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
+                                class="mt-6 gap-4 border-0 bg-muted py-6 shadow-none"
                             >
                                 <CardHeader class="pb-0">
                                     <div class="flex items-center gap-3">
@@ -379,7 +379,7 @@ const visibleItems = computed(() => {
                         </div>
 
                         <Card
-                            class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
+                            class="mt-6 gap-4 border-0 bg-muted py-6 shadow-none"
                         >
                             <CardHeader class="pb-0">
                                 <div class="flex items-center gap-3">
@@ -426,7 +426,7 @@ const visibleItems = computed(() => {
                                         class="text-xs text-muted-foreground"
                                     >
                                         Aquest camp es opcional i permet afegir notes
-                                        cliniques per al professional (maxim 255 caracters).
+                                        cliniques per al professional.
                                     </p>
                                     <InputError :message="errors.description" />
                                 </div>
@@ -434,7 +434,7 @@ const visibleItems = computed(() => {
                         </Card>
 
                         <Card
-                            class="mt-6 gap-4 border-0 bg-muted/50 py-6 shadow-none"
+                            class="mt-6 gap-4 border-0 bg-muted py-6 shadow-none"
                         >
                             <CardHeader class="pb-0">
                                 <div class="flex items-center gap-3">
@@ -580,7 +580,7 @@ const visibleItems = computed(() => {
                                     <InputError :message="errors.date_time" class="mt-2" />
                                 </div>
 
-                                <div class="mt-4 w-full">
+                                <div class="mt-4 w-full lg:mb-25">
                                     <Label
                                         id="urgencia_label"
                                         for="urgencia"
