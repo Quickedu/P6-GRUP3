@@ -31,6 +31,7 @@ const props = defineProps<{
         id: number;
         name: string;
     };
+    workerId: number;
 }>();
 
 interface Patient {
@@ -43,6 +44,7 @@ interface Patient {
 
 
 const patientForm = ref({
+    id: props.patient?.id ?? null,
     nts: props.patient?.nts ?? '',
     name: props.patient?.name ?? '',
     address: props.patient?.address ?? '',
@@ -51,6 +53,7 @@ const patientForm = ref({
 
 
 function clearPatientFields() {
+    patientForm.value.id = null;
     patientForm.value.name = '';
     patientForm.value.address = '';
     patientForm.value.birth_date = '';
@@ -68,11 +71,13 @@ function loadPatient() {
         .then((response) => response.json())
         .then((data) => {
             const info = data as {
+                id?: number;
                 name?: string;
                 address?: string;
                 birth_date?: string;
             };
 
+            patientForm.value.id = info.id ?? null;
             patientForm.value.name = info.name ?? '';
             patientForm.value.address = info.address ?? '';
             patientForm.value.birth_date = info.birth_date ?? '';
@@ -93,6 +98,8 @@ function loadPatient() {
         <div class="mt-6 flex h-full flex-1 flex-col gap-4 px-4 pb-8 sm:mt-8 sm:px-6 lg:mt-10 lg:px-8">
             <Form v-bind="store.form()" v-slot="{ errors, processing }" class="flex flex-col gap-6"
                 aria-describedby="appointment-form-help">
+                <input type="hidden" name="patient_id" :value="patientForm.id ?? '' " />
+                <input type="hidden" name="worker_id" :value="props.workerId ?? ''" />
                 <div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12">
                     <div class="lg:col-span-12 flex flex-col">
                         <div class="gap-3">
@@ -128,7 +135,7 @@ function loadPatient() {
                                         <Input id="patient_id" v-model="patientForm.nts" type="text" name="nts" class="h-9 flex-1 bg-background"
                                             placeholder="Ex: ABCD 0123456789" autocomplete="off" 
                                             aria-describedby="patient-check-help patient-check-status"
-                                            @keyup="loadPatient" />
+                                            @change="loadPatient" />
                                     </div>
 
                                     <div>
@@ -295,6 +302,16 @@ function loadPatient() {
                                                 Exploració clínica
                                             </Label>
                                             <Input id="exploration_date" type="text" name="exploration"
+                                                class="h-9 w-full bg-background" autocomplete="off" required
+                                                aria-required="true"
+                                                aria-describedby="patient-check-help patient-check-status" />
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <Label for="nreport"
+                                                class="text-xs font-semibold tracking-widest text-muted-foreground">
+                                                numero report
+                                            </Label>
+                                            <Input id="nreport" type="number" name="nreport"
                                                 class="h-9 w-full bg-background" autocomplete="off" required
                                                 aria-required="true"
                                                 aria-describedby="patient-check-help patient-check-status" />

@@ -19,20 +19,28 @@ class GeneratePatientReportPdf
         $report = $this->createReport($data);
 
         $Code = $this->generateCode($data, $report->id);
+        dd($Code);
 
         $htmlContent = $this->generateHtml($data, $Code);
 
         return $this->streamPdf($htmlContent, $data);
-
     }
 
-    private function createReport(array $data): Report
+    private function createReport(array $data)
     {
-        return Report::create([
+        $report = Report::create([
             'patient_id' => $data['patient_id'],
             'worker_id' => $data['worker_id'],
             'pdf_path' => '',
         ]);
+
+        $filename = sprintf(
+            '%s_%s_report.pdf',
+            $report->created_at->format('Ymd-His'),
+            $data['name']
+        );
+
+        $report->update(['pdf_path' => $filename]);
     }
 
     private function generateCode(array $data, int $reportId): string
@@ -48,7 +56,7 @@ class GeneratePatientReportPdf
             'report_id' => $reportId,
             'patient_id' => $data['patient_id'],
             'worker_id' => $data['worker_id'],
-            'nhc' => $data['nhc'],
+            // 'nhc' => $data['nhc'],
             'name' => $data['name'],
             'address' => $data['address'],
             'birth_date' => $data['birth_date'],
@@ -60,7 +68,9 @@ class GeneratePatientReportPdf
             'data_exploration' => $data['data_exploration'],
             'reason' => $data['reason'],
             'exploration' => $data['exploration'],
-            'create_at' => $data['create_at'],
+            // 'created_at' => $data['created_at'],
+            'created_at' => 'default:' . now()->toDateTimeString(),
+
         ];
 
         return $writer->writeString(json_encode($CodeData));
@@ -68,7 +78,7 @@ class GeneratePatientReportPdf
 
     private function generateHtml(array $data, string $Code): string
     {
-        
+
 
         ob_start();
         include __DIR__ . '/resources/js/pages/Workers/Secretary';
@@ -77,9 +87,6 @@ class GeneratePatientReportPdf
             'Code' => $Code,
         ])->render();
         return ob_get_clean();
-
-       
-
     }
 
     private function streamPdf(string $htmlContent, array $data)
@@ -99,6 +106,5 @@ class GeneratePatientReportPdf
         );
 
         $dompdf->stream($filename, ['Attachment' => true]);
-
     }
 }

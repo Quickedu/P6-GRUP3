@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Worker;
+namespace App\Http\Requests\Worker\Doctor;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +17,7 @@ class DownloadPdfRequest extends FormRequest
       return [
         'patient_id' => 'required|integer|min:1|exists:patients,id',
         'worker_id' => 'required|integer|min:1|exists:workers,id',
+        'nreport' => 'required|integer',
         // 'nhc' => 'required|string|max:255',
         'name' => 'required|string|max:255',
         'address' => 'required|string|max:255',
@@ -30,7 +31,7 @@ class DownloadPdfRequest extends FormRequest
         'reason' => 'required|string|max:255',
         'exploration' => 'required|string|max:255',
         'report' => 'required|string|max:255',
-        // 'create_at' => 'default:' . now()->toDateTimeString(),
+        'created_at' => 'default:' . now()->toDateTimeString(),
       ];
     }
 }
