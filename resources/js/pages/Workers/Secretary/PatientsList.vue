@@ -42,8 +42,7 @@ const handleSearch = () => {
         preserveState: true,
         replace: true,
     });
-};  
-console.log(props.patients);
+};
 </script>
 
 <template>

@@ -75,6 +75,11 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     Route::get('/doctorConsult/{id}/{idDate?}', [DatesController::class, 'ajaxDoctor'])->name('ajax-doctor');
     // Edit patient
     Route::post('/patients/{id}', [PatientsListController::class, 'update']);
+    //Patient needs
+    Route::get('/patients/needs', [PatientsListController::class, 'patientsNeedsList']);
+    Route::get('/patients/{id}/needs', [PatientsListController::class, 'patientsNeeds']);
+    Route::post('/patients/needs/{id}', [PatientsListController::class, 'patientsNeedsUpdate']);
+    Route::post('/patients/needs/{id}', [PatientsListController::class, 'patientsNeedsDelete']);
 });
 
 // DOCTOR AREA

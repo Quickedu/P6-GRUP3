@@ -23,12 +23,24 @@ class PatientsListController extends Controller
                 ->orWhere('dni', 'like', "%{$search}%")
                 ->orWhere('nts', 'like', "%{$search}%");
         })->get();
+        
+        $needs = Need::get();
 
-        // dd($patients);
         return Inertia::render('Workers/Secretary/PatientsList', [
             'patients' => $patients,
+            'needs' => $needs,
         ]);
     }
+
+    public function patientsNeedsList()
+    { 
+        $needs = Need::get();
+
+        return Inertia::render('Workers/Secretary/PatientsList', [
+            'needs' => $needs,
+        ]);
+    }
+
     public function update(UpdateDataRequest $request, $id){
         $patient = Patient::findOrFail($id);
 
