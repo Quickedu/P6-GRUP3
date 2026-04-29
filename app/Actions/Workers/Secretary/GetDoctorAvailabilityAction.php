@@ -12,7 +12,7 @@ class GetDoctorAvailabilityAction
     /**
      * @return array<string, mixed>
      */
-    public function handle(int $doctorId, string $date, int $time): array
+    public function handle(int $doctorId, string $date, int $time, int|null $idDate = null): array
     {
         $doctor = User::query()
             ->whereKey($doctorId)
@@ -50,6 +50,7 @@ class GetDoctorAvailabilityAction
             ->where('worker_id', $workerId)
             ->whereBetween('date_time', [$dayStart, $dayEnd])
             ->where('estat', '!=', 'cancel·lada')
+            ->where('id', '!=', $idDate)
             ->orderBy('date_time')
             ->get(['date_time', 'time']);
 
