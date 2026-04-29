@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { CalendarPlus, LayoutGrid } from 'lucide-vue-next';
+import { CalendarPlus, FileText, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -12,7 +12,7 @@ import {
     SidebarFooter,
     SidebarHeader,
 } from '@/components/ui/sidebar';
-import { dashboard, novaCita, patientDashboard, patientsList } from '@/routes';
+import { dashboard, novaCita, patientDashboard, patientsList, formReport } from '@/routes';
 import type { NavItem } from '@/types';
 import { Microscope, Users, BookUser, History, Cross } from 'lucide-vue-next';
 import { Settings } from 'lucide-vue-next';
@@ -98,6 +98,11 @@ const DoctorNavItems: NavItem[] = [
         href: '/',
         icon: History,
     },
+    {
+        title: 'Formulari de report',
+        href: formReport(),
+        icon: FileText,
+    }
 ];
 const SecretaryNavItems: NavItem[] = [
     {
