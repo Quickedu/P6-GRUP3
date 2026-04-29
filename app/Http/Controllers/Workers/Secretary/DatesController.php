@@ -50,7 +50,7 @@ class DatesController extends Controller
         return response()->json($getTestConsultationAction->handle($id));
     }
 
-    public function ajaxDoctor(int $id, int|null $idDate, Request $request, GetDoctorAvailabilityAction $getDoctorAvailabilityAction): JsonResponse
+    public function ajaxDoctor(int $id, ?int $idDate, Request $request, GetDoctorAvailabilityAction $getDoctorAvailabilityAction): JsonResponse
     {
         $validate = $request->validate([
             'date' => ['required', 'date_format:Y-m-d'],

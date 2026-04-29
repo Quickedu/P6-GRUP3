@@ -12,7 +12,7 @@ class GetDoctorAvailabilityAction
     /**
      * @return array<string, mixed>
      */
-    public function handle(int $doctorId, string $date, int $time, int|null $idDate = null): array
+    public function handle(int $doctorId, string $date, int $time, ?int $idDate = null): array
     {
         $doctor = User::query()
             ->whereKey($doctorId)
