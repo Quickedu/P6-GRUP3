@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginPatientController;
 use App\Http\Controllers\Patients\DashboardPatientController;
 use App\Http\Controllers\Workers\Secretary\PatientsListController;
 use App\Http\Controllers\Workers\Secretary\DatesController;
+use App\Http\Controllers\Workers\Doctor\downloadpdfController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -73,5 +74,9 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
 });
 
 // DOCTOR AREA
-Route::middleware(['auth:admin', 'Doctor', 'verified'])->group(function () {});
+Route::middleware(['auth:admin', 'Doctor', 'verified'])->group(function () {
+    Route::get('/formReport', [downloadpdfController::class, 'index'])->name('formReport');
+    Route::post('/downloadReport', [downloadpdfController::class, 'download'])->name('downloadReport');
+    Route::get('/formReport/patient/{nts}', [downloadpdfController::class, 'ajaxPatient'])->name('formReport.patient');
+});
 require __DIR__.'/settings.php';
