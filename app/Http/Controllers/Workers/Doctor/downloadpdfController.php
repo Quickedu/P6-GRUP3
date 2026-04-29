@@ -6,17 +6,15 @@ use App\Actions\Workers\Doctor\GeneratePatientReportPdf;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Worker\Doctor\DownloadPdfRequest;
 use App\Models\Patient;
+use App\Models\Worker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Models\Worker;
 
 class downloadpdfController extends Controller
-{ 
-
-public function index(Patient $patient)
+{
+    public function index(Patient $patient)
     {
         $workerId = Worker::query()
             ->where('user_id', Auth::id())
