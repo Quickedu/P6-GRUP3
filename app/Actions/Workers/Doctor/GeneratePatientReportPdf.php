@@ -68,7 +68,7 @@ class GeneratePatientReportPdf
             'reason' => $data['reason'],
             'exploration' => $data['exploration'],
             // 'created_at' => $data['created_at'],
-            'created_at' => 'default:' . now()->toDateTimeString(),
+            'created_at' => 'default:'.now()->toDateTimeString(),
 
         ];
 
@@ -84,6 +84,7 @@ class GeneratePatientReportPdf
             'data' => $data,
             'Code' => $Code,
         ])->render();
+
         return ob_get_clean();
     }
 
