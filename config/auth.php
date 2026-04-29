@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\Patient;
+use App\Models\User;
 
 return [
 
@@ -46,7 +46,7 @@ return [
         'patient' => [
             'driver' => 'session',
             'provider' => 'patients',
-        ]
+        ],
     ],
 
     /*

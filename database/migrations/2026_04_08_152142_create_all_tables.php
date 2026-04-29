@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('dni')->unique();
             $table->integer('phone');
             $table->timestamps();
-        }); 
+        });
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('name');

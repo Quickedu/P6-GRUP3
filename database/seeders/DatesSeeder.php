@@ -18,6 +18,11 @@ class DatesSeeder extends Seeder
                 'time' => 15,
                 'estat' => 'programada',
                 'urgencia' => 'no urgent',
+                'description' => 'El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -29,6 +34,11 @@ class DatesSeeder extends Seeder
                 'time' => 5,
                 'estat' => 'cancel·lada',
                 'urgencia' => 'preferent',
+                'description' => 'El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -40,6 +50,11 @@ class DatesSeeder extends Seeder
                 'time' => 8,
                 'estat' => 'realitzada',
                 'urgencia' => 'urgent',
+                'description' => 'El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
+                                  El pacient presenta una lesió a la mà dreta.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
