@@ -3,29 +3,48 @@
 namespace App\Actions\Workers\Doctor;
 
 use App\Models\Report;
+use App\Models\ImageReport;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Http;
+
 
 class GeneratePatientReportPdf
 {
-    public function pdf(array $data)
+    public function pdf(array $data): void
     {
         $report = $this->createReport($data);
 
-        $Code = $this->generateCode($data, $report->id);
-        dd($Code);
+        $this->createImageReport($data, $report);
+
+        $Code = $this->generateCode($data);
 
         $htmlContent = $this->generateHtml($data, $Code);
 
-        return $this->streamPdf($htmlContent, $data);
+        $this->streamPdf($htmlContent, $report);
     }
 
-    private function createReport(array $data)
+    private function createImageReport(array $data, Report $report): void
+    {
+        $images = $data['images'] ?? [];
+
+        foreach ($images as $image) {
+            $path = Storage::disk('public')->put('report_images', $image);
+
+            ImageReport::create([
+                'reports_id' => $report->id,
+                'image_path' => Storage::url($path),
+            ]);
+        }
+    }
+
+    private function createReport(array $data): Report
     {
         $report = Report::create([
             'patient_id' => $data['patient_id'],
@@ -36,13 +55,15 @@ class GeneratePatientReportPdf
         $filename = sprintf(
             '%s_%s_report.pdf',
             $report->created_at->format('Ymd-His'),
-            $data['name']
+            $data['nts']
         );
 
         $report->update(['pdf_path' => $filename]);
+
+        return $report;
     }
 
-    private function generateCode(array $data, int $reportId): string
+    private function generateCode(array $data): string
     {
         $renderer = new ImageRenderer(
             new RendererStyle(400),
@@ -52,7 +73,7 @@ class GeneratePatientReportPdf
         $writer = new Writer($renderer);
 
         $CodeData = [
-            'report_id' => $reportId,
+            // 'report_id' => $reportId,
             'patient_id' => $data['patient_id'],
             'worker_id' => $data['worker_id'],
             // 'nhc' => $data['nhc'],
@@ -67,8 +88,8 @@ class GeneratePatientReportPdf
             'data_exploration' => $data['data_exploration'],
             'reason' => $data['reason'],
             'exploration' => $data['exploration'],
-            // 'created_at' => $data['created_at'],
-            'created_at' => 'default:'.now()->toDateTimeString(),
+            'images' => $data['images'] ?? [],
+            'created_at' => 'default:' . now()->toDateTimeString(),
 
         ];
 
@@ -77,18 +98,13 @@ class GeneratePatientReportPdf
 
     private function generateHtml(array $data, string $Code): string
     {
-
-        ob_start();
-        include __DIR__.'/resources/js/pages/Workers/Secretary';
-        View::make('Workers/Doctor/ReportPdfTemplate', [
+        return View::make('workers.doctor.report-pdf-template', [
             'data' => $data,
             'Code' => $Code,
         ])->render();
-
-        return ob_get_clean();
     }
 
-    private function streamPdf(string $htmlContent, array $data)
+    private function streamPdf(string $htmlContent, Report $report)
     {
         $options = new Options;
         $options->set('isRemoteEnabled', true);
@@ -98,12 +114,6 @@ class GeneratePatientReportPdf
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        $filename = sprintf(
-            '%s_%s_report.pdf',
-            $data['create_at'],
-            $data['patient_id']
-        );
-
-        $dompdf->stream($filename, ['Attachment' => true]);
+        $dompdf->stream($report->pdf_path, ['Attachment' => true]);
     }
 }
