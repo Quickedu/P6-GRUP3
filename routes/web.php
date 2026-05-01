@@ -76,13 +76,16 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     // Filter dates
     Route::get('/filter-dates', [DatesController::class, 'filterDates'])->name('filter-dates');
     Route::get('/filter-patient-dates', [DatesController::class, 'filterPatientDates'])->name('filter-patient-dates');
-    // Edit patient
-    Route::post('/patients/{id}', [PatientsListController::class, 'update']);
+
+    // EDIT PATIENT INFO
+    //General info
+    Route::post('/patients/{patient}', [PatientsListController::class, 'update']);
+
     //Patient needs
-    Route::get('/patients/needs', [PatientsListController::class, 'patientsNeedsList']);
-    Route::get('/patients/{id}/needs', [PatientsListController::class, 'patientsNeeds']);
-    Route::post('/patients/needs/{id}', [PatientsListController::class, 'patientsNeedsUpdate']);
-    Route::post('/patients/needs/{id}', [PatientsListController::class, 'patientsNeedsDelete']);
+    // Route::get('/patients/needs', [PatientsListController::class, 'patientsNeedsList'])->name('patientNeedsList');
+    Route::get('/patients/{patient}/needs', [PatientsListController::class, 'patientsNeeds']);
+    Route::post('/patients/{patient}/needs', [PatientsListController::class, 'addPatientNeed']);
+    Route::delete('/patients/{patient}/needs/{need}', [PatientsListController::class, 'deletePatientNeed']);
 });
 
 // DOCTOR AREA

@@ -5,7 +5,7 @@ namespace App\Http\Requests\Worker\Secretary;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class UpdateDataRequest extends FormRequest
+class UpdateNeedsRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,9 +15,7 @@ class UpdateDataRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'telefono' => ['nullable', 'regex:/^[0-9]{9}$/'],
-            'email' => ['nullable', 'email'],
-            'direccion' => ['nullable', 'string', 'max:255'],
+            'need_id' => 'required|exists:needs,id'
         ];
     }
 }

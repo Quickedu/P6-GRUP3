@@ -5,7 +5,6 @@ import { SquarePen } from 'lucide-vue-next';
 import PatientModal from '@/pages/components/PatientModal.vue';
 import searchInput from '@/pages/components/searchInput.vue';
 import textNotify from '@/pages/components/textNotify.vue';
-import Patients from '@/actions/App/Http/Controllers/Patients';
 
 const search = ref('');
 const page = usePage();
@@ -18,12 +17,18 @@ interface Patient {
     nts: string;
     address: string;
     dni: string;
-    phone: number;
+    phone: string;
     email: string;
+}
+
+interface Need {
+    id: number;
+    name: string;
 }
 
 const props = defineProps<{
     patients: Patient[];
+    needs: Need[];
 }>();
 
 const isPatientModalOpen = ref(false);
@@ -122,5 +127,5 @@ const handleSearch = () => {
         </div>
     </div>
 
-    <PatientModal v-model="isPatientModalOpen" :patient="selectedPatient" />
+    <PatientModal v-model="isPatientModalOpen" :patient="selectedPatient" :available-needs="props.needs" />
 </template>
