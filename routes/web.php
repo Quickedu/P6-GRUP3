@@ -73,13 +73,16 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
     Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
     Route::get('/doctorConsult/{id}/{idDate?}', [DatesController::class, 'ajaxDoctor'])->name('ajax-doctor');
-    // Edit patient
-    Route::post('/patients/{id}', [PatientsListController::class, 'update']);
+
+    // EDIT PATIENT INFO
+    //General info
+    Route::post('/patients/{patient}', [PatientsListController::class, 'update']);
+
     //Patient needs
-    Route::get('/patients/needs', [PatientsListController::class, 'patientsNeedsList']);
-    Route::get('/patients/{id}/needs', [PatientsListController::class, 'patientsNeeds']);
-    Route::post('/patients/needs/{id}', [PatientsListController::class, 'patientsNeedsUpdate']);
-    Route::post('/patients/needs/{id}', [PatientsListController::class, 'patientsNeedsDelete']);
+    // Route::get('/patients/needs', [PatientsListController::class, 'patientsNeedsList'])->name('patientNeedsList');
+    Route::get('/patients/{patient}/needs', [PatientsListController::class, 'patientsNeeds']);
+    Route::post('/patients/{patient}/needs', [PatientsListController::class, 'addPatientNeed']);
+    Route::delete('/patients/{patient}/needs/{need}', [PatientsListController::class, 'deletePatientNeed']);
 });
 
 // DOCTOR AREA
