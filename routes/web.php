@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::inertia('/', 'Welcome', [
+Route::inertia('/', 'HomePage', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
