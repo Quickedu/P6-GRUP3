@@ -17,7 +17,7 @@ class DownloadPdfRequest extends FormRequest
         return [
             'patient_id' => 'required|integer|min:1|exists:patients,id',
             'worker_id' => 'required|integer|min:1|exists:workers,id',
-            'nreport' => 'required|integer',
+            'nreport' => 'nullable|integer',
             // 'nhc' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
@@ -31,6 +31,8 @@ class DownloadPdfRequest extends FormRequest
             'reason' => 'required|string|max:255',
             'exploration' => 'required|string|max:255',
             'report' => 'required|string|max:255',
+            'images' => ['nullable', 'array'],
+            'images.*' => ['image', 'max:2048'],
             'created_at' => 'default:'.now()->toDateTimeString(),
         ];
     }

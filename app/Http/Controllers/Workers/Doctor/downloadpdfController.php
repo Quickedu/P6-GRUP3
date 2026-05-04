@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class downloadpdfController extends Controller
 {
@@ -34,7 +35,7 @@ class downloadpdfController extends Controller
         ]);
     }
 
-    public function download(DownloadPdfRequest $request, GeneratePatientReportPdf $generatePdf)
+    public function download(DownloadPdfRequest $request, GeneratePatientReportPdf $generatePdf): StreamedResponse
     {
         return $generatePdf->pdf($request->validated());
     }
@@ -46,7 +47,7 @@ class downloadpdfController extends Controller
             ->where('nts', $nts)
             ->first();
 
-        if (! $patient) {
+        if (!$patient) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Pacient no trobat',
@@ -64,7 +65,7 @@ class downloadpdfController extends Controller
 
     private function formatBirthDate(mixed $birthDate): ?string
     {
-        if (! $birthDate) {
+        if (!$birthDate) {
             return null;
         }
 
