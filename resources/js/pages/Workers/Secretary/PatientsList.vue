@@ -2,9 +2,9 @@
 import { ref, computed } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import { SquarePen } from 'lucide-vue-next';
-import PatientModal from '@/pages/components/PatientModal.vue';
 import searchInput from '@/pages/components/searchInput.vue';
 import textNotify from '@/pages/components/textNotify.vue';
+import { patientDetail } from '@/routes';
 
 const search = ref('');
 const page = usePage();
@@ -100,7 +100,7 @@ const handleSearch = () => {
                                 {{ String(patient.id).padStart(3, '0') }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 font-medium text-pmf-green-dark">{{ patient.name }}</td>
+                        <td class="px-4 py-3 text-pmf-grey-light cursor-pointer" @click="router.get(patientDetail(patient.id))">{{ patient.name }}</td>
                         <td class="px-4 py-3 text-pmf-grey-light">{{ patient.address }}</td>
                         <td class="px-4 py-3 text-pmf-grey-light">{{ patient.dni }}</td>
                         <td class="px-4 py-3 text-pmf-grey-light">{{ patient.nts }}</td>
@@ -108,15 +108,15 @@ const handleSearch = () => {
                         <td class="px-4 py-3 text-pmf-grey-light">{{ patient.email }}</td>
                         <td v-if="isSecretary" class="px-4 py-3">
                             <button
-                                @click="openEditModal(patient)"
+                                @click="router.get(patientDetail(patient.id))"
                                 class="inline-flex items-center gap-1.5 rounded-lg border border-[#b0ceca] bg-pmf-primary px-2.5 py-1.5 text-md font-medium text-white transition-colors hover:bg-pmf-primary cursor-pointer"
-                                title="Editar pacient"
+                                title="Detall pacient"
                             >
-                                <SquarePen class="h-3.5 w-3.5" />
-                                Editar
+                                <!-- <SquarePen class="h-3.5 w-3.5" /> -->
+                                Detall pacient
                             </button>
                         </td>
-                    </tr> 
+                    </tr>
                     <tr v-if="!props.patients || props.patients.length === 0">
                         <td colspan="8" class="px-5 py-12 text-center text-pmf-grey-light">
                             No hi ha cap pacient registrat.

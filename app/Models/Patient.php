@@ -30,4 +30,9 @@ class Patient extends Authenticatable
     {
         return $this->belongsToMany(Need::class, 'patient_needs');
     }
+
+    public function reports(): HasMany
+    {
+        return $this->HasMany(Report::class);
+    }
 }
