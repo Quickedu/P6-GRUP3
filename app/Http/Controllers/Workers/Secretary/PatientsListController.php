@@ -58,6 +58,7 @@ class PatientsListController extends Controller
 
         $patient->update($data);
 
+
         return redirect()->back()->with(['status' => 'correcte', 'message' => 'Dades modificades correctament']);
     }
 
