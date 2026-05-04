@@ -9,6 +9,7 @@ use App\Models\Patient;
 use App\Models\Test;
 use App\Models\Need;
 use App\Models\User;
+use App\Models\Report;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -34,6 +35,21 @@ class PatientsListController extends Controller
         ]);
     }
 
+    // public function patientsReports(Patient $patient)
+    // {
+    //     return response()->json($patient->reports);
+    // }
+
+    public function patientDetail(Patient $patient)
+    {
+        return Inertia::render('Workers/PatientDetail', [
+            'patient' => $patient,
+            'needs'   => $patient->needs()->get(),
+            'reports' => $patient->reports()->get(),
+            'availableNeeds' => Need::all(),
+        ]);
+    }
+
     public function update(UpdateDataRequest $request, $id){
         
         $patient = Patient::findOrFail($id);
@@ -45,21 +61,12 @@ class PatientsListController extends Controller
         return redirect()->back()->with(['status' => 'correcte', 'message' => 'Dades modificades correctament']);
     }
 
-    public function patientsNeedsList()
-    { 
-        $needs = Need::get();
-
-        return Inertia::render('Workers/Secretary/PatientsList', [
-            'needs' => $needs,
-        ]);
-    }
-
-    public function patientsNeeds(Patient $patient)
-    {
-        $needs = $patient->needs()->get();
+    // public function patientsNeeds(Patient $patient)
+    // {
+    //     $needs = $patient->needs()->get();
         
-        return response()->json($needs);
-    }
+    //     return response()->json($needs);
+    // }
 
     public function addPatientNeed(UpdateNeedsRequest $request, Patient $patient)
     {

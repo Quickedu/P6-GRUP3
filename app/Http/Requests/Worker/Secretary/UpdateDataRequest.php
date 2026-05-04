@@ -15,9 +15,9 @@ class UpdateDataRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'telefono' => ['nullable', 'regex:/^[0-9]{9}$/'],
+            'phone' => ['required', 'regex:/^[0-9]{9}$/'],
             'email' => ['nullable', 'email'],
-            'direccion' => ['nullable', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
         ];
     }
 }
