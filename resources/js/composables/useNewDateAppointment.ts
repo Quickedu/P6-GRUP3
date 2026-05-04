@@ -88,6 +88,20 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         return `${hour}:${minute}`;
     }
 
+    function roundUpToMinutes(dateValue: Date, interval: number): Date {
+        const rounded = new Date(dateValue.getTime());
+        const minutes = rounded.getMinutes();
+        const remainder = minutes % interval;
+
+        if (remainder === 0) {
+            return rounded;
+        }
+
+        rounded.setMinutes(minutes + interval - remainder, 0, 0);
+
+        return rounded;
+    }
+
     function resetSlotSelection() {
         availableSlots.value = [];
         startTimeOptions.value = [];
@@ -117,7 +131,18 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
                 return;
             }
 
-            const cursor = new Date(slotStart.getTime());
+            const first = roundUpToMinutes(slotStart, 5);
+
+            if (first.getTime() + requiredMinutes * 60_000 <= slotEnd.getTime()) {
+                validStartTimes.add(formatTimeForDisplay(first));
+            }
+
+            let cursor = roundUpToMinutes(first, 15);
+
+            if (cursor.getTime() === first.getTime()) {
+                cursor = new Date(first.getTime());
+                cursor.setMinutes(cursor.getMinutes() + 15);
+            }
 
             while (cursor.getTime() + requiredMinutes * 60_000 <= slotEnd.getTime()) {
                 validStartTimes.add(formatTimeForDisplay(cursor));
@@ -165,7 +190,6 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
 
         const response = await fetch(ajaxPatient.url(currentCip));
         const data = await response.json();
-        console.log('Patient validation response:', data);
 
         patientAvailable.value = Boolean(data.available);
         validatedClass.value = patientAvailable.value
@@ -184,13 +208,6 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         resetSlotSelection();
         slotsMessage.value = '';
         isAvaible.value = true;
-        console.log('Patient validation result:', {
-            cip: currentCip,
-            available: data.available,
-            patientId: patientId.value,
-            extraTime: extraTime.value,
-            estimatedMinutes: estimatedMinutes.value,
-        });
     };
 
     const validateTimeTest = async (testId: number): Promise<void> => {
@@ -256,7 +273,13 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
 
             availableSlots.value = Array.isArray(data?.data?.slots) ? data.data.slots : [];
             requiredSlotMinutes.value = Number(data?.data?.required_minutes) || estimatedMinutes.value;
-            startTimeOptions.value = buildStartTimeOptions(availableSlots.value);
+            const apiStartTimes = Array.isArray(data?.data?.start_times)
+                ? data.data.start_times
+                : [];
+
+            startTimeOptions.value = apiStartTimes.length > 0
+                ? apiStartTimes
+                : buildStartTimeOptions(availableSlots.value);
             selectedStartTime.value = startTimeOptions.value[0] || '';
 
             slotsMessage.value = startTimeOptions.value.length > 0
