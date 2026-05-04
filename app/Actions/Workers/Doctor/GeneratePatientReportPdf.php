@@ -2,8 +2,9 @@
 
 namespace App\Actions\Workers\Doctor;
 
-use App\Models\Report;
 use App\Models\ImageReport;
+use App\Models\Report;
+use App\Models\Worker;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
@@ -12,22 +13,27 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Http;
-
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class GeneratePatientReportPdf
 {
-    public function pdf(array $data): void
+    public function pdf(array $data): StreamedResponse
     {
         $report = $this->createReport($data);
 
+        $data['nreport'] = $report->id;
+
         $this->createImageReport($data, $report);
+
+        $data['license_number'] = Worker::query()
+            ->whereKey($data['worker_id'])
+            ->value('license_number');
 
         $Code = $this->generateCode($data);
 
         $htmlContent = $this->generateHtml($data, $Code);
-
-        $this->streamPdf($htmlContent, $report);
+        
+        return $this->streamPdf($htmlContent, $report);
     }
 
     private function createImageReport(array $data, Report $report): void
@@ -84,12 +90,13 @@ class GeneratePatientReportPdf
             'center_requested' => $data['center_requested'],
             'center_destination' => $data['center_destination'],
             'doctor_name' => $data['doctor_name'],
+            'license_number' => $data['license_number'] ?? null,
             'data_request' => $data['data_request'],
             'data_exploration' => $data['data_exploration'],
             'reason' => $data['reason'],
             'exploration' => $data['exploration'],
             'images' => $data['images'] ?? [],
-            'created_at' => 'default:' . now()->toDateTimeString(),
+            'created_at' => 'default:'.now()->toDateTimeString(),
 
         ];
 
@@ -104,7 +111,7 @@ class GeneratePatientReportPdf
         ])->render();
     }
 
-    private function streamPdf(string $htmlContent, Report $report)
+    private function streamPdf(string $htmlContent, Report $report): StreamedResponse
     {
         $options = new Options;
         $options->set('isRemoteEnabled', true);
@@ -114,6 +121,19 @@ class GeneratePatientReportPdf
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        $dompdf->stream($report->pdf_path, ['Attachment' => true]);
+        $pdfOutput = $dompdf->output();
+
+        $path = 'reports/'.$report->pdf_path;
+        Storage::disk('public')->put($path, $pdfOutput);
+
+        $report->update(['pdf_path' => $path]);
+
+        return response()->streamDownload(
+            static function () use ($pdfOutput): void {
+                echo $pdfOutput;
+            },
+            basename($path),
+            ['Content-Type' => 'application/pdf']
+        );
     }
 }

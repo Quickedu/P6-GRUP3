@@ -1,224 +1,211 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informe de Pacient</title>
+    <title>Informe PMF</title>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @page {
+            margin: 8mm 18mm;
         }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 11px;
-            line-height: 1.4;
-            color: #333;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            color: #1e1e1e;
+            line-height: 1.45;
         }
-        .container {
-            width: 100%;
-            max-width: 210mm;
+
+        .page-inner {
+            max-width: 175mm;
             margin: 0 auto;
-            padding: 20px;
         }
+
+        /* HEADER */
         .header {
-            border-bottom: 3px solid #2c3e50;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            text-align: center;
+            margin-bottom: 5px;
         }
-        .header h1 {
-            font-size: 18px;
-            margin-bottom: 8px;
-            color: #2c3e50;
+
+        .header-table {
+            width: 100%;
         }
-        .header p {
-            font-size: 10px;
-            color: #666;
+
+        .header-logo {
+            width: 95px;
         }
+
+        .header-logo img {
+            width: 90px;
+        }
+
+        .main-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .sub-title {
+            font-size: 12px;
+            color: #555;
+        }
+
+        /* META TABLE */
+        .meta-table {
+            width: 100%;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .meta-table td {
+            vertical-align: top;
+            padding: 5px;
+        }
+
+        .meta-left {
+            width: 60%;
+        }
+
+        .meta-right {
+            width: 40%;
+        }
+
+        .report-number {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .meta-row {
+            margin: 2px 0;
+        }
+
+        .patient-name {
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        /* DIVIDER */
+        .divider {
+            border-top: 1px solid #000;
+            margin: 5px 0;
+        }
+
+        /* SECTIONS */
         .section {
-            margin-bottom: 18px;
+            margin-bottom: 8px;
         }
+
         .section-title {
             font-weight: bold;
-            font-size: 12px;
-            background-color: #34495e;
-            color: white;
-            padding: 8px 10px;
-            margin-bottom: 10px;
-            border-radius: 3px;
+            font-size: 14px;
+            margin-bottom: 6px;
         }
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+
+        .section-body {
+            text-align: justify;
+            white-space: pre-wrap;
         }
-        .info-item {
-            background-color: #ecf0f1;
-            padding: 8px;
-            border-radius: 3px;
-        }
-        .info-item strong {
-            display: block;
-            font-size: 10px;
-            color: #2c3e50;
-            margin-bottom: 3px;
-        }
-        .info-item p {
-            font-size: 11px;
-            color: #555;
-            word-wrap: break-word;
-        }
-        .full-width {
-            grid-column: 1 / -1;
-        }
-        .text-content {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-left: 3px solid #3498db;
-            margin-bottom: 10px;
-            font-size: 11px;
-            line-height: 1.5;
-            color: #555;
-        }
-        .qr-section {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 2px solid #bdc3c7;
-            text-align: center;
-        }
-        .qr-section .section-title {
-            text-align: left;
-            margin-bottom: 15px;
-        }
-        .qr-code {
-            display: inline-block;
-            background: white;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .qr-code svg {
-            max-width: 150px;
-            height: auto;
-        }
+
+        /* FOOTER */
         .footer {
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-            text-align: center;
-            font-size: 9px;
-            color: #999;
-        }
-        @media print {
-            body {
-                margin: 0;
-                padding: 0;
-            }
-            .container {
-                padding: 10px;
-            }
+            margin-top: 20px;
+            font-size: 12px;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>Informe Mèdic de Pacient</h1>
-            <p>Data de creació: {{ now()->format('d/m/Y H:i') }}</p>
-        </div>
+    <div class="page-inner">
 
-        <!-- Dades del Pacient -->
+        <!-- HEADER -->
+        <table class="header-table">
+            <tr>
+                <td class="header-logo">
+                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/logo.png'))) }}" alt="Logo PMF">                
+                </td>
+                <td>
+                    <div class="main-title">INFORME PMF</div>
+                    <div class="sub-title">Servei de Diagnòstic per la Imatge</div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- META -->
+        <table class="meta-table">
+            <tr>
+
+                <td class="meta-left">
+                    <div class="report-number">Informe {{ $data['nreport'] ?? '' }}</div>
+
+                    <div class="meta-row">
+                        <span class="lbl">Centre sol·licitant:</span> {{ $data['center_requested'] ?? '' }}
+                    </div>
+                    <div class="meta-row">
+                        <span class="lbl">Metge sol·licitant:</span> {{ $data['doctor_name'] ?? '' }}
+                    </div>
+
+                    <br>
+
+                    <div class="meta-row">
+                        <span class="lbl">Data sol·licitud:</span> {{ $data['data_request'] ?? '' }}
+                    </div>
+                    <div class="meta-row">
+                        <span class="lbl">Data exploració:</span> {{ $data['data_exploration'] ?? '' }}
+                    </div>
+                    <div class="meta-row">
+                        <span class="lbl">Centre destí:</span> {{ $data['center_destination'] ?? '' }}
+                    </div>
+                </td>
+
+                <td class="meta-right">
+                    <div class="patient-card">
+                        <div class="patient-name">{{ $data['name'] ?? 'NOM DEL PACIENT' }}</div>
+                        <div>
+                            {{ $data['address'] ?? '' }}<br>
+                            {{ $data['postal_code'] ?? '' }} {{ $data['city'] ?? '' }}<br>
+                            {{ $data['province'] ?? '' }}
+                        </div>
+                    </div>
+
+                    {{-- <br> --}}
+
+                    <div class="meta-row">
+                        <span class="lbl">Data naixement:</span> {{ $data['birth_date'] ?? '' }}
+                    </div>
+                    <div class="meta-row">
+                        <span class="lbl">NTS:</span> {{ $data['nts'] ?? '' }}
+                    </div>
+                </td>
+
+            </tr>
+        </table>
+
+        <hr class="divider">
+
+        <!-- SECTIONS -->
         <div class="section">
-            <div class="section-title">Dades del Pacient</div>
-            <div class="info-grid">
-                <div class="info-item">
-                    <strong>Nom:</strong>
-                    <p>{{ $data['name'] ?? 'N/A' }}</p>
-                </div>
-                <div class="info-item">
-                    <strong>NTS:</strong>
-                    <p>{{ $data['nts'] ?? 'N/A' }}</p>
-                </div>
-                <div class="info-item">
-                    <strong>Data de naixement:</strong>
-                    <p>{{ $data['birth_date'] ?? 'N/A' }}</p>
-                </div>
-                <div class="info-item">
-                    <strong>Adreça:</strong>
-                    <p>{{ $data['address'] ?? 'N/A' }}</p>
-                </div>
-            </div>
+            <div class="section-title">Motiu</div>
+            <div class="section-body">{{ $data['reason'] ?? '' }}</div>
         </div>
 
-        <!-- Informació de la Derivació -->
-        <div class="section">
-            <div class="section-title">Informació de la Derivació</div>
-            <div class="info-grid">
-                <div class="info-item">
-                    <strong>Centre sol·licitat:</strong>
-                    <p>{{ $data['center_requested'] ?? 'N/A' }}</p>
-                </div>
-                <div class="info-item">
-                    <strong>Centre de destinació:</strong>
-                    <p>{{ $data['center_destination'] ?? 'N/A' }}</p>
-                </div>
-                <div class="info-item full-width">
-                    <strong>Nom del doctor:</strong>
-                    <p>{{ $data['doctor_name'] ?? 'N/A' }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dades de la Demanda -->
-        @if($data['data_request'] ?? null)
-        <div class="section">
-            <div class="section-title">Dades de la Demanda</div>
-            <div class="text-content">
-                {{ $data['data_request'] }}
-            </div>
-        </div>
-        @endif
-
-        <!-- Exploració -->
         <div class="section">
             <div class="section-title">Exploració</div>
-            @if($data['data_exploration'] ?? null)
-            <div class="text-content">
-                <strong>Exploració:</strong><br>
-                {{ $data['data_exploration'] }}
-            </div>
-            @endif
-            
-            @if($data['reason'] ?? null)
-            <div class="text-content">
-                <strong>Raó:</strong><br>
-                {{ $data['reason'] }}
-            </div>
-            @endif
-            
-            @if($data['exploration'] ?? null)
-            <div class="text-content">
-                <strong>Detalls:</strong><br>
-                {{ $data['exploration'] }}
-            </div>
-            @endif
+            <div class="section-body">{{ $data['exploration'] ?? '' }}</div>
         </div>
 
-        <!-- Codi QR -->
-        <div class="qr-section">
-            <div class="section-title">Codi QR de Verificació</div>
-            <div class="qr-code">
-                {!! $Code !!}
-            </div>
+        <div class="section">
+            <div class="section-title">Informe</div>
+            <div class="section-body">{{ $data['report'] ?? '' }}</div>
         </div>
 
-        <!-- Footer -->
+        <!-- FOOTER -->
         <div class="footer">
-            <p>Informe generat automàticament el {{ now()->format('d/m/Y') }} a les {{ now()->format('H:i:s') }}</p>
+            Dr/a {{ $data['doctor_name'] ?? '' }} Nº col·legiat: {{ $data['license_number'] ?? '' }}<br>
+            Sabadell, {{ now()->format('d-m-Y') }}
         </div>
+
     </div>
 </body>
+
 </html>
