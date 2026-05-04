@@ -32,7 +32,7 @@ class GeneratePatientReportPdf
         $Code = $this->generateCode($data);
 
         $htmlContent = $this->generateHtml($data, $Code);
-        
+
         return $this->streamPdf($htmlContent, $report);
     }
 

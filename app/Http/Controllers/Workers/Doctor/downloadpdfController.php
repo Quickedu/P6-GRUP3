@@ -47,7 +47,7 @@ class downloadpdfController extends Controller
             ->where('nts', $nts)
             ->first();
 
-        if (!$patient) {
+        if (! $patient) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Pacient no trobat',
@@ -65,7 +65,7 @@ class downloadpdfController extends Controller
 
     private function formatBirthDate(mixed $birthDate): ?string
     {
-        if (!$birthDate) {
+        if (! $birthDate) {
             return null;
         }
 
