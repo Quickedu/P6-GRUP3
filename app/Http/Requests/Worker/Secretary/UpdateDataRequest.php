@@ -16,7 +16,7 @@ class UpdateDataRequest extends FormRequest
     {
         return [
             'phone' => ['required', 'regex:/^[0-9]{9}$/'],
-            'email' => ['nullable', 'email'],
+            'email' => ['nullable', 'string'],
             'address' => ['required', 'string', 'max:255'],
         ];
     }
