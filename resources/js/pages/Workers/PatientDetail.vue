@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { router, usePage } from '@inertiajs/vue3';
+import { router, usePage, route } from '@inertiajs/vue3';
 import { ArrowLeft, Download, Plus } from 'lucide-vue-next';
 import textNotify from '@/pages/components/textNotify.vue';
 import PatientInfoModal from '@/pages/components/PatientInfoModal.vue';
@@ -16,12 +16,24 @@ interface Need {
     name: string;
 }
 
+interface Worker {
+    id: number;
+    name: string;
+}
+
 interface Report {
     id: number;
     patient_id: string;
     worker_id: string;
-    created_at: string;
+    created_at: Date;
     pdf_path: string;
+    worker?: {
+        id: number;
+        user?: {
+            id: number;
+            name: string;
+        };
+    };
 }
 
 interface Patient {
@@ -49,6 +61,7 @@ const isInfoModalOpen = ref(false);
 const isNeedsModalOpen = ref(false);
 
 const goBack = () => router.get('/patientsList');
+
 </script>
 
 <template>
@@ -98,11 +111,11 @@ const goBack = () => router.get('/patientsList');
                 </div>
                 <div>
                     <p class="text-[11px] font-medium uppercase tracking-wider text-pmf-green mb-1">Número de telèfon</p>
-                    <p class="text-sm text-pmf-green-dark">{{ props.patient.phone }}</p>
+                    <p class="text-sm text-pmf-green-dark">{{ props.patient.phone}}</p>
                 </div>
                 <div>
                     <p class="text-[11px] font-medium uppercase tracking-wider text-pmf-green mb-1">Data de naixement</p>
-                    <p class="text-sm text-pmf-green-dark">{{ props.patient.birth_date }}</p>
+                    <p class="text-sm text-pmf-green-dark">{{ new Date(props.patient.birth_date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) }}</p>
                 </div>
                 <div>
                     <p class="text-[11px] font-medium uppercase tracking-wider text-pmf-green mb-1">DNI</p>
@@ -169,7 +182,7 @@ const goBack = () => router.get('/patientsList');
                 <thead class="border-b border-[#c5d8d5] text-left text-[11px] font-medium uppercase tracking-wider text-pmf-green">
                     <tr>
                         <th class="px-5 py-3">Informe</th>
-                        <th class="px-5 py-3">Treballador/a</th>
+                        <th class="px-5 py-3">Metge</th>
                         <th class="px-5 py-3">Data</th>
                         <th class="px-5 py-3"></th>
                     </tr>
@@ -181,11 +194,10 @@ const goBack = () => router.get('/patientsList');
                         class="transition-colors hover:bg-[#f4f9f8]"
                     >
                         <td class="px-5 py-3 font-medium text-pmf-green-dark">Informe {{ report.id }}</td>
-                        <td class="px-5 py-3 text-pmf-grey-light">{{ report.worker_id }}</td>
+                        <td class="px-5 py-3 text-pmf-grey-light">{{ report.worker?.user?.name || '' }}</td>
                         <td class="px-5 py-3 text-pmf-grey-light">{{ report.created_at }}</td>
                         <td class="px-5 py-3">
-                            <a
-                                :href="`/storage/${report.pdf_path}`"
+                            <a :href="route('reports.pdf', { id: report.id })"
                                 target="_blank"
                                 class="inline-flex items-center gap-1.5 rounded-lg border border-[#b0ceca] px-2.5 py-1.5 text-xs font-medium text-pmf-green transition-colors hover:bg-[#f0f7f6]"
                             >
@@ -200,7 +212,7 @@ const goBack = () => router.get('/patientsList');
             <div v-else class="px-5 py-12 text-center text-pmf-grey-light text-sm">
                 No hi ha cap informe mèdic registrat.
             </div>
-        </div>
+        </div> 
     </div>
 
     <!-- Modals -->
