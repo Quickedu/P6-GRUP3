@@ -28,7 +28,7 @@ class DatesController extends Controller
             ->get();
         $testTypes = Test::get();
 
-        return Inertia::render('Workers/newDate', [
+        return Inertia::render('Workers/NewDate', [
             'doctors' => $doctors,
             'testTypes' => $testTypes,
         ]);
