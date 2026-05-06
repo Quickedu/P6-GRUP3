@@ -3,6 +3,7 @@
 use App\Http\Controllers\LoginAdminController;
 use App\Http\Controllers\LoginPatientController;
 use App\Http\Controllers\Patients\DashboardPatientController;
+use App\Http\Controllers\Workers\Admin\TestAdminController;
 use App\Http\Controllers\Workers\Doctor\downloadpdfController;
 use App\Http\Controllers\Workers\Secretary\DatesController;
 use App\Http\Controllers\Workers\Secretary\PatientsListController;
@@ -10,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
-use App\Http\Controllers\Workers\Admin\TestAdminController;
 
 Route::inertia('/', 'HomePage', [
     'canRegister' => Features::enabled(Features::registration()),

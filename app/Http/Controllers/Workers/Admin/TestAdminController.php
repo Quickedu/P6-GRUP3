@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Workers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Worker\Admin\TestAdminRequest;
 use App\Models\Test;
+use Inertia\Inertia;
 
 class TestAdminController extends Controller
 {
@@ -16,6 +15,7 @@ class TestAdminController extends Controller
     public function index()
     {
         $tests = Test::all();
+
         return Inertia::render('Workers/Admin/Test', [
             'tests' => $tests,
         ]);
@@ -36,6 +36,7 @@ class TestAdminController extends Controller
     {
         $validated = $request->validated();
         Test::create($validated);
+
         return redirect()->back()->with(['status' => 'correcte', 'message' => 'Test creado correctamente']);
 
     }
@@ -68,6 +69,7 @@ class TestAdminController extends Controller
         $validated = $request->validated();
         $test = Test::findOrFail($id);
         $test->update($validated);
+
         return redirect()->back()->with(['status' => 'correcte', 'message' => 'Test actualizado correctamente']);
     }
 
@@ -78,6 +80,7 @@ class TestAdminController extends Controller
     {
         $test = Test::findOrFail($id);
         $test->delete();
+
         return redirect()->back()->with(['status' => 'correcte', 'message' => 'Test eliminado correctamente']);
     }
 }

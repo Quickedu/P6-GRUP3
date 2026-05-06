@@ -24,8 +24,8 @@ class TestAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|string|max:255",
-            "time" => "required|integer|min:1",
+            'name' => 'required|string|max:255',
+            'time' => 'required|integer|min:1',
         ];
     }
 }
