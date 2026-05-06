@@ -16,7 +16,6 @@ class TestAdminController extends Controller
     public function index()
     {
         $tests = Test::all();
-
         return Inertia::render('Workers/Admin/Test', [
             'tests' => $tests,
         ]);
