@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\Workers\Admin\TestAdminController;
 
 Route::inertia('/', 'HomePage', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -55,7 +56,9 @@ Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
 });
 
 // ADMIN AREA
-Route::middleware(['auth:admin', 'Admin', 'verified'])->group(function () {});
+Route::middleware(['auth:admin', 'Admin', 'verified'])->group(function () {
+    Route::resource('tests', TestAdminController::class);
+});
 
 // SECRETARY AREA
 Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {

@@ -219,8 +219,9 @@ onBeforeUnmount(() => {
                                             v-model="patientForm.name"
                                             type="text"
                                             name="name"
-                                            class="h-9 flex-1 bg-background"
+                                            class="h-9 flex-1 bg-background block cursor-not-allowed"
                                             placeholder="Ex: John Doe"
+                                            readonly
                                             autocomplete="off"
                                             aria-describedby="patient-check-help patient-check-status"
                                         />

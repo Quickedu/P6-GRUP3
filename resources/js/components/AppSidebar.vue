@@ -16,6 +16,7 @@ import { dashboard, novaCita, patientDashboard, patientsList, formReport } from 
 import type { NavItem } from '@/types';
 import { Microscope, Users, BookUser, History, Cross } from 'lucide-vue-next';
 import { Settings } from 'lucide-vue-next';
+import { index } from '@/routes/tests';
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
@@ -34,7 +35,7 @@ const AdminNavItems: NavItem[] = [
     },
     {
         title: 'Proves diagnostic',
-        href: '/',
+        href: index(),
         icon: Microscope,
     },
     {
@@ -125,7 +126,7 @@ const SecretaryNavItems: NavItem[] = [
         href: '/',
         icon: Cross,
     },
-]
+];
 
 const footerNavItems: NavItem[] = [
     {
