@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Workers\Secretary;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Worker\Secretary\UpdateDataRequest;
 use App\Models\Patient;
+use App\Models\Test;
+use App\Models\Need;
+use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -20,12 +24,30 @@ class PatientsListController extends Controller
                 ->orWhere('nts', 'like', "%{$search}%");
         })->get();
 
+        // dd($patients);
         return Inertia::render('Workers/Secretary/PatientsList', [
             'patients' => $patients,
         ]);
     }
+    public function update(UpdateDataRequest $request, $id){
+        $patient = Patient::findOrFail($id);
 
-    public function update(UpdateDataRequest $request, $id)
+        $data = $request->validated();
+
+        $patient->update($data);
+
+        return redirect()->back()->with(['status' => 'correcte', 'message' => 'Dades modificades correctament']);
+    }
+
+    public function patientsNeeds($id)
+    {
+        $needs = Patient::with('needs')->where('patient_id', $id)->get();
+        dd($needs);
+        return Inertia::render('Workers/Secretary/PatientsList', [
+            'need' => $needs,
+        ]);
+    }
+    public function patientsNeedsUpdate(UpdateDataRequest $request, $id)
     {
         $patient = Patient::findOrFail($id);
 
@@ -34,5 +56,13 @@ class PatientsListController extends Controller
         $patient->update($data);
 
         return redirect()->back()->with(['status' => 'correcte', 'message' => 'Dades modificades correctament']);
+    }
+    public function patientsNeedsDelete($id)
+    {
+        $needs = Patient::with('needs')->where('patient_id', $id)->get();
+        dd($needs);
+        return Inertia::render('Workers/Secretary/PatientsList', [
+            'need' => $needs,
+        ]);
     }
 }
