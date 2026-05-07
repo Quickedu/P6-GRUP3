@@ -23,7 +23,6 @@ const emit = defineEmits<{
     (e: 'update:modelValue', value: boolean): void;
 }>();
 
-// Còpia local per actualitzar la UI sense reload
 const localNeeds = ref<Need[]>([]);
 const showSelect = ref(false);
 const selectedNeedId = ref<number | null>(null);
