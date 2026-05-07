@@ -263,7 +263,7 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         slotsMessage.value = '';
 
         try {
-            const response = await fetch(ajaxDoctor.url(professionalId.value, {
+            const response = await fetch(ajaxDoctor.url({ id: professionalId.value }, {
                 query: {
                     date: dataCita.value,
                     time: estimatedMinutes.value,

@@ -12,6 +12,7 @@ class Worker extends Model
         'nss',
         'address',
         'dni',
+        'license_number',
         'phone',
     ];
 
