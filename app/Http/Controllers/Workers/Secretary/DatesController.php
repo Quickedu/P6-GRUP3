@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Workers\Secretary;
 
 use App\Actions\Workers\Secretary\GetDoctorAvailabilityAction;
 use App\Actions\Workers\Secretary\GetPatientConsultationAction;
+use App\Actions\Workers\Secretary\GetPatientDatesAction;
 use App\Actions\Workers\Secretary\GetTestConsultationAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Worker\FilterPatientByNtsRequest;
 use App\Http\Requests\Worker\StoreDateRequest;
 use App\Models\Date;
 use App\Models\Test;
@@ -90,5 +92,12 @@ class DatesController extends Controller
         $dates = $query->orderBy('date_time')->get();
 
         return response()->json($dates);
+    }
+
+    public function filterPatientDates(FilterPatientByNtsRequest $request, GetPatientDatesAction $getPatientDatesAction): JsonResponse
+    {
+        $validated = $request->validated();
+
+        return response()->json($getPatientDatesAction->handle($validated['nts']));
     }
 }

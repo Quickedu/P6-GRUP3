@@ -70,6 +70,7 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     Route::get('/doctorConsult/{id}', [DatesController::class, 'ajaxDoctor'])->name('ajax-doctor');
     // Filter dates
     Route::get('/filter-dates', [DatesController::class, 'filterDates'])->name('filter-dates');
+    Route::get('/filter-patient-dates', [DatesController::class, 'filterPatientDates'])->name('filter-patient-dates');
     // Edit patient
     Route::post('/patients/{id}', [PatientsListController::class, 'update']);
 });
