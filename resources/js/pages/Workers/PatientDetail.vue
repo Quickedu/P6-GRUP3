@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { router, usePage, route } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import { ArrowLeft, Download, Plus } from 'lucide-vue-next';
 import textNotify from '@/pages/components/textNotify.vue';
 import PatientInfoModal from '@/pages/components/PatientInfoModal.vue';
@@ -197,7 +197,7 @@ const goBack = () => router.get('/patientsList');
                         <td class="px-5 py-3 text-pmf-grey-light">{{ report.worker?.user?.name || '' }}</td>
                         <td class="px-5 py-3 text-pmf-grey-light">{{ report.created_at }}</td>
                         <td class="px-5 py-3">
-                            <a :href="route('reports.pdf', { id: report.id })"
+                            <a :href="`/storage/${report.pdf_path}`"
                                 target="_blank"
                                 class="inline-flex items-center gap-1.5 rounded-lg border border-[#b0ceca] px-2.5 py-1.5 text-xs font-medium text-pmf-green transition-colors hover:bg-[#f0f7f6]"
                             >
