@@ -122,12 +122,7 @@ const SecretaryNavItems: NavItem[] = [
         href: patientsList(),
         icon: Users,
     },
-    {
-        title: 'Necessitats dels pacients',
-        href: '/',
-        icon: Cross,
-    },
-];
+]
 
 const footerNavItems: NavItem[] = [
     {

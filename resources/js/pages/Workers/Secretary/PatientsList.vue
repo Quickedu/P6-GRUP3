@@ -5,6 +5,7 @@ import { SquarePen } from 'lucide-vue-next';
 import PatientModal from '@/pages/components/PatientModal.vue';
 import searchInput from '@/pages/components/searchInput.vue';
 import textNotify from '@/pages/components/textNotify.vue';
+import Patients from '@/actions/App/Http/Controllers/Patients';
 
 const search = ref('');
 const page = usePage();
@@ -41,8 +42,8 @@ const handleSearch = () => {
         preserveState: true,
         replace: true,
     });
-};
-
+};  
+console.log(props.patients);
 </script>
 
 <template>
