@@ -4,15 +4,15 @@ import { usePage, useForm } from '@inertiajs/vue3';
 import { SquarePen, Trash2 } from 'lucide-vue-next';
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import textNotify from '@/pages/components/textNotify.vue';
-import { update, destroy, store } from '@/routes/tests';
+import { update, destroy, store } from '@/routes/needs';
 import ModalDelete from '@/pages/components/modalDelete.vue';
 
 const page = usePage();
 const flashMessage = computed(() => (page.props.flash as any)?.message);
 const flashStatus = computed(() => (page.props.flash as any)?.status);
-const isTestModalOpen = ref(false);
-const isTestUpdateModalOpen = ref(false);
-const selectedTest = ref<Test>({
+const isNeedModalOpen = ref(false);
+const isNeedUpdateModalOpen = ref(false);
+const selectedNeed = ref<Need>({
     id: 0,
     name: '',
     time: 0,
@@ -21,107 +21,107 @@ const showDeleteModal = ref(false);
 const limit = ref(1);
 const perPage = 10;
 
-interface Test {
+interface Need {
     id: number;
     name: string;
     time: number;
 }
 
 const props = defineProps<{
-    tests: Test[];
+    needs: Need[];
 }>();
-const filteredTests = ref(props.tests);
+const filteredNeeds = ref(props.needs);
 
 const visibleItems = computed(() => {
-    return filteredTests.value.slice(
+    return filteredNeeds.value.slice(
         (limit.value - 1) * perPage,
         limit.value * perPage,
     );
 });
 
 const hasMore = computed(
-    () => limit.value * perPage < filteredTests.value.length,
+    () => limit.value * perPage < filteredNeeds.value.length,
 );
 
 const OpenCreateModal = () => {
-    selectedTest.value = {
+    selectedNeed.value = {
         id: 0,
         name: '',
         time: 0,
     };
-    isTestModalOpen.value = true;
+    isNeedModalOpen.value = true;
 };
 
 const closeModal = () => {
-    isTestModalOpen.value = false;
-    selectedTest.value = { id: 0, name: '', time: 0, };
+    isNeedModalOpen.value = false;
+    selectedNeed.value = { id: 0, name: '', time: 0, };
 };
 
 const closeModalUpdate = () => {
-    isTestUpdateModalOpen.value = false;
-    selectedTest.value = { id: 0, name: '', time: 0, };
+    isNeedUpdateModalOpen.value = false;
+    selectedNeed.value = { id: 0, name: '', time: 0, };
 };
 
-const createTest = () => {
+const createNeed = () => {
     const form = useForm({
-        name: selectedTest.value.name,
-        time: selectedTest.value.time,
+        name: selectedNeed.value.name,
+        time: selectedNeed.value.time,
     });
     form.post(store().url, {
         preserveScroll: true,
         onSuccess: () => {
-            isTestModalOpen.value = false;
-            filteredTests.value = props.tests;
+            isNeedModalOpen.value = false;
+            filteredNeeds.value = props.needs;
         },
     });
 };
 
-const openEditModal = (test: Test) => {
-    selectedTest.value = {
-        id: test.id,
-        name: test.name,
-        time: test.time,
+const openEditModal = (need: Need) => {
+    selectedNeed.value = {
+        id: need.id,
+        name: need.name,
+        time: need.time,
     };
-    isTestUpdateModalOpen.value = true;
+    isNeedUpdateModalOpen.value = true;
 };
 
-function updateTest() {
+function updateNeed() {
     const form = useForm({
-        name: selectedTest.value.name,
-        time: selectedTest.value.time,
+        name: selectedNeed.value.name,
+        time: selectedNeed.value.time,
     });
-    const id = selectedTest.value.id;
+    const id = selectedNeed.value.id;
     form.put(update(id).url, {
         preserveScroll: true,
         onSuccess: () => {
-            isTestUpdateModalOpen.value = false;
-            filteredTests.value = props.tests;
+            isNeedUpdateModalOpen.value = false;
+            filteredNeeds.value = props.needs;
         },
     });
 }
 
-function destroyTest() {
+function destroyNeed() {
     const form = useForm({});
-    const id = selectedTest.value.id;
+    const id = selectedNeed.value.id;
     form.delete(destroy(id).url, {
         preserveScroll: true,
         onSuccess: () => {
             showDeleteModal.value = false;
-            selectedTest.value = { id: 0, name: '', time: 0 };
-            filteredTests.value = props.tests;
+            selectedNeed.value = { id: 0, name: '', time: 0 };
+            filteredNeeds.value = props.needs;
         },
         onFinish: () => {
             showDeleteModal.value = false;
-            selectedTest.value = { id: 0, name: '', time: 0 };
+            selectedNeed.value = { id: 0, name: '', time: 0 };
         },
     });
 }
 
-function openDeleteModal(test: Test) {
-    selectedTest.value = {
-        id: test.id,
-        name: test.name,
-        time: test.time,
+function openDeleteModal(need: Need) {
+    selectedNeed.value = {
+        id: need.id,
+        name: need.name,
+        time: need.time,
     };
     showDeleteModal.value = true;
 }
@@ -134,7 +134,7 @@ function openDeleteModal(test: Test) {
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <h2 class="text-2xl font-medium text-pmf-green-dark">
-                    Llistat de proves
+                    Llistat de necessitats
                 </h2>
             </div>
             <div>
@@ -142,7 +142,7 @@ function openDeleteModal(test: Test) {
                     class="text-md inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#b0ceca] bg-pmf-primary px-2.5 py-1.5 font-medium text-white transition-colors hover:bg-pmf-primary"
                     title="Editar prova" @click="OpenCreateModal()">
                     <SquarePen class="h-3.5 w-3.5" />
-                    Afegir prova
+                    Afegir necessitat
                 </button>
             </div>
         </div>
@@ -154,43 +154,43 @@ function openDeleteModal(test: Test) {
                     <tr
                         class="border-b border-[#c5d8d5] text-left text-[11px] font-medium tracking-wider text-pmf-green uppercase">
                         <th class="px-4 py-3">Número</th>
-                        <th class="px-4 py-3">Nom del test</th>
+                        <th class="px-4 py-3">Nom del la necessitat</th>
                         <th class="px-4 py-3">Duració</th>
                         <th class="px-4 py-3">Accions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#eaf2f1]">
-                    <tr class="transition-colors hover:bg-[#f4f9f8]" v-for="test in visibleItems" :key="test.id">
+                    <tr class="transition-colors hover:bg-[#f4f9f8]" v-for="need in visibleItems" :key="need.id">
                         <td class="px-4 py-3">
                             <span
                                 class="rounded-full bg-pmf-secondary px-2 py-0.5 text-[11px] font-medium text-pmf-green">
-                                {{ test.id }}
+                                {{ need.id }}
                             </span>
                         </td>
                         <td class="px-4 py-3 font-medium text-pmf-green-dark">
-                            {{ test.name }}
+                            {{ need.name }}
                         </td>
                         <td class="px-4 py-3 text-pmf-grey-light">
-                            {{ test.time }} min
+                            {{ need.time }} min
                         </td>
                         <td class="flex gap-2 py-3">
-                            <button @click="openEditModal(test)"
+                            <button @click="openEditModal(need)"
                                 class="inline-flex items-center gap-1.5 rounded-lg border border-pmf-primary bg-pmf-primary px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-pmf-primary/90"
-                                title="Editar prova">
+                                title="Editar necessitat">
                                 <SquarePen class="h-4 w-4" />
                                 Editar
                             </button>
-                            <button @click="openDeleteModal(test)"
+                            <button @click="openDeleteModal(need)"
                                 class="inline-flex items-center gap-1.5 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100"
-                                title="Eliminar prova">
+                                title="Eliminar necessitat">
                                 <Trash2 class="h-4 w-4" />
                                 Eliminar
                             </button>
                         </td>
                     </tr>
-                    <tr v-if="!props.tests || props.tests.length === 0">
+                    <tr v-if="!props.needs || props.needs.length === 0">
                         <td colspan="8" class="px-5 py-12 text-center text-pmf-grey-light">
-                            No hi ha cap prova registrada.
+                            No hi ha cap necessitat registrada.
                         </td>
                     </tr>
                 </tbody>
@@ -201,8 +201,8 @@ function openDeleteModal(test: Test) {
                 class="flex flex-col gap-3 border-t border-[#eaf2f1] bg-[#f8fcfb] px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <p class="text-sm text-pmf-grey-light">
                     Mostrant de {{ (limit - 1) * perPage + 1 }} a
-                    {{ Math.min(limit * perPage, filteredTests.length) }} de
-                    {{ filteredTests.length }} resultats
+                    {{ Math.min(limit * perPage, filteredNeeds.length) }} de
+                    {{ filteredNeeds.length }} resultats
                 </p>
 
                 <div class="flex items-center gap-2">
@@ -222,12 +222,12 @@ function openDeleteModal(test: Test) {
         </div>
     </div>
 
-    <ModalDelete v-model="showDeleteModal" :title="'Eliminar prova'" :name="selectedTest.name" :id="selectedTest.id"
-        @confirm="destroyTest" />
+    <ModalDelete v-model="showDeleteModal" :title="'Eliminar necessitat'" :name="selectedNeed.name" :id="selectedNeed.id"
+        @confirm="destroyNeed" />
 
     <!-- Modal create -->
 
-    <div v-if="isTestModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+    <div v-if="isNeedModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
         @click.self="closeModal">
         <div
             class="relative mx-4 w-full max-w-2xl overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl">
@@ -236,7 +236,7 @@ function openDeleteModal(test: Test) {
                 <div class="flex items-center gap-3">
                     <div>
                         <h3 class="text-[19px] font-medium text-pmf-green-dark">
-                            Dades de la prova
+                            Dades de la necessitat
                         </h3>
                     </div>
                 </div>
@@ -246,19 +246,19 @@ function openDeleteModal(test: Test) {
                 </button>
             </div>
 
-            <form @submit.prevent="createTest()">
+            <form @submit.prevent="createNeed()">
                 <div class="max-h-[65vh] overflow-y-auto px-6 py-5">
                     <p
                         class="mb-3 flex items-center gap-2 text-[11px] font-medium tracking-wider text-pmf-grey-light uppercase">
-                        Informació de la prova
+                        Informació de la necessitat
                     </p>
 
                     <div class="grid grid-cols-6 gap-x-4 gap-y-4">
                         <div class="col-span-3">
                             <label for="name"
                                 class="mb-1 block text-[11px] font-medium tracking-wider text-pmf-green uppercase">Nom de
-                                la prova</label>
-                            <input id="name" v-model="selectedTest.name" type="text" name="name"
+                                la necessitat</label>
+                            <input id="name" v-model="selectedNeed.name" type="text" name="name"
                                 class="w-full rounded-lg border border-[#c5d8d5] px-3 py-2 text-sm text-pmf-green-dark outline-none" />
                         </div>
 
@@ -266,7 +266,7 @@ function openDeleteModal(test: Test) {
                             <label for="time"
                                 class="mb-1 block text-[11px] font-medium tracking-wider text-pmf-green uppercase">Temps
                                 (minuts)</label>
-                            <input id="time" v-model="selectedTest.time" type="number" name="time"
+                            <input id="time" v-model="selectedNeed.time" type="number" name="time"
                                 class="w-full rounded-lg border border-[#c5d8d5] px-3 py-2 text-sm text-pmf-green-dark outline-none" />
                         </div>
                     </div>
@@ -289,7 +289,7 @@ function openDeleteModal(test: Test) {
 
     <!-- Modal update -->
 
-    <div v-if="isTestUpdateModalOpen"
+    <div v-if="isNeedUpdateModalOpen"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
         @click.self="closeModalUpdate">
         <div
@@ -299,7 +299,7 @@ function openDeleteModal(test: Test) {
                 <div class="flex items-center gap-3">
                     <div>
                         <h3 class="text-[19px] font-medium text-pmf-green-dark">
-                            Dades de la prova
+                            Dades de la necessitat
                         </h3>
                     </div>
                 </div>
@@ -309,19 +309,19 @@ function openDeleteModal(test: Test) {
                 </button>
             </div>
 
-            <form @submit.prevent="updateTest()">
+            <form @submit.prevent="updateNeed()">
                 <div class="max-h-[65vh] overflow-y-auto px-6 py-5">
                     <p
                         class="mb-3 flex items-center gap-2 text-[11px] font-medium tracking-wider text-pmf-grey-light uppercase">
-                        Informació de la prova
+                        Informació de la necessitat
                     </p>
 
                     <div class="grid grid-cols-6 gap-x-4 gap-y-4">
                         <div class="col-span-3">
                             <label for="name"
                                 class="mb-1 block text-[11px] font-medium tracking-wider text-pmf-green uppercase">Nom de
-                                la prova</label>
-                            <input id="name" v-model="selectedTest.name" name="name" type="text"
+                                la necessitat</label>
+                            <input id="name" v-model="selectedNeed.name" name="name" type="text"
                                 class="w-full rounded-lg border border-[#c5d8d5] px-3 py-2 text-sm text-pmf-green-dark outline-none" />
                         </div>
 
@@ -329,7 +329,7 @@ function openDeleteModal(test: Test) {
                             <label for="time"
                                 class="mb-1 block text-[11px] font-medium tracking-wider text-pmf-green uppercase">Temps
                                 (minuts)</label>
-                            <input id="time" v-model="selectedTest.time" name="time" type="number"
+                            <input id="time" v-model="selectedNeed.time" name="time" type="number"
                                 class="w-full rounded-lg border border-[#c5d8d5] px-3 py-2 text-sm text-pmf-green-dark outline-none" />
                         </div>
                     </div>
