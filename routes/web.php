@@ -3,8 +3,8 @@
 use App\Http\Controllers\LoginAdminController;
 use App\Http\Controllers\LoginPatientController;
 use App\Http\Controllers\Patients\DashboardPatientController;
-use App\Http\Controllers\Workers\Admin\TestAdminController;
 use App\Http\Controllers\Workers\Admin\NeedAdminController;
+use App\Http\Controllers\Workers\Admin\TestAdminController;
 use App\Http\Controllers\Workers\Doctor\downloadpdfController;
 use App\Http\Controllers\Workers\Secretary\DatesController;
 use App\Http\Controllers\Workers\Secretary\PatientsListController;
@@ -75,6 +75,9 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
     Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
     Route::get('/doctorConsult/{id}/{idDate?}', [DatesController::class, 'ajaxDoctor'])->name('ajax-doctor');
+    // Filter dates
+    Route::get('/filter-dates', [DatesController::class, 'filterDates'])->name('filter-dates');
+    Route::get('/filter-patient-dates', [DatesController::class, 'filterPatientDates'])->name('filter-patient-dates');
 
     // EDIT PATIENT INFO
     //General info

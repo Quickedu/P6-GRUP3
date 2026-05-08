@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Workers\Secretary;
 
 use App\Actions\Workers\Secretary\GetDoctorAvailabilityAction;
 use App\Actions\Workers\Secretary\GetPatientConsultationAction;
+use App\Actions\Workers\Secretary\GetPatientDatesAction;
 use App\Actions\Workers\Secretary\GetTestConsultationAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Worker\FilterPatientByNtsRequest;
 use App\Http\Requests\Worker\StoreDateRequest;
 use App\Models\Date;
 use App\Models\Test;
@@ -65,5 +67,37 @@ class DatesController extends Controller
         $dates = Date::with(['patient', 'worker.user', 'test'])->where('date_time', '>=', now())->orderBy('date_time')->get();
 
         return $dates;
+    }
+
+    public function filterDates(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'date' => ['nullable', 'date_format:Y-m-d'],
+            'doctorName' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $query = Date::with(['patient', 'worker.user', 'test'])
+            ->where('date_time', '>=', now());
+
+        if ($validated['date'] ?? null) {
+            $query->whereDate('date_time', $validated['date']);
+        }
+
+        if ($validated['doctorName'] ?? null) {
+            $query->whereHas('worker.user', function ($q) use ($validated) {
+                $q->where('name', 'like', '%'.$validated['doctorName'].'%');
+            });
+        }
+
+        $dates = $query->orderBy('date_time')->get();
+
+        return response()->json($dates);
+    }
+
+    public function filterPatientDates(FilterPatientByNtsRequest $request, GetPatientDatesAction $getPatientDatesAction): JsonResponse
+    {
+        $validated = $request->validated();
+
+        return response()->json($getPatientDatesAction->handle($validated['nts']));
     }
 }
