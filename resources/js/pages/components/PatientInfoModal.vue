@@ -2,94 +2,79 @@
 import { useForm } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import { X, Mail, Phone } from 'lucide-vue-next';
-import { watch, onUnmounted } from 'vue';
+import { watch } from 'vue';
 
 interface Patient {
     id: number;
     name: string;
+    birth_date: string;
     nts: string;
     address: string;
     dni: string;
-    phone: number;
+    phone: string;
     email: string;
 }
 
 const props = defineProps<{
     modelValue: boolean;
-    patient: Patient | null;
+    patient: Patient;
 }>();
 
 const emit = defineEmits<{
     (e: 'update:modelValue', value: boolean): void;
 }>();
 
-const form = useForm<Patient>({
-    id: 0,
+const form = useForm({
     name: '',
     address: '',
     dni: '',
     nts: '',
-    phone: 0,
+    phone: '',
     email: '',
 });
 
 watch(() => props.modelValue, (isOpen) => {
-    if (isOpen && props.patient) {
-        form.defaults(props.patient);
-        form.reset();
+    if (isOpen) {
+        form.name    = props.patient.name;
+        form.address = props.patient.address;
+        form.dni     = props.patient.dni;
+        form.nts     = props.patient.nts;
+        form.phone   = props.patient.phone;
+        form.email   = props.patient.email;
     }
 });
 
-const closeModal = () => {
-    emit('update:modelValue', false);
-    form.reset();
-    form.clearErrors();
-};
+const close = () => emit('update:modelValue', false);
 
-const submitForm = () => {
-    form.post(`/patients/${form.id}`, {
-        onSuccess: () => closeModal(),
+const submit = () => {
+    form.post(`/patients/${props.patient.id}`, {
+        onSuccess: () => close(),
     });
 };
 
-const handleKeyPress = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') closeModal();
-};
-
-watch(() => props.modelValue, (isOpen) => {
-    isOpen
-        ? document.addEventListener('keydown', handleKeyPress)
-        : document.removeEventListener('keydown', handleKeyPress);
-});
-
-onUnmounted(() => document.removeEventListener('keydown', handleKeyPress));
 </script>
 
 <template>
     <div
         v-if="modelValue"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
-        @click.self="closeModal"
+        @click.self="close"
     >
-        <div class="relative mx-4 w-full max-w-2xl overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl">
+        <div class="mx-4 w-full max-w-lg overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl">
 
             <!-- Header -->
-            <div class="flex items-center justify-between border-b border-[#deecea] bg-[#f0f7f6] px-6 py-3">
-                <div class="flex items-center gap-3">
-                    <div>
-                        <h3 class="text-[19px] font-medium text-pmf-green-dark">Dades del pacient</h3>
-                    </div>
+            <div class="flex items-center justify-between border-b border-[#deecea] bg-[#f0f7f6] px-6 py-4">
+                <div>
+                    <h3 class="text-[15px] font-semibold text-pmf-green-dark">Editar dades personals</h3>
+                    <p class="text-xs text-pmf-grey-light mt-0.5">{{ patient.name }}</p>
                 </div>
-                <button @click="closeModal"
-                    aria-label="Tancar"
-                    class="rounded-lg p-1.5 text-pmf-grey-light transition-colors hover:bg-pmf-secondary cursor-pointer"
-                >
-                    <X class="h-4 w-4" aria-hidden="true" />
+                <button @click="close" class="rounded-lg p-1.5 text-pmf-grey-light hover:bg-pmf-secondary cursor-pointer transition-colors">
+                    <X class="h-4 w-4" />
                 </button>
             </div>
+            
 
-            <!-- Body -->
-            <form @submit.prevent="submitForm">
+            <form @submit.prevent="submit">
                 <div class="max-h-[65vh] overflow-y-auto px-6 py-5">
 
                     <p class="mb-3 flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-pmf-grey-light">
@@ -181,7 +166,7 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeyPress));
                 <div class="flex items-center justify-end gap-3 border-t border-[#deecea] bg-[#f9fcfc] px-6 py-4">
                     <button
                         type="button"
-                        @click="closeModal"
+                        @click="close"
                         class="rounded-lg border border-[#c5d8d5] bg-white px-4 py-2 text-sm font-medium text-pmf-grey-light transition-colors hover:bg-pmf-secondary cursor-pointer"
                     >
                         Cancel·lar
@@ -198,3 +183,50 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeyPress));
         </div>
     </div>
 </template>
+
+<style scoped>
+.field-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--pmf-green);
+}
+.field-input {
+    display: block;
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid #c5d8d5;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--pmf-green-dark);
+    outline: none;
+}
+.field-input:focus { border-color: var(--pmf-turquoise); }
+.btn-primary {
+    border-radius: 0.5rem;
+    background-color: var(--pmf-primary);
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary {
+    border-radius: 0.5rem;
+    border: 1px solid #c5d8d5;
+    background-color: #fff;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--pmf-grey-light);
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+.btn-secondary:hover { background-color: var(--pmf-secondary); }
+</style>
