@@ -16,7 +16,7 @@ class Patient extends Authenticatable
         'phone',
         'email',
         'birth_date',
-        'created_at'
+        'created_at',
     ];
 
     public function getRoleAttribute(): string
