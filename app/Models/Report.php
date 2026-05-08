@@ -10,6 +10,7 @@ class Report extends Model
         'patient_id',
         'worker_id',
         'pdf_path',
+        'created_at',
     ];
 
     public function patient()

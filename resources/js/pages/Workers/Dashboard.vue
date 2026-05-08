@@ -5,9 +5,37 @@ import DoctorDashboard from '@/components/Dashboard/DoctorDashboard.vue';
 import AdminDashboard from '@/components/Dashboard/AdminDashboard.vue';
 import { dashboard } from '@/routes';
 
-defineProps({
-    dates: Array,
-});
+interface ScheduledDate {
+  id: number;
+  patient_id: number;
+  worker_id: number;
+  test_id: number;
+  date_time: string;
+  time: number;
+  estat: string;
+  urgencia: string;
+  description: string;
+  patient: {
+    id: number;
+    name: string;
+    nts: string;
+  };
+  worker: {
+    id: number;
+    user: {
+      id: number;
+      name: string;
+    };
+  };
+  test: {
+    id: number;
+    name: string;
+  };
+}
+
+defineProps<{
+  dates?: ScheduledDate[]
+}>()
 
 defineOptions({
     layout: {
@@ -24,7 +52,7 @@ const page = usePage();
 const user = page.props.auth.user
 
 const isSecretry = user.role === 'secretary'
-const isDoctor = user.role === 'doctor'
+const isDoctor = user.role === 'doctor' || user.role === 'technician'
 const isAdmin = user.role === 'admin'
 
 //check user role using session and make 3 v-if components depending on the role
