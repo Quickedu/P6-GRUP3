@@ -55,7 +55,7 @@ Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
     Route::post('work/logout', [LoginAdminController::class, 'destroy'])->name('loginworkerDestroy');
     // Patients List
     Route::get('/patientsList', [PatientsListController::class, 'index'])->name('patientsList');
-    //Patient Detail
+    // Patient Detail
     Route::get('/patientDetail/{patient}', [PatientsListController::class, 'patientDetail'])->name('patientDetail');
 });
 
@@ -81,15 +81,15 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     Route::get('/filter-patient-dates', [DatesController::class, 'filterPatientDates'])->name('filter-patient-dates');
 
     // EDIT PATIENT INFO
-    //General info
+    // General info
     Route::post('/patients/{patient}', [PatientsListController::class, 'update']);
 
-    //Patient needs
+    // Patient needs
     Route::get('/patients/{patient}/needs', [PatientsListController::class, 'patientsNeeds']);
     Route::post('/patients/{patient}/needs', [PatientsListController::class, 'addPatientNeed']);
     Route::delete('/patients/{patient}/needs/{need}', [PatientsListController::class, 'deletePatientNeed']);
 
-    //Patient reports
+    // Patient reports
     Route::get('/patients/{patient}/reports', [PatientsListController::class, 'patientsReports']);
 });
 

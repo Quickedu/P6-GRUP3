@@ -15,7 +15,7 @@ class UpdateNeedsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'need_id' => 'required|exists:needs,id'
+            'need_id' => 'required|exists:needs,id',
         ];
     }
 }
