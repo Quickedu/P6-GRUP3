@@ -22,10 +22,12 @@ Route::get('/dashboard', function (DatesController $datesController) {
     $role = $user?->role ?? 'patient';
 
     $dates = $role === 'secretary' ? $datesController->seeDates() : [];
+    $doctors = $role === 'secretary' ? $datesController->seeDoctors() : [];
 
     return Inertia::render('Workers/Dashboard', [
         'role' => $role,
         'dates' => $dates,
+        'doctors' => $doctors,
     ]);
 
 })->middleware('auth')->name('dashboard');

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import { X } from 'lucide-vue-next'
+import { computed, ref } from 'vue'
+import { filterPatientDates } from '@/routes'
 
 interface ScheduledDate {
   id: number;
@@ -31,7 +32,7 @@ interface ScheduledDate {
 }
 
 const emit = defineEmits<{
-  resultsFound: [dates: ScheduledDate[], error: string]
+  'results-found': [dates: ScheduledDate[], error: string]
   cleared: []
 }>()
 
@@ -41,6 +42,7 @@ const error = ref('')
 
 const isValidNts = computed(() => {
   const ntsRegex = /^[A-Z]{4}\d{10}$/
+
   return ntsRegex.test(nts.value)
 })
 
@@ -54,23 +56,57 @@ const handleSearch = async () => {
   loading.value = true
 
   try {
-    const response = await fetch(`/filter-patient-dates?nts=${encodeURIComponent(nts.value)}`)
+    const response = await fetch(filterPatientDates.url({ query: { nts: nts.value } }))
     const data = await response.json()
+    
+    console.log('Response from server:', data) // Add this debug line
 
     if (data.status === 'success') {
-      emit('resultsFound', data.data, '')
+      console.log('Dates found:', data.data) // Add this debug line
+      emit('results-found', data.data, '')
     } else {
       const errorMsg = data.message || 'Error al cercar pacient'
       error.value = errorMsg
-      emit('resultsFound', [], errorMsg)
+      emit('results-found', [], errorMsg)
     }
   } catch (err) {
+    console.error('Fetch error:', err) // Add this debug line
     error.value = 'Error al realitzar la cerca'
-    emit('resultsFound', [], error.value)
+    emit('results-found', [], error.value)
   } finally {
     loading.value = false
   }
 }
+
+// const handleSearch = async () => {
+//   if (!isValidNts.value) {
+//     error.value = 'El NTS ha de tenir 4 lletres majúscules i 10 dígits, sense espais.'
+
+//     return
+//   }
+
+//   error.value = ''
+//   loading.value = true
+
+//   try {
+//     const response = await fetch(filterPatientDates.url({ query: { nts: nts.value } }))
+//     const data = await response.json()
+
+//     if (data.status === 'success') {
+//       emit('results-found', data.data, '')
+//     } else {
+//       const errorMsg = data.message || 'Error al cercar pacient'
+
+//       error.value = errorMsg
+//       emit('results-found', [], errorMsg)
+//     }
+//   } catch {
+//     error.value = 'Error al realitzar la cerca'
+//     emit('results-found', [], error.value)
+//   } finally {
+//     loading.value = false
+//   }
+// }
 
 const handleReset = () => {
   nts.value = ''
@@ -78,11 +114,6 @@ const handleReset = () => {
   emit('cleared')
 }
 
-const handleKeyDown = (event: KeyboardEvent) => {
-  if (event.key === 'Enter') {
-    handleSearch()
-  }
-}
 </script>
 
 <template>
@@ -105,6 +136,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
         </div>
         
         <button
+          type="button"
           @click="handleSearch"
           :disabled="!isValidNts || loading"
           class="flex items-center gap-2 rounded-lg px-2 text-sm font-medium transition bg-pmf-green hover:bg-pmf-primary text-white cursor-pointer">
@@ -113,6 +145,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
         
         <button
           v-if="nts"
+          type="button"
           @click="handleReset"
           class="flex items-center gap-1 pt-1 px-1 text-sm font-medium text-pmf-primary cursor-pointer rounded-lg transition hover:bg-gray-100">
           <X class="h-4 w-4"/>

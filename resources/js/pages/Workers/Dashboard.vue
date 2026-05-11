@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Head, Link, usePage } from '@inertiajs/vue3'
-import SecretaryDashboard from '@/components/Dashboard/SecretaryDashboard.vue';
-import DoctorDashboard from '@/components/Dashboard/DoctorDashboard.vue';
+import { Head, usePage } from '@inertiajs/vue3'
 import AdminDashboard from '@/components/Dashboard/AdminDashboard.vue';
+import DoctorDashboard from '@/components/Dashboard/DoctorDashboard.vue';
+import SecretaryDashboard from '@/components/Dashboard/SecretaryDashboard.vue';
 import { dashboard } from '@/routes';
 
 interface ScheduledDate {
@@ -33,8 +33,14 @@ interface ScheduledDate {
   };
 }
 
+interface DoctorOption {
+  id: number;
+  name: string;
+}
+
 defineProps<{
   dates?: ScheduledDate[]
+  doctors?: DoctorOption[]
 }>()
 
 defineOptions({
@@ -61,7 +67,7 @@ const isAdmin = user.role === 'admin'
 <template>
     <Head title="Escriptori" />
     <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-        <SecretaryDashboard v-if="isSecretry" :dates="dates"/>
+        <SecretaryDashboard v-if="isSecretry" :dates="dates" :doctors="doctors"/>
         <DoctorDashboard v-if="isDoctor"/>
         <AdminDashboard v-if="isAdmin"/>
     </div>

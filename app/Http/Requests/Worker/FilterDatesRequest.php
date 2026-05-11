@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class FilterPatientByNtsRequest extends FormRequest
+class FilterDatesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,8 @@ class FilterPatientByNtsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nts' => ['required', 'string', 'regex:/^[A-Z]{4}\d{10}$/'],
+            'date' => ['nullable', 'date_format:Y-m-d'],
+            'doctor_id' => ['nullable', 'integer', 'exists:workers,id'],
         ];
     }
 
@@ -38,9 +39,9 @@ class FilterPatientByNtsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nts.required' => 'El camp NTS és obligatori',
-            'nts.string' => 'El valor NTS ha de ser una cadena de lletres i números',
-            'nts.regex' => 'El NTS ha de tenir 4 lletres majúscules i 10 números',
+            'date.date_format' => 'La data ha de tenir el format AAAA-MM-DD',
+            'doctor_id.integer' => 'El doctor seleccionat no és vàlid',
+            'doctor_id.exists' => 'El doctor seleccionat no existeix',
         ];
     }
 }
