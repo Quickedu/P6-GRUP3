@@ -59,16 +59,11 @@ const AdminNavItems: NavItem[] = [
         href: NeedIndex(),
         icon: Cross,
     },
-    {
-        title: 'Historial de cites',
-        href: '/',
-        icon: History,
-    },
 ];
 
 const PatientNavItems: NavItem[] = [
     {
-        title: 'Calendari',
+        title: 'Agenda',
         href: patientDashboard(),
         icon: CalendarDays,
     },
@@ -81,7 +76,7 @@ const PatientNavItems: NavItem[] = [
 
 const DoctorNavItems: NavItem[] = [
     {
-        title: 'Inici',
+        title: 'Agenda',
         href: dashboard(),
         icon: LayoutGrid,
     },
@@ -89,16 +84,6 @@ const DoctorNavItems: NavItem[] = [
         title: 'Pacients',
         href: patientsList(),
         icon: Users,
-    },
-    {
-        title: 'Necessitats dels pacients',
-        href: '/',
-        icon: Cross,
-    },
-    {
-        title: 'Historial de cites',
-        href: '/',
-        icon: History,
     },
     {
         title: 'Formulari de report',
@@ -154,4 +139,4 @@ const footerNavItems: NavItem[] = [
             <NavUser />
         </SidebarFooter>
     </Sidebar>
-</template> 
+</template>
