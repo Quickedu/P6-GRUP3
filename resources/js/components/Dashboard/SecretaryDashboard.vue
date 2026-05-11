@@ -1,7 +1,6 @@
 <script setup lang="ts">
-  import { Head, Link, usePage } from '@inertiajs/vue3'
-  import { ref } from 'vue'
   import { Calendar, Stethoscope, User, FileText, Loader, Clock } from 'lucide-vue-next'
+  import { ref } from 'vue'
   import DatesFilterComponent from './DatesFilterComponent.vue'
   import PatientFilterComponent from './PatientFilterComponent.vue'
 
@@ -33,17 +32,41 @@
     };
   }
 
-  defineProps({
-    dates: {
-      type: Array<ScheduledDate>,
-      default: () => [],
-    },
+  interface DoctorOption {
+    id: number;
+    name: string;
+  }
+
+  withDefaults(defineProps<{
+    dates?: ScheduledDate[]
+    doctors?: DoctorOption[]
+  }>(), {
+    dates: () => [],
+    doctors: () => [],
   });
 
   const displayedDates = ref<ScheduledDate[]>([])
   const resultError = ref('')
   const isLoading = ref(false)
   const hasSearched = ref(false)
+  type ActiveFilter = 'dates' | 'patient'
+
+  const activeFilter = ref<ActiveFilter>('dates')
+
+  const resetResults = () => {
+    hasSearched.value = false
+    displayedDates.value = []
+    resultError.value = ''
+  }
+
+  const showFilter = (filter: ActiveFilter) => {
+    if (activeFilter.value === filter) {
+      return
+    }
+
+    activeFilter.value = filter
+    resetResults()
+  }
 
   const getUrgencyColor = (urgency: string) => {
     const colors: Record<string, string> = {
@@ -51,16 +74,8 @@
       'preferent': 'bg-yellow-100 text-yellow-800',
       'no urgent': 'bg-green-100 text-green-800',
     };
-    return colors[urgency] || 'bg-gray-100 text-gray-800';
-  };
 
-  const getEstatColor = (estat: string) => {
-    const colors: Record<string, string> = {
-      'pendent': 'bg-yellow-100 text-yellow-600',
-      'completada': 'bg-green-100 text-green-700',
-      'cancel·lada': 'bg-red-100 text-red-700',
-    };
-    return colors[estat] || 'bg-gray-100 text-gray-800';
+    return colors[urgency] || 'bg-gray-100 text-gray-800';
   };
 
   const handlePatientResults = (dates: ScheduledDate[], error: string) => {
@@ -70,9 +85,7 @@
   }
 
   const handlePatientCleared = () => {
-    hasSearched.value = false
-    displayedDates.value = []
-    resultError.value = ''
+    resetResults()
   }
 
   const handleDatesResults = (dates: ScheduledDate[], error: string) => {
@@ -82,24 +95,51 @@
   }
 
   const handleDatesCleared = () => {
-    hasSearched.value = false
-    displayedDates.value = []
-    resultError.value = ''
+    resetResults()
   }
 </script>
 
 <template>
   <div class="w-full space-y-8">
-    <div>
+    <div class="flex flex-wrap gap-2">
+      <button
+        type="button"
+        :aria-pressed="activeFilter === 'dates'"
+        @click="showFilter('dates')"
+        :class="[
+          'rounded-lg px-3 py-2 text-sm font-medium transition',
+          activeFilter === 'dates'
+            ? 'bg-pmf-primary text-white'
+            : 'border border-gray-300 bg-white text-pmf-primary hover:bg-gray-50',
+        ]">
+        Filtrar per dates
+      </button>
+
+      <button
+        type="button"
+        :aria-pressed="activeFilter === 'patient'"
+        @click="showFilter('patient')"
+        :class="[
+          'rounded-lg px-3 py-2 text-sm font-medium transition',
+          activeFilter === 'patient'
+            ? 'bg-pmf-primary text-white'
+            : 'border border-gray-300 bg-white text-pmf-primary hover:bg-gray-50',
+        ]">
+        Filtrar per pacient
+      </button>
+    </div>
+
+    <div v-if="activeFilter === 'patient'">
       <PatientFilterComponent 
         @results-found="handlePatientResults"
         @cleared="handlePatientCleared"
       />
     </div>
-    <div>
+    <div v-else>
       <h2 class="mb-4 text-lg font-bold">Filtrar cites per data i metge</h2>
       <DatesFilterComponent 
         :initial-dates="dates"
+        :doctors="doctors"
         @results-found="handleDatesResults"
         @cleared="handleDatesCleared"
       />
@@ -138,28 +178,28 @@
               <p class="text-gray-600 line-clamp-2">{{ date.description }}</p>
             </div>
 
-            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-4">
+            <div class="mb-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div class="items-start">
                 <div class="inline-flex gap-2">
                   <User class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
                   <p class="text-xs text-gray-600">Pacient</p>
                 </div>
-                  <p class="font-semibold text-sm">{{ date.patient?.name }}</p>
-                  <p class="text-xs text-gray-500">{{ date.patient?.nts }}</p>
+                <p class="font-semibold text-sm">{{ date.patient?.name }}</p>
+                <p class="text-xs text-gray-500">{{ date.patient?.nts }}</p>
               </div>
 
               <div class="items-start">
                 <div class="inline-flex gap-2">
-                    <Stethoscope class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
-                    <p class="text-xs text-gray-600">Doctor</p>
+                  <Stethoscope class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
+                  <p class="text-xs text-gray-600">Doctor</p>
                 </div>
-                  <p class="font-semibold text-sm">{{ date.worker?.user?.name || 'N/A' }}</p>
+                <p class="font-semibold text-sm">{{ date.worker?.user?.name || 'N/A' }}</p>
               </div>
 
               <div class="items-start">
                 <div class="inline-flex gap-2">
-                    <Calendar class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
-                    <p class="text-xs text-gray-600">Data i hora</p>
+                  <Calendar class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
+                  <p class="text-xs text-gray-600">Data i hora</p>
                 </div>
                 <p class="font-semibold text-sm">{{ new Date(date.date_time).toLocaleDateString('ca-ES') }}</p>
                 <p class="text-xs text-gray-500">{{ new Date(date.date_time).toLocaleString('ca-ES', { hour: '2-digit', minute: '2-digit' }) }}</p>
@@ -167,12 +207,11 @@
 
               <div class="items-start">
                 <div class="inline-flex gap-2">
-                    <Clock class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
-                    <p class="text-xs text-gray-600">Temps</p>
+                  <Clock class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
+                  <p class="text-xs text-gray-600">Temps</p>
                 </div>
                 <p class="font-semibold text-sm">{{ date.time }} min</p>
               </div>
-            </div>
             </div>
           </div>
         </div>
@@ -183,4 +222,5 @@
         <p class="text-gray-600">No hi han cites amb els filtres seleccionats</p>
       </div>
     </div>
+  </div>
 </template>
