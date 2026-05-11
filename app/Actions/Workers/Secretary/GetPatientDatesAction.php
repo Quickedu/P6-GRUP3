@@ -30,11 +30,11 @@ class GetPatientDatesAction
             ->orderBy('date_time')
             ->get();
 
-        //Debug: Log the results
+        // Debug: Log the results
         \Log::info('Patient Dates Query:', [
             'nts' => $nts,
             'patient_id' => $patient->id,
-            'count' => $dates->count()
+            'count' => $dates->count(),
         ]);
 
         return [

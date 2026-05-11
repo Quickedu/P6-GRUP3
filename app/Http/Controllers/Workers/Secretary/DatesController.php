@@ -84,31 +84,31 @@ class DatesController extends Controller
     public function filterDates(FilterDatesRequest $request, GetDoctorDatesAction $getDoctorDatesAction): JsonResponse
     {
         $validated = $request->validated();
-        
+
         $result = $getDoctorDatesAction->handle(
             $validated['date'] ?? null,
             $validated['doctor_id'] ?? null,
         );
-        
-        //Ensure consistent response format
+
+        // Ensure consistent response format
         return response()->json([
             'status' => $result['status'] ?? 'success',
             'data' => $result['data'] ?? [],
-            'message' => $result['message'] ?? ''
+            'message' => $result['message'] ?? '',
         ]);
     }
 
     public function filterPatientDates(FilterPatientByNtsRequest $request, GetPatientDatesAction $getPatientDatesAction): JsonResponse
     {
         $validated = $request->validated();
-        
+
         $result = $getPatientDatesAction->handle($validated['nts']);
-        
-        //Ensure consistent response format
+
+        // Ensure consistent response format
         return response()->json([
             'status' => $result['status'] ?? 'success',
             'data' => $result['data'] ?? [],
-            'message' => $result['message'] ?? ''
+            'message' => $result['message'] ?? '',
         ]);
     }
 }
