@@ -14,6 +14,9 @@ class Patient extends Authenticatable
         'address',
         'dni',
         'phone',
+        'email',
+        'birth_date',
+        'created_at',
     ];
 
     public function getRoleAttribute(): string
@@ -29,5 +32,10 @@ class Patient extends Authenticatable
     public function needs(): BelongsToMany
     {
         return $this->belongsToMany(Need::class, 'patient_needs');
+    }
+
+    public function reports(): HasMany
+    {
+        return $this->HasMany(Report::class);
     }
 }

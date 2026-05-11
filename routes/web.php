@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\LoginAdminController;
 use App\Http\Controllers\LoginPatientController;
-use App\Http\Controllers\Patients\DashboardPatientController;
+use App\Http\Controllers\Patients\PatientController;
 use App\Http\Controllers\Workers\Admin\NeedAdminController;
 use App\Http\Controllers\Workers\Admin\TestAdminController;
 use App\Http\Controllers\Workers\Doctor\downloadpdfController;
@@ -46,8 +46,10 @@ Route::middleware('guest')->group(function () {
 // PRIVATE
 // PATIENT AREA
 Route::middleware(['auth:patient'])->group(function () {
-    Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
+    Route::get('/dashboardPatient', [PatientController::class, 'index'])->name('patientDashboard');
     Route::post('patient/logout', [LoginPatientController::class, 'destroy'])->name('loginpatientDestroy');
+
+    Route::get('patient/reports', [PatientController::class, 'show'])->name('patientReports');
 });
 
 // WORKERS COMMON AREA
@@ -56,6 +58,8 @@ Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
     Route::post('work/logout', [LoginAdminController::class, 'destroy'])->name('loginworkerDestroy');
     // Patients List
     Route::get('/patientsList', [PatientsListController::class, 'index'])->name('patientsList');
+    // Patient Detail
+    Route::get('/patientDetail/{patient}', [PatientsListController::class, 'patientDetail'])->name('patientDetail');
 });
 
 // ADMIN AREA
@@ -78,8 +82,18 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     // Filter dates
     Route::get('/filter-dates', [DatesController::class, 'filterDates'])->name('filter-dates');
     Route::get('/filter-patient-dates', [DatesController::class, 'filterPatientDates'])->name('filter-patient-dates');
-    // Edit patient
-    Route::post('/patients/{id}', [PatientsListController::class, 'update']);
+
+    // EDIT PATIENT INFO
+    // General info
+    Route::post('/patients/{patient}', [PatientsListController::class, 'update']);
+
+    // Patient needs
+    Route::get('/patients/{patient}/needs', [PatientsListController::class, 'patientsNeeds']);
+    Route::post('/patients/{patient}/needs', [PatientsListController::class, 'addPatientNeed']);
+    Route::delete('/patients/{patient}/needs/{need}', [PatientsListController::class, 'deletePatientNeed']);
+
+    // Patient reports
+    Route::get('/patients/{patient}/reports', [PatientsListController::class, 'patientsReports']);
 });
 
 // DOCTOR AREA

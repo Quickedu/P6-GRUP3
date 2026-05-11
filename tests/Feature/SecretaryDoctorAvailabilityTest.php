@@ -240,7 +240,7 @@ test('it provides worker mapping for doctors on new appointment page', function 
 
     $response->assertSuccessful();
     $response->assertInertia(fn (Assert $page) => $page
-        ->component('Workers/newDate')
+        ->component('Workers/NewDate')
         ->has('doctors', 1)
         ->where('doctors.0.id', $doctorUserId)
         ->where('doctors.0.worker_id', $doctorWorkerId)
