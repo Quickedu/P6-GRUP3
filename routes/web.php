@@ -1,8 +1,7 @@
 <?php
-
 use App\Http\Controllers\LoginAdminController;
 use App\Http\Controllers\LoginPatientController;
-use App\Http\Controllers\Patients\DashboardPatientController;
+use App\Http\Controllers\Patients\PatientController;
 use App\Http\Controllers\Workers\Admin\NeedAdminController;
 use App\Http\Controllers\Workers\Admin\TestAdminController;
 use App\Http\Controllers\Workers\Doctor\downloadpdfController;
@@ -44,8 +43,10 @@ Route::middleware('guest')->group(function () {
 // PRIVATE
 // PATIENT AREA
 Route::middleware(['auth:patient'])->group(function () {
-    Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
+    Route::get('/dashboardPatient', [PatientController::class, 'index'])->name('patientDashboard');
     Route::post('patient/logout', [LoginPatientController::class, 'destroy'])->name('loginpatientDestroy');
+
+    Route::get('patient/reports', [PatientController::class, 'show'])->name('patientReports');
 });
 
 // WORKERS COMMON AREA
