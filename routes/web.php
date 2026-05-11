@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\LoginAdminController;
 use App\Http\Controllers\LoginPatientController;
 use App\Http\Controllers\Patients\PatientController;
