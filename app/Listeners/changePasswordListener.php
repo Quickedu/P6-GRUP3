@@ -2,21 +2,16 @@
 
 namespace App\Listeners;
 
+use App\Events\UpdatePasswordEvent;
+
 class changePasswordListener
 {
     /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(UpdatePasswordEvent $event): void
     {
-        //
+        $event->user->last_update_password = now();
+        $event->user->save();
     }
 }
