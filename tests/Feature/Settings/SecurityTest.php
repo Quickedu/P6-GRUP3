@@ -1,6 +1,9 @@
 <?php
 
+use App\Events\UpdatePasswordEvent;
 use App\Models\User;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Fortify\Features;
@@ -80,6 +83,8 @@ test('security page renders without two factor when feature is disabled', functi
 test('password can be updated', function () {
     $user = User::factory()->create();
 
+    Date::setTestNow('2026-05-05 10:30:00');
+
     $response = $this
         ->actingAs($user)
         ->from(route('security.edit'))
@@ -94,6 +99,9 @@ test('password can be updated', function () {
         ->assertRedirect(route('security.edit'));
 
     expect(Hash::check('new-password', $user->refresh()->password))->toBeTrue();
+    expect($user->last_update_password?->equalTo(Date::now()))->toBeTrue();
+
+    Date::setTestNow();
 });
 
 test('correct password must be provided to update password', function () {
@@ -111,4 +119,24 @@ test('correct password must be provided to update password', function () {
     $response
         ->assertSessionHasErrors('current_password')
         ->assertRedirect(route('security.edit'));
+});
+
+test('password update dispatches event', function () {
+    $user = User::factory()->create();
+
+    Event::fake([UpdatePasswordEvent::class]);
+
+    $this
+        ->actingAs($user)
+        ->from(route('security.edit'))
+        ->put(route('user-password.update'), [
+            'current_password' => 'password',
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ])
+        ->assertSessionHasNoErrors();
+
+    Event::assertDispatched(UpdatePasswordEvent::class, function (UpdatePasswordEvent $event) use ($user): bool {
+        return $event->user->is($user);
+    });
 });

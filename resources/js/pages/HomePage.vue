@@ -108,7 +108,7 @@ defineOptions({
 								<img src="/images/logo.png" alt="Logo PMF" class="summary-logo" />
 							</figure>
 							<figure class="summary-slice slice-3">
-								<img src="/images/grup2.jpeg" alt="Equip medic" />
+								<img src="/images/nosaltres1.jpeg" alt="Equip de programadors" />
 							</figure>
 						</div>
 					</div>
