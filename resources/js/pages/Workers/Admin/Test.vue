@@ -152,7 +152,7 @@ function openDeleteModal(test: Test) {
                 <table class="w-full min-w-160 text-sm">
                 <thead class="bg-[#f0f7f6]">
                     <tr
-                        class="border-b border-[#c5d8d5] text-left text-[11px] font-medium tracking-wider text-pmf-green uppercase">
+                        class="border-b border-[rgb(197,216,213)] text-left text-[11px] font-medium tracking-wider text-pmf-green uppercase">
                         <th class="px-4 py-3">Número</th>
                         <th class="px-4 py-3">Nom del test</th>
                         <th class="px-4 py-3">Duració</th>
@@ -173,7 +173,7 @@ function openDeleteModal(test: Test) {
                         <td class="px-4 py-3 text-pmf-grey-light">
                             {{ test.time }} min
                         </td>
-                        <td class="flex gap-2 py-3">
+                        <td class="flex gap-2 py-3 max-w-27">
                             <button @click="openEditModal(test)"
                                 class="inline-flex items-center gap-1.5 rounded-lg border border-pmf-primary bg-pmf-primary px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-pmf-primary/90"
                                 title="Editar prova">

@@ -153,7 +153,7 @@ function openDeleteModal(need: Need) {
                 <thead class="bg-[#f0f7f6]">
                     <tr
                         class="border-b border-[#c5d8d5] text-left text-[11px] font-medium tracking-wider text-pmf-green uppercase">
-                        <th class="px-4 py-3">Número</th>
+                        <th class="px-4 py-3 max-w-20">Número</th>
                         <th class="px-4 py-3">Nom del la necessitat</th>
                         <th class="px-4 py-3">Duració</th>
                         <th class="px-4 py-3">Accions</th>
@@ -161,7 +161,7 @@ function openDeleteModal(need: Need) {
                 </thead>
                 <tbody class="divide-y divide-[#eaf2f1]">
                     <tr class="transition-colors hover:bg-[#f4f9f8]" v-for="need in visibleItems" :key="need.id">
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3 min-w-4">
                             <span
                                 class="rounded-full bg-pmf-secondary px-2 py-0.5 text-[11px] font-medium text-pmf-green">
                                 {{ need.id }}
@@ -173,7 +173,7 @@ function openDeleteModal(need: Need) {
                         <td class="px-4 py-3 text-pmf-grey-light">
                             {{ need.time }} min
                         </td>
-                        <td class="flex gap-2 py-3">
+                        <td class="flex gap-2 py-3 max-w-27">
                             <button @click="openEditModal(need)"
                                 class="inline-flex items-center gap-1.5 rounded-lg border border-pmf-primary bg-pmf-primary px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-pmf-primary/90"
                                 title="Editar necessitat">
