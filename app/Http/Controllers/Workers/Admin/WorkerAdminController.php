@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Workers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Worker\Admin\WorkerAdminRquest;
 use App\Models\User;
 use App\Models\Worker;
 use Inertia\Inertia;
+use App\Http\Requests\Worker\Admin\WorkerAdminRequest;
 
 class WorkerAdminController extends Controller
 {
@@ -45,7 +45,7 @@ class WorkerAdminController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(WorkerAdminRquest $request)
+    public function store(WorkerAdminRequest $request)
     {
         $validated = $request->validated();
 
@@ -91,7 +91,7 @@ class WorkerAdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(WorkerAdminRquest $request, Worker $worker)
+    public function update(WorkerAdminRequest $request, Worker $worker)
     {
         $validated = $request->validated();
 
