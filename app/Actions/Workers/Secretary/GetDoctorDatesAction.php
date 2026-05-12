@@ -10,14 +10,18 @@ class GetDoctorDatesAction
     /**
      * @return array<string, mixed>
      */
-    public function handle(?string $date = null, ?int $doctorId = null): array
+    public function handle(?string $date = null, ?int $doctorId = null, bool $defaultToToday = true): array
     {
-        $query = Date::with(['patient', 'worker.user', 'test']);
+        $query = Date::with(['patient', 'worker.user', 'test'])->where('estat', 'programada');;
 
-        // Only apply date filter if a date is provided
+        //only apply date filter if a date is provided
         if ($date !== null) {
             $filterDate = Carbon::parse($date);
             $query->whereDate('date_time', $filterDate->format('Y-m-d'));
+        }
+        elseif ($defaultToToday && $doctorId === null) {
+        //default to today's date
+        $query->whereDate('date_time', Carbon::today()->format('Y-m-d'));
         }
 
         // Apply doctor filter if provided

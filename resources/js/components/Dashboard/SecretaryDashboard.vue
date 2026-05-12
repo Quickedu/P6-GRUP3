@@ -3,6 +3,7 @@
   import { ref } from 'vue'
   import DatesFilterComponent from './DatesFilterComponent.vue'
   import PatientFilterComponent from './PatientFilterComponent.vue'
+  import DateDetailModal from '@/pages/components/DateDetailModal.vue'
 
   interface ScheduledDate {
     id: number;
@@ -53,6 +54,10 @@
 
   const activeFilter = ref<ActiveFilter>('dates')
 
+  // Modal state
+  const isModalOpen = ref(false)
+  const selectedDate = ref<ScheduledDate | null>(null)
+
   const resetResults = () => {
     hasSearched.value = false
     displayedDates.value = []
@@ -97,6 +102,18 @@
   const handleDatesCleared = () => {
     resetResults()
   }
+
+  //open modal with selected date
+  const openDateDetail = (date: ScheduledDate) => {
+    selectedDate.value = date
+    isModalOpen.value = true
+  }
+
+  //close modal
+  const closeModal = () => {
+    isModalOpen.value = false
+    selectedDate.value = null
+  }
 </script>
 
 <template>
@@ -112,7 +129,7 @@
             ? 'bg-pmf-primary text-white'
             : 'border border-gray-300 bg-white text-pmf-primary hover:bg-gray-50',
         ]">
-        Filtrar per dates
+        Filtrar per dates i metge
       </button>
 
       <button
@@ -161,7 +178,8 @@
       <div v-else-if="displayedDates.length > 0" class="space-y-4">
         <h3 class="text-2xl font-bold text-pmf-primary">{{ displayedDates.length }} cites trobades</h3>
         <div class="space-y-4">
-          <div v-for="date in displayedDates" :key="date.id" class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition">
+          <div v-for="date in displayedDates" :key="date.id" class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition cursor-pointer"
+              @click="openDateDetail(date)">
             <div class="flex items-start justify-between mb-4">
               <div class="flex-1">
                 <div class="flex items-center">
@@ -222,5 +240,11 @@
         <p class="text-gray-600">No hi han cites amb els filtres seleccionats</p>
       </div>
     </div>
+
+    <!--date detail modal -->
+    <DateDetailModal
+      v-model:is-open="isModalOpen"
+      :date="selectedDate"
+      @close="closeModal"/>
   </div>
 </template>
