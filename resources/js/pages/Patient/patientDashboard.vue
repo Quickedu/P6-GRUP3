@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { Head, usePage } from '@inertiajs/vue3'
-import { patientDashboard } from '@/routes'
+import { Head, usePage, router } from '@inertiajs/vue3'
+import { patientDashboard, cancelDate } from '@/routes'
 import { computed, ref } from 'vue'
 import { Calendar, Clock, AlertCircle, X } from 'lucide-vue-next'
 import FullCalendar from '@/pages/components/FullCalendar.vue'
 import EventPopover from '@/pages/components/EventPopover.vue'
+import textNotify from '@/pages/components/textNotify.vue';
 
 interface DateRecord {
     id: number;
@@ -24,9 +25,9 @@ defineOptions({
 
 const page = usePage()
 const dates = page.props.dates as DateRecord[]
+const flashMessage = computed(() => (page.props.flash as any)?.message);
+const flashStatus = computed(() => (page.props.flash as any)?.status);
 
-// const selectedEvent = ref<any>(null)
-// const showModal = ref(false)
 const popover = ref<{
     visible: boolean
     x: number
@@ -101,16 +102,6 @@ const getStatusText = (urgencia: string) => {
     }
 }
 
-// Etiqueta d'estat per la llista i el modal
-const getStatusStyle = (estat: string) => {
-    switch (estat) {
-        case 'programada':  return { bg: 'bg-blue-100 text-blue-700',   label: 'Programada' }
-        case 'realitzada':  return { bg: 'bg-[#f0f7f6] text-pmf-green', label: 'Realitzada' }
-        case 'cancel·lada': return { bg: 'bg-red-100 text-red-700',     label: 'Cancel·lada' }
-        default:            return { bg: 'bg-gray-100 text-gray-600',   label: estat }
-    }
-}
-
 const now = new Date()
 const todayDates = computed(() =>
     dates
@@ -147,16 +138,34 @@ const getUrgencyStyle = (urgencia: string) => {
             return { bg: 'bg-gray-100 text-gray-600', label: 'NO URGENT' }
     }
 }
+
+async function handleCancel(id: number) {
+    try {
+        const res = await fetch(cancelDate.url(id), {
+            method: 'POST',
+        })
+        if (res.ok) {
+            window.location.reload()
+        } else {
+            console.error('Error al cancel·lar la cita')
+        }
+    } catch (error) {
+        console.error('Error cancel·lant la cita', error)
+    }
+}
 </script>
 
 <template>
     <Head title="Gestió de cites" />
+    <textNotify class="mb-4"
+        v-if="flashMessage"
+        :message="flashMessage"
+        :status="flashStatus"/>
 
     <h1 class="text-pmf-primary font-semibold text-2xl mt-4 mx-6">Visites</h1>
 
     <div class="space-y-6 px-4 py-4 sm:px-6">
 
-        <!-- Summary cards -->
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
 
             <div class="rounded-xl border border-red-200 bg-red-200/30 px-6 py-5">
@@ -225,6 +234,12 @@ const getUrgencyStyle = (urgencia: string) => {
                             <Clock class="h-3 w-3" aria-hidden="true" />
                             {{ formatTime(date.date_time) }}
                         </div>
+                        <button v-if="date.estat !== 'cancel·lada'"
+                            @click="handleCancel(date.id)"
+                            class="mt-2 w-full rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100 transition-colors cursor-pointer"
+                        >
+                            Cancel·lar cita
+                        </button>
                     </div>
                 </div>
 
@@ -242,5 +257,6 @@ const getUrgencyStyle = (urgencia: string) => {
         :x="popover.x"
         :y="popover.y"
         @close="closePopover"
+        @cancel="handleCancel"
     />
 </template>

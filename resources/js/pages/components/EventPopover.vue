@@ -5,6 +5,7 @@ interface PopoverEvent {
     title: string
     startStr: string
     extendedProps: {
+        id: number
         status: string
         urgency: string
         test: string
@@ -20,6 +21,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'close'): void
+    (e: 'cancel', id: number): void
 }>()
 
 const getUrgencyStyle = (urgencia: string) => {
@@ -103,6 +105,14 @@ const formatDateTime = (dateStr: string) =>
                         {{ getUrgencyStyle(event.extendedProps.urgency).label }}
                     </span>
                 </div>
+            </div>
+            <div v-if="event.extendedProps.status !== 'cancel·lada'" class="mt-4 pt-3 border-t border-gray-100">
+                <button
+                    @click="emit('cancel', event.extendedProps.id)"
+                    class="w-full rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100 transition-colors cursor-pointer"
+                >
+                    Cancel·lar cita
+                </button>
             </div>
         </div>
     </div>
