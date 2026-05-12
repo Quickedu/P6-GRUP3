@@ -18,6 +18,7 @@ import { Microscope, Users, BookUser, History, Cross, CalendarDays  } from 'luci
 import { Settings } from 'lucide-vue-next';
 import { index as TestIndex } from '@/routes/tests';
 import { index as NeedIndex } from '@/routes/needs';
+import { index as WorkerIndex } from '@/routes/workers';
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
@@ -41,7 +42,7 @@ const AdminNavItems: NavItem[] = [
     },
     {
         title: 'Gestió de personal',
-        href: '/',
+        href: WorkerIndex(),
         icon: BookUser,
     },
     {

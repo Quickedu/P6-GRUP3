@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginPatientController;
 use App\Http\Controllers\Patients\PatientController;
 use App\Http\Controllers\Workers\Admin\NeedAdminController;
 use App\Http\Controllers\Workers\Admin\TestAdminController;
+use App\Http\Controllers\Workers\Admin\WorkerAdminController;
 use App\Http\Controllers\Workers\Doctor\DoctorController;
 use App\Http\Controllers\Workers\Doctor\downloadpdfController;
 use App\Http\Controllers\Workers\Secretary\DatesController;
@@ -67,6 +68,7 @@ Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
 Route::middleware(['auth:admin', 'Admin', 'verified'])->group(function () {
     Route::resource('tests', TestAdminController::class);
     Route::resource('needs', NeedAdminController::class);
+    Route::resource('workers', WorkerAdminController::class);
 });
 
 // SECRETARY AREA
