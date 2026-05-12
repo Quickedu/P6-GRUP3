@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Workers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Worker\Admin\WorkerAdminRquest;
-use App\Models\Worker;
 use App\Models\User;
+use App\Models\Worker;
 use Inertia\Inertia;
-
 
 class WorkerAdminController extends Controller
 {
@@ -41,9 +40,7 @@ class WorkerAdminController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.

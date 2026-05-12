@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Worker\Admin;
 
-use App\Models\Worker;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
