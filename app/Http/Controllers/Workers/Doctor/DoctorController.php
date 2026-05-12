@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Workers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Date;
-use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use App\Models\Patient;
-use App\Models\Report;
 use App\Models\User;
+use Inertia\Inertia;
 
 class DoctorController extends Controller
 {
