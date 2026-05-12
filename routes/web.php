@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\LoginAdminController;
 use App\Http\Controllers\LoginPatientController;
-use App\Http\Controllers\Patients\DashboardPatientController;
+use App\Http\Controllers\Patients\PatientController;
 use App\Http\Controllers\Workers\Admin\NeedAdminController;
 use App\Http\Controllers\Workers\Admin\TestAdminController;
 use App\Http\Controllers\Workers\Admin\WorkerAdminController;
+use App\Http\Controllers\Workers\Doctor\DoctorController;
 use App\Http\Controllers\Workers\Doctor\downloadpdfController;
 use App\Http\Controllers\Workers\Secretary\DatesController;
 use App\Http\Controllers\Workers\Secretary\PatientsListController;
@@ -23,10 +24,12 @@ Route::get('/dashboard', function (DatesController $datesController) {
     $role = $user?->role ?? 'patient';
 
     $dates = $role === 'secretary' ? $datesController->seeDates() : [];
+    $doctors = $role === 'secretary' ? $datesController->seeDoctors() : [];
 
     return Inertia::render('Workers/Dashboard', [
         'role' => $role,
         'dates' => $dates,
+        'doctors' => $doctors,
     ]);
 
 })->middleware('auth')->name('dashboard');
@@ -45,8 +48,10 @@ Route::middleware('guest')->group(function () {
 // PRIVATE
 // PATIENT AREA
 Route::middleware(['auth:patient'])->group(function () {
-    Route::get('/dashboardPatient', [DashboardPatientController::class, 'index'])->name('patientDashboard');
+    Route::get('/dashboardPatient', [PatientController::class, 'index'])->name('patientDashboard');
     Route::post('patient/logout', [LoginPatientController::class, 'destroy'])->name('loginpatientDestroy');
+
+    Route::get('patient/reports', [PatientController::class, 'show'])->name('patientReports');
 });
 
 // WORKERS COMMON AREA
@@ -96,6 +101,7 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
 
 // DOCTOR AREA
 Route::middleware(['auth:admin', 'Doctor', 'verified'])->group(function () {
+    Route::get('/dashboard', [DoctorController::class, 'index'])->name('dashboard');
     Route::get('/formReport', [downloadpdfController::class, 'index'])->name('formReport');
     Route::post('/downloadReport', [downloadpdfController::class, 'download'])->name('downloadReport');
     Route::get('/formReport/patient/{nts}', [downloadpdfController::class, 'ajaxPatient'])->name('formReport.patient');

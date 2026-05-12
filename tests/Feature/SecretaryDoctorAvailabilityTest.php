@@ -310,3 +310,184 @@ test('it returns summed patient needs time', function () {
     $response->assertJsonPath('status', 'success');
     $response->assertJsonPath('data.number', 35);
 });
+
+test('it returns patient dates for an authenticated secretary', function () {
+    $doctorUserId = DB::table('users')->insertGetId([
+        'name' => 'Doctor Patient Dates',
+        'email' => 'doctor.patient.dates@example.com',
+        'role' => 'doctor',
+        'password' => bcrypt('password'),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $doctorWorkerId = DB::table('workers')->insertGetId([
+        'user_id' => $doctorUserId,
+        'nss' => 'NSS900004',
+        'address' => 'Test address',
+        'dni' => '90000004A',
+        'phone' => 600100006,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $secretaryUser = User::factory()->create([
+        'role' => 'secretary',
+    ]);
+
+    $patientId = DB::table('patients')->insertGetId([
+        'name' => 'Patient Dates',
+        'nts' => 'ABCD1234567890',
+        'address' => 'Test address',
+        'dni' => '10000004Z',
+        'phone' => 600100007,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $testId = DB::table('test_types')->insertGetId([
+        'name' => 'Analitica',
+        'time' => 20,
+    ]);
+
+    DB::table('dates')->insert([
+        'patient_id' => $patientId,
+        'worker_id' => $doctorWorkerId,
+        'test_id' => $testId,
+        'date_time' => now()->addWeek(),
+        'time' => 20,
+        'estat' => 'programada',
+        'urgencia' => 'no urgent',
+        'description' => 'Control de prova',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $response = $this
+        ->actingAs($secretaryUser, 'admin')
+        ->getJson(route('filter-patient-dates', ['nts' => 'ABCD1234567890']));
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('status', 'success');
+    $response->assertJsonCount(1, 'data');
+    $response->assertJsonPath('data.0.patient.name', 'Patient Dates');
+});
+
+test('it filters dates by doctor id and date with today as the default date', function () {
+    $firstDoctorUserId = DB::table('users')->insertGetId([
+        'name' => 'Doctor Filter One',
+        'email' => 'doctor.filter.one@example.com',
+        'role' => 'doctor',
+        'password' => bcrypt('password'),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $firstDoctorWorkerId = DB::table('workers')->insertGetId([
+        'user_id' => $firstDoctorUserId,
+        'nss' => 'NSS900005',
+        'address' => 'Test address',
+        'dni' => '90000005A',
+        'phone' => 600100008,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $secondDoctorUserId = DB::table('users')->insertGetId([
+        'name' => 'Doctor Filter Two',
+        'email' => 'doctor.filter.two@example.com',
+        'role' => 'doctor',
+        'password' => bcrypt('password'),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $secondDoctorWorkerId = DB::table('workers')->insertGetId([
+        'user_id' => $secondDoctorUserId,
+        'nss' => 'NSS900006',
+        'address' => 'Test address',
+        'dni' => '90000006A',
+        'phone' => 600100009,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $secretaryUser = User::factory()->create([
+        'role' => 'secretary',
+    ]);
+
+    $patientId = DB::table('patients')->insertGetId([
+        'name' => 'Filter Patient',
+        'nts' => 'WXYZ1234567890',
+        'address' => 'Test address',
+        'dni' => '10000005Z',
+        'phone' => 600100010,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $testId = DB::table('test_types')->insertGetId([
+        'name' => 'Ecografia',
+        'time' => 20,
+    ]);
+
+    DB::table('dates')->insert([
+        [
+            'patient_id' => $patientId,
+            'worker_id' => $firstDoctorWorkerId,
+            'test_id' => $testId,
+            'date_time' => today()->setTime(9, 0),
+            'time' => 20,
+            'estat' => 'programada',
+            'urgencia' => 'no urgent',
+            'description' => 'Today first doctor',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ],
+        [
+            'patient_id' => $patientId,
+            'worker_id' => $secondDoctorWorkerId,
+            'test_id' => $testId,
+            'date_time' => today()->setTime(10, 0),
+            'time' => 20,
+            'estat' => 'programada',
+            'urgencia' => 'no urgent',
+            'description' => 'Today second doctor',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ],
+        [
+            'patient_id' => $patientId,
+            'worker_id' => $firstDoctorWorkerId,
+            'test_id' => $testId,
+            'date_time' => today()->addDay()->setTime(11, 0),
+            'time' => 20,
+            'estat' => 'programada',
+            'urgencia' => 'no urgent',
+            'description' => 'Tomorrow first doctor',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ],
+    ]);
+
+    $defaultDateResponse = $this
+        ->actingAs($secretaryUser, 'admin')
+        ->getJson(route('filter-dates', ['doctor_id' => $firstDoctorWorkerId]));
+
+    $defaultDateResponse->assertSuccessful();
+    $defaultDateResponse->assertJsonPath('status', 'success');
+    $defaultDateResponse->assertJsonPath('available', true);
+    $defaultDateResponse->assertJsonCount(1, 'data');
+    $defaultDateResponse->assertJsonPath('data.0.worker_id', $firstDoctorWorkerId);
+    $defaultDateResponse->assertJsonPath('data.0.description', 'Today first doctor');
+
+    $dateOnlyResponse = $this
+        ->actingAs($secretaryUser, 'admin')
+        ->getJson(route('filter-dates', ['date' => today()->addDay()->toDateString()]));
+
+    $dateOnlyResponse->assertSuccessful();
+    $dateOnlyResponse->assertJsonPath('status', 'success');
+    $dateOnlyResponse->assertJsonPath('available', true);
+    $dateOnlyResponse->assertJsonCount(1, 'data');
+    $dateOnlyResponse->assertJsonPath('data.0.description', 'Tomorrow first doctor');
+});

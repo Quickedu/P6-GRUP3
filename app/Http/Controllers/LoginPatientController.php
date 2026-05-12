@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Laravel\Fortify\Features;
 
 class LoginPatientController extends Controller
 {
@@ -15,6 +16,8 @@ class LoginPatientController extends Controller
     {
         return Inertia::render('auth/Login', [
             'status' => $request->session()->get('status'),
+            'canResetPassword' => Features::enabled(Features::resetPasswords()),
+            'canRegister' => Features::enabled(Features::registration()),
         ]);
     }
 

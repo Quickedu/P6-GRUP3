@@ -4,6 +4,7 @@ namespace App\Actions\Workers\Secretary;
 
 use App\Models\Date;
 use App\Models\Patient;
+use Carbon\Carbon;
 
 class GetPatientDatesAction
 {
@@ -25,9 +26,16 @@ class GetPatientDatesAction
 
         $dates = Date::with(['patient', 'worker.user', 'test'])
             ->where('patient_id', $patient->id)
-            ->where('date_time', '>=', now())
+            ->where('date_time', '>=', Carbon::now())
             ->orderBy('date_time')
             ->get();
+
+        // Debug: Log the results
+        \Log::info('Patient Dates Query:', [
+            'nts' => $nts,
+            'patient_id' => $patient->id,
+            'count' => $dates->count(),
+        ]);
 
         return [
             'status' => 'success',

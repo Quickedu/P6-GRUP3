@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Head, Link, usePage } from '@inertiajs/vue3'
-import SecretaryDashboard from '@/components/Dashboard/SecretaryDashboard.vue';
-import DoctorDashboard from '@/components/Dashboard/DoctorDashboard.vue';
+import { Head, usePage } from '@inertiajs/vue3'
 import AdminDashboard from '@/components/Dashboard/AdminDashboard.vue';
+import DoctorDashboard from '@/components/Dashboard/DoctorDashboard.vue';
+import SecretaryDashboard from '@/components/Dashboard/SecretaryDashboard.vue';
 import { dashboard } from '@/routes';
 
 interface ScheduledDate {
@@ -33,8 +33,23 @@ interface ScheduledDate {
   };
 }
 
+interface DoctorOption {
+  id: number;
+  name: string;
+}
+
+interface DateRecord {
+  id: number;
+  date_time: string;
+  estat: string;
+  urgencia: string;
+  test: {name: string;}
+}
+
 defineProps<{
   dates?: ScheduledDate[]
+  doctors?: DoctorOption[]
+  doctorDates?: DateRecord[]
 }>()
 
 defineOptions({
@@ -47,6 +62,7 @@ defineOptions({
         ],
     },
 });
+
 
 const page = usePage();
 const user = page.props.auth.user
@@ -61,8 +77,8 @@ const isAdmin = user.role === 'admin'
 <template>
     <Head title="Escriptori" />
     <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-        <SecretaryDashboard v-if="isSecretry" :dates="dates"/>
-        <DoctorDashboard v-if="isDoctor"/>
+        <SecretaryDashboard v-if="isSecretry" :dates="dates" :doctors="doctors"/>
+        <DoctorDashboard v-if="isDoctor" :doctorDates="doctorDates"/>
         <AdminDashboard v-if="isAdmin"/>
     </div>
 </template>
