@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ChevronLeft, ChevronRight, X, Loader } from 'lucide-vue-next';
-  import { computed, ref } from 'vue';
+  import { computed, ref, onMounted } from 'vue';
   import { filterDates } from '@/routes';
 
   interface ScheduledDate {
@@ -54,6 +54,7 @@
   const selectedDate = ref<string | null>(null);
   const doctorSearch = ref<string>('');
   const isLoading = ref(false);
+  const isInitialLoad = ref(true);
 
   const normalizeSearch = (value: string): string => value.trim().toLocaleLowerCase('ca-ES');
 
@@ -89,9 +90,17 @@
 
     isLoading.value = true;
 
-    const query: Record<string, string | number> = {};
+  const query: Record<string, string | number> = {};
 
-    if (selectedDate.value) {
+    // If no date is selected and it's the initial load, use today's date
+    if (!selectedDate.value && isInitialLoad.value) {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      query.date = `${year}-${month}-${day}`;
+      isInitialLoad.value = false;
+    } else if (selectedDate.value) {
       query.date = selectedDate.value;
     }
 
@@ -99,29 +108,30 @@
       query.doctor_id = selectedDoctorId.value;
     }
 
-    try {
-      const response = await fetch(filterDates.url({ query }));
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.status === 'success') {
-        emit('results-found', data.data, '');
-      } else {
-        const errorMessage = data.message || 'Error al realitzar la cerca';
-
-        emit('results-found', [], errorMessage);
-      }
-    } catch (error) {
-      console.error('Error fetching filtered dates:', error);
-      emit('results-found', [], 'Error al realitzar la cerca');
-    } finally {
-      isLoading.value = false;
+  try {
+    const response = await fetch(filterDates.url({ query }));
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
+    const data = await response.json();
+    if (data.status === 'success') {
+      emit('results-found', data.data, '');
+    } else {
+      const errorMessage = data.message || 'Error al realitzar la cerca';
+      emit('results-found', [], errorMessage);
+    }
+  } catch (error) {
+    console.error('Error fetching filtered dates:', error);
+    emit('results-found', [], 'Error al realitzar la cerca');
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+  //load initial dates when component mounts
+  onMounted(() => {
+    fetchFilteredDates();
+  });
 
   const previousDay = () => {
     const currentDate = selectedDate.value || getDateKey(new Date());
@@ -146,6 +156,7 @@
     selectedDate.value = null;  
     doctorSearch.value = '';
     emit('cleared');
+    fetchFilteredDates();
   };
 </script>
 

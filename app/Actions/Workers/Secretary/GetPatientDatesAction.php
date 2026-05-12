@@ -26,6 +26,7 @@ class GetPatientDatesAction
 
         $dates = Date::with(['patient', 'worker.user', 'test'])
             ->where('patient_id', $patient->id)
+            ->where('estat', 'programada')
             ->where('date_time', '>=', Carbon::now())
             ->orderBy('date_time')
             ->get();
