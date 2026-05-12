@@ -38,9 +38,18 @@ interface DoctorOption {
   name: string;
 }
 
+interface DateRecord {
+  id: number;
+  date_time: string;
+  estat: string;
+  urgencia: string;
+  test: {name: string;}
+}
+
 defineProps<{
   dates?: ScheduledDate[]
   doctors?: DoctorOption[]
+  doctorDates?: DateRecord[]
 }>()
 
 defineOptions({
@@ -53,6 +62,7 @@ defineOptions({
         ],
     },
 });
+
 
 const page = usePage();
 const user = page.props.auth.user
@@ -68,7 +78,7 @@ const isAdmin = user.role === 'admin'
     <Head title="Escriptori" />
     <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <SecretaryDashboard v-if="isSecretry" :dates="dates" :doctors="doctors"/>
-        <DoctorDashboard v-if="isDoctor"/>
+        <DoctorDashboard v-if="isDoctor" :doctorDates="doctorDates"/>
         <AdminDashboard v-if="isAdmin"/>
     </div>
 </template>

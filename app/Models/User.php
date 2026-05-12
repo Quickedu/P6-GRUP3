@@ -27,8 +27,14 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_update_password' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    public function worker()
+    {
+        return $this->hasOne(Worker::class);
     }
 }

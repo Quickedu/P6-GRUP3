@@ -18,6 +18,7 @@ import { Microscope, Users, BookUser, History, Cross, CalendarDays  } from 'luci
 import { Settings } from 'lucide-vue-next';
 import { index as TestIndex } from '@/routes/tests';
 import { index as NeedIndex } from '@/routes/needs';
+import { index as WorkerIndex } from '@/routes/workers';
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
@@ -41,7 +42,7 @@ const AdminNavItems: NavItem[] = [
     },
     {
         title: 'Gestió de personal',
-        href: '/',
+        href: WorkerIndex(),
         icon: BookUser,
     },
     {
@@ -59,16 +60,11 @@ const AdminNavItems: NavItem[] = [
         href: NeedIndex(),
         icon: Cross,
     },
-    {
-        title: 'Historial de cites',
-        href: '/',
-        icon: History,
-    },
 ];
 
 const PatientNavItems: NavItem[] = [
     {
-        title: 'Calendari',
+        title: 'Agenda',
         href: patientDashboard(),
         icon: CalendarDays,
     },
@@ -81,7 +77,7 @@ const PatientNavItems: NavItem[] = [
 
 const DoctorNavItems: NavItem[] = [
     {
-        title: 'Inici',
+        title: 'Agenda',
         href: dashboard(),
         icon: LayoutGrid,
     },
@@ -89,16 +85,6 @@ const DoctorNavItems: NavItem[] = [
         title: 'Pacients',
         href: patientsList(),
         icon: Users,
-    },
-    {
-        title: 'Necessitats dels pacients',
-        href: '/',
-        icon: Cross,
-    },
-    {
-        title: 'Historial de cites',
-        href: '/',
-        icon: History,
     },
     {
         title: 'Formulari de report',
@@ -154,4 +140,4 @@ const footerNavItems: NavItem[] = [
             <NavUser />
         </SidebarFooter>
     </Sidebar>
-</template> 
+</template>
