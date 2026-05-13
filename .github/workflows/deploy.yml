@@ -30,7 +30,9 @@ jobs:
 
             - name: Instal·la les dependències de Node JS
               run: npm install
-
+            - name: Configura .env per al build
+              run: | 
+               cp .env.example .env
             - name: Compila vue.js
               run: npm run build
             - name: Fent neteja
