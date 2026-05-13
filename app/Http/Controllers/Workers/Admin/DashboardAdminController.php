@@ -14,7 +14,6 @@ class DashboardAdminController extends Controller
 {
     public function index()
     {
-        // dd('dashboard admin');
         $totalPatients = Patient::query()->count('*');
         $totalWorkers = Worker::query()->count('*');
         $totalReports = Report::query()->count('*');
