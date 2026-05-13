@@ -6,6 +6,7 @@ import { Calendar, Clock, AlertCircle, X } from 'lucide-vue-next'
 import FullCalendar from '@/pages/components/FullCalendar.vue'
 import EventPopover from '@/pages/components/EventPopover.vue'
 import textNotify from '@/pages/components/textNotify.vue';
+import DeleteModal from '@/pages/components/cancelModal.vue';
 
 interface DateRecord {
     id: number;
@@ -39,6 +40,13 @@ const popover = ref<{
     y: 0,
     event: null
 })
+const showCancelModal = ref(false)
+const selectedDateId = ref<number | null>(null)
+
+function openCancelModal(id: number) {
+    selectedDateId.value = id
+    showCancelModal.value = true
+}
 
 const handleEventClick = (info: any) => {
     const rect = info.el.getBoundingClientRect()
@@ -139,19 +147,18 @@ const getUrgencyStyle = (urgencia: string) => {
     }
 }
 
-async function handleCancel(id: number) {
-    try {
-        const res = await fetch(cancelDate.url(id), {
-            method: 'POST',
-        })
-        if (res.ok) {
-            window.location.reload()
-        } else {
-            console.error('Error al cancel·lar la cita')
+function handleCancel(id: number) {
+    closePopover()
+    showCancelModal.value = false
+    
+    router.post(cancelDate.url(id), {}, {
+        onSuccess: () => {
+            router.reload()
+        },
+        onError: (errors) => {
+            console.error(errors)
         }
-    } catch (error) {
-        console.error('Error cancel·lant la cita', error)
-    }
+    })
 }
 </script>
 
@@ -235,7 +242,7 @@ async function handleCancel(id: number) {
                             {{ formatTime(date.date_time) }}
                         </div>
                         <button v-if="date.estat !== 'cancel·lada'"
-                            @click="handleCancel(date.id)"
+                            @click="openCancelModal(date.id)"
                             class="mt-2 w-full rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100 transition-colors cursor-pointer"
                         >
                             Cancel·lar cita
@@ -257,6 +264,13 @@ async function handleCancel(id: number) {
         :x="popover.x"
         :y="popover.y"
         @close="closePopover"
-        @cancel="handleCancel"
+        @cancel="openCancelModal"
+    />
+    <DeleteModal
+        v-model="showCancelModal"
+        title="Cancel·lar cita"
+        name="Aquesta cita mèdica"
+        :id="selectedDateId"
+        @confirm="handleCancel"
     />
 </template>

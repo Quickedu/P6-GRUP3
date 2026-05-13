@@ -15,7 +15,7 @@ const props = defineProps({
 // Can change the calendar view from the parent using the initial-view prop.
 // Available views: 'dayGridMonth' (default), 'dayGridWeek', 'dayGridDay'.
 const calendarOptions = {
-    plugins: [dayGridPlugin],
+    plugins: [dayGridPlugin ],
     initialView: props.initialView,
     locale: caLocale,
     headerToolbar: {

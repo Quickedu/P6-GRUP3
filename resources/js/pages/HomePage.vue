@@ -37,7 +37,7 @@ defineOptions({
 					</div>
 					<div class="home-brand__text">
 						<p class="home-brand__title">PMF Salut</p>
-						<p class="home-brand__subtitle">Portal de pacients</p>
+						<p class="home-brand__subtitle">Programa millora de flux</p>
 					</div>
 				</div>
 
@@ -73,27 +73,23 @@ defineOptions({
 						El teu espai per consultar cites i informes medics
 					</h1>
 					<p class="home-lead">
-						Un portal pensat per als pacients: agenda clara, informes accessibles i
-						seguiment medic sense soroll. Entra i gestiona tot en pocs clics.
+						Accedeix i podrás veure les cites que tens programades i els resultats médics registrats.
 					</p>
 					<div class="home-actions">
 						<Link :href="login()" class="home-button">Area personal</Link>
-						<a href="#informes" class="home-button home-button--ghost">
-							Veure informes
-						</a>
 					</div>
 					<div class="home-cards">
 						<div class="home-card">
 							<p class="home-card__label">Cites</p>
-							<p class="home-card__value">Agenda controlada</p>
+							<p class="home-card__value">Agenda amb les properes cites</p>
 						</div>
 						<div class="home-card">
 							<p class="home-card__label">Informes</p>
-							<p class="home-card__value">Historial sempre visible</p>
+							<p class="home-card__value">Informes i resultats</p>
 						</div>
 						<div class="home-card">
 							<p class="home-card__label">Suport</p>
-							<p class="home-card__value">Recordatoris i avisos</p>
+							<p class="home-card__value">Cancel·la una cita en qulasevol moment</p>
 						</div>
 					</div>
 				</div>

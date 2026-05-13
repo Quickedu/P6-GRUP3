@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Patients;
 
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\Date;
 use Illuminate\Support\Facades\Auth;
@@ -39,5 +40,14 @@ class PatientController extends Controller
             'status' => 'correcte',
             'message' => 'Cita cancelada correctament',
         ]);
+    }
+
+    public function updateDates()
+    {
+        Date::where('estat', 'programada')
+            ->whereDate('date_time', Carbon::yesterday())
+            ->update([
+                'estat' => 'realitzada',
+            ]);
     }
 }
