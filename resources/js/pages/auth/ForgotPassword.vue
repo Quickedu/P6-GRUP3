@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import { login } from '@/routes';
+import { loginWorker } from '@/routes';
 import { email } from '@/routes/password';
 
 defineOptions({
@@ -60,7 +60,7 @@ defineProps<{
 
         <div class="space-x-1 text-center text-sm text-muted-foreground">
             <span>Or, return to</span>
-            <TextLink :href="login()">log in</TextLink>
+            <TextLink :href="loginWorker()">log in</TextLink>
         </div>
     </div>
 </template>
