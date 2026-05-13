@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Workers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Worker\Admin\WorkerAdminRequest;
 use App\Models\User;
 use App\Models\Worker;
 use Inertia\Inertia;
-use App\Http\Requests\Worker\Admin\WorkerAdminRequest;
 
 class WorkerAdminController extends Controller
 {

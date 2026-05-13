@@ -76,7 +76,7 @@ Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
 // ADMIN AREA
 Route::middleware(['auth:admin', 'Admin', 'verified'])->group(function () {
     // Route::get('/adminDashboard', [DashboardAdminController::class, 'index'])->name('adminDashboard');
-Route::resource('tests', TestAdminController::class);
+    Route::resource('tests', TestAdminController::class);
     Route::resource('needs', NeedAdminController::class);
     Route::resource('workers', WorkerAdminController::class);
 });
