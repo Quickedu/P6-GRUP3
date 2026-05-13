@@ -86,8 +86,12 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     // New Appointment
     Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
     Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
+    // ajax for new appointment
     Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
     Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
+    // reSchedule appointment
+    Route::get('/dateSchedule/{date}', [DatesController::class, 'dateSchedule'])->name('dateSchedule');
+    Route::put('/dateSchedule/{date}', [DatesController::class, 'reSchedule'])->name('dateSchedule.update');
     //
     Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
     Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
