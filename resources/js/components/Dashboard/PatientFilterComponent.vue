@@ -78,36 +78,6 @@ const handleSearch = async () => {
   }
 }
 
-// const handleSearch = async () => {
-//   if (!isValidNts.value) {
-//     error.value = 'El NTS ha de tenir 4 lletres majúscules i 10 dígits, sense espais.'
-
-//     return
-//   }
-
-//   error.value = ''
-//   loading.value = true
-
-//   try {
-//     const response = await fetch(filterPatientDates.url({ query: { nts: nts.value } }))
-//     const data = await response.json()
-
-//     if (data.status === 'success') {
-//       emit('results-found', data.data, '')
-//     } else {
-//       const errorMsg = data.message || 'Error al cercar pacient'
-
-//       error.value = errorMsg
-//       emit('results-found', [], errorMsg)
-//     }
-//   } catch {
-//     error.value = 'Error al realitzar la cerca'
-//     emit('results-found', [], error.value)
-//   } finally {
-//     loading.value = false
-//   }
-// }
-
 const handleReset = () => {
   nts.value = ''
   error.value = ''

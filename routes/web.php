@@ -59,8 +59,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth:patient'])->group(function () {
     Route::get('/dashboardPatient', [PatientController::class, 'index'])->name('patientDashboard');
     Route::post('patient/logout', [LoginPatientController::class, 'destroy'])->name('loginpatientDestroy');
-
     Route::get('patient/reports', [PatientController::class, 'show'])->name('patientReports');
+    Route::post('patient/cancelDate/{date}', [PatientController::class, 'update'])->name('cancelDate');
 });
 
 // WORKERS COMMON AREA
