@@ -161,7 +161,7 @@
 </script>
 
 <template>
-  <div class="rounded-lg p-2 border border-gray-200 mb-3 w-full flex flex-col gap-3">
+  <div class="rounded-lg p-2 border bg-[#f0f7f6] border-b border-[#c5d8d5] mb-3 w-full flex flex-col gap-3">
     <!--clear filters button-->
     <button
       v-if="selectedDate !== null || doctorSearch.trim()"
@@ -177,7 +177,7 @@
       <button
         type="button"
         @click="previousDay"
-        class="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition bg-pmf-green hover:bg-pmf-primary text-white cursor-pointer">
+        class="flex items-center gap-2 rounded-lg pl-1 pr-2 py-2 text-sm font-medium transition bg-pmf-green hover:bg-pmf-primary text-white cursor-pointer">
         <ChevronLeft class="h-4 w-4"/>
         Anterior
       </button>
@@ -195,7 +195,7 @@
       <button
         type="button"
         @click="nextDay"
-        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition bg-pmf-green hover:bg-pmf-primary text-white cursor-pointer">
+        class="flex items-center gap-2 rounded-lg pl-2 pr-1 py-2 text-sm font-medium transition bg-pmf-green hover:bg-pmf-primary text-white cursor-pointer">
         Següent
         <ChevronRight class="h-4 w-4" />
       </button>

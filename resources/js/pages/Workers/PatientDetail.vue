@@ -60,7 +60,13 @@ const flashStatus = computed(() => (page.props.flash as any)?.status);
 const isInfoModalOpen = ref(false);
 const isNeedsModalOpen = ref(false);
 
-const goBack = () => router.get('/patientsList');
+const goBack = () => {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        router.get('/patientsList');
+    }
+};
 
 </script>
 
