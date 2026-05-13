@@ -50,6 +50,15 @@ defineProps<{
   dates?: ScheduledDate[]
   doctors?: DoctorOption[]
   doctorDates?: DateRecord[]
+  stats?: {
+    totalPatients: number;
+    totalWorkers: number;
+    totalReports: number;
+    totalNeeds: number;
+  }
+  chartDays?: string[];
+  chartReports?: number[];
+  chartPatients?: number[];
 }>()
 
 defineOptions({
@@ -75,10 +84,16 @@ const isAdmin = user.role === 'admin'
 </script>
 
 <template>
-  <Head title="Escriptori" />
-  <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-      <SecretaryDashboard v-if="isSecretry" :dates="dates" :doctors="doctors"/>
-      <DoctorDashboard v-if="isDoctor" :doctorDates="doctorDates"/>
-      <AdminDashboard v-if="isAdmin"/>
-  </div>
+    <Head title="Escriptori" />
+    <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+        <SecretaryDashboard v-if="isSecretry" :dates="dates" :doctors="doctors"/>
+        <DoctorDashboard v-if="isDoctor" :doctorDates="doctorDates"/>
+        <AdminDashboard 
+            v-if="isAdmin" 
+            :stats="stats || {}"
+            :chartDays="chartDays || []"
+            :chartReports="chartReports || []"
+            :chartPatients="chartPatients || []"
+        />
+    </div>
 </template>
