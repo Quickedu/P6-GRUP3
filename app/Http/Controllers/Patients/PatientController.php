@@ -32,12 +32,12 @@ class PatientController extends Controller
         Date::where('patient_id', Auth::user()->id)
             ->where('id', $date)
             ->update([
-                'estat' => 'cancel·lada'
+                'estat' => 'cancel·lada',
             ]);
 
         return redirect()->back()->with([
             'status' => 'correcte',
-            'message' => 'Cita cancelada correctament'
+            'message' => 'Cita cancelada correctament',
         ]);
     }
 }
