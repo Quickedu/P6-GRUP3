@@ -14,18 +14,18 @@ class UsersSeeder extends Seeder
         $password = Hash::make('password123');
 
         $users = [
-            ['id' => 1, 'name' => 'Admin One', 'email' => 'admin1@gmail.com', 'role' => 'admin'],
-            ['id' => 2, 'name' => 'Admin Two', 'email' => 'admin2@gmail.com', 'role' => 'admin'],
-            ['id' => 3, 'name' => 'Admin Three', 'email' => 'admin3@gmail.com', 'role' => 'admin'],
-            ['id' => 4, 'name' => 'Doctor One', 'email' => 'doctor1@gmail.com', 'role' => 'doctor'],
-            ['id' => 5, 'name' => 'Doctor Two', 'email' => 'doctor2@gmail.com', 'role' => 'doctor'],
-            ['id' => 6, 'name' => 'Doctor Three', 'email' => 'doctor3@gmail.com', 'role' => 'doctor'],
-            ['id' => 7, 'name' => 'Technician One', 'email' => 'technician1@gmail.com', 'role' => 'technician'],
-            ['id' => 8, 'name' => 'Technician Two', 'email' => 'technician2@gmail.com', 'role' => 'technician'],
-            ['id' => 9, 'name' => 'Technician Three', 'email' => 'technician3@gmail.com', 'role' => 'technician'],
-            ['id' => 10, 'name' => 'Secretary One', 'email' => 'secretary1@gmail.com', 'role' => 'secretary'],
-            ['id' => 11, 'name' => 'Secretary Two', 'email' => 'secretary2@gmail.com', 'role' => 'secretary'],
-            ['id' => 12, 'name' => 'Secretary Three', 'email' => 'secretary3@gmail.com', 'role' => 'secretary'],
+            ['id' => 1,  'name' => 'Martina Solà Ferrer',      'email' => 'admin1@gmail.com',      'role' => 'admin'],
+            ['id' => 2,  'name' => 'Bernat Puig Camps',         'email' => 'admin2@gmail.com',      'role' => 'admin'],
+            ['id' => 3,  'name' => 'Núria Vidal Esteve',        'email' => 'admin3@gmail.com',      'role' => 'admin'],
+            ['id' => 4,  'name' => 'Dr. Arnau Bosch Mas',       'email' => 'doctor1@gmail.com',     'role' => 'doctor'],
+            ['id' => 5,  'name' => 'Dra. Laia Tort Comas',      'email' => 'doctor2@gmail.com',     'role' => 'doctor'],
+            ['id' => 6,  'name' => 'Dr. Oriol Nadal Font',      'email' => 'doctor3@gmail.com',     'role' => 'doctor'],
+            ['id' => 7,  'name' => 'Pau Roca Ginés',            'email' => 'technician1@gmail.com', 'role' => 'technician'],
+            ['id' => 8,  'name' => 'Júlia Mir Santana',         'email' => 'technician2@gmail.com', 'role' => 'technician'],
+            ['id' => 9,  'name' => 'Marc Llull Ribera',         'email' => 'technician3@gmail.com', 'role' => 'technician'],
+            ['id' => 10, 'name' => 'Carla Rovira Pons',         'email' => 'secretary1@gmail.com',  'role' => 'secretary'],
+            ['id' => 11, 'name' => 'Toni Gasull Marí',          'email' => 'secretary2@gmail.com',  'role' => 'secretary'],
+            ['id' => 12, 'name' => 'Aina Fuster Molina',        'email' => 'secretary3@gmail.com',  'role' => 'secretary'],
         ];
 
         DB::table('users')->upsert(
@@ -61,7 +61,7 @@ class UsersSeeder extends Seeder
         DB::table('patients')->upsert([
             [
                 'id' => 1,
-                'name' => 'Patient One',
+                'name' => 'Sílvia Torrents Pla',
                 'birth_date' => '1988-01-15 00:00:00',
                 'nts' => 'NTSS0000000001',
                 'address' => 'Carrer del Pacient 1',
@@ -73,7 +73,7 @@ class UsersSeeder extends Seeder
             ],
             [
                 'id' => 2,
-                'name' => 'Patient Two',
+                'name' => 'Guillem Saura Colom',
                 'birth_date' => '1992-05-22 00:00:00',
                 'nts' => 'NTSS0000000002',
                 'address' => 'Carrer del Pacient 2',
@@ -85,7 +85,7 @@ class UsersSeeder extends Seeder
             ],
             [
                 'id' => 3,
-                'name' => 'Patient Three',
+                'name' => 'Montserrat Cos Grau',
                 'birth_date' => '1979-11-03 00:00:00',
                 'nts' => 'NTSS0000000003',
                 'address' => 'Carrer del Pacient 3',
