@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Patients;
 
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\Date;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
