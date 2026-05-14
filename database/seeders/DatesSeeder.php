@@ -27,30 +27,41 @@ class DatesSeeder extends Seeder
             ->whereIn('id', [1, 2, 3])
             ->pluck('time', 'id');
 
+        // 6 citas por paciente: los primeros 3 testId se repiten con distinto dia/hora
+        $appointments = [
+            ['testId' => 1, 'estat' => 'realitzada',   'urgencia' => 'no urgent',  'hourOffset' => 0,  'minuteOffset' => 0],
+            ['testId' => 2, 'estat' => 'realitzada',   'urgencia' => 'preferent',  'hourOffset' => 1,  'minuteOffset' => 15],
+            ['testId' => 3, 'estat' => 'cancel·lada',  'urgencia' => 'urgent',     'hourOffset' => 2,  'minuteOffset' => 30],
+            ['testId' => 1, 'estat' => 'programada',   'urgencia' => 'no urgent',  'hourOffset' => 3,  'minuteOffset' => 0],
+            ['testId' => 2, 'estat' => 'programada',   'urgencia' => 'preferent',  'hourOffset' => 4,  'minuteOffset' => 15],
+            ['testId' => 3, 'estat' => 'programada',   'urgencia' => 'urgent',     'hourOffset' => 5,  'minuteOffset' => 30],
+        ];
+
         $dates = [];
         $dateId = 1;
 
         foreach ($patients as $patientIndex => $patientId) {
-            foreach ([1, 2, 3] as $appointmentIndex => $testId) {
+            foreach ($appointments as $apptIndex => $appt) {
                 $dates[] = [
-                    'id' => $dateId,
+                    'id'         => $dateId,
                     'patient_id' => $patientId,
-                    'worker_id' => $doctorWorkerIds[$appointmentIndex % $doctorWorkerIds->count()],
-                    'test_id' => $testId,
-                    'date_time' => now()
-                        ->addDays(($patientIndex * 3) + $appointmentIndex + 1)
-                        ->setTime(9 + $appointmentIndex, $patientIndex * 10)
+                    'worker_id'  => $doctorWorkerIds[$apptIndex % $doctorWorkerIds->count()],
+                    'test_id'    => $appt['testId'],
+                    'date_time'  => now()
+                        ->addDays(($patientIndex * 6) + $apptIndex + 1)
+                        ->setTime(9 + $appt['hourOffset'], $appt['minuteOffset'])
                         ->format('Y-m-d H:i:s'),
-                    'time' => $testTimes[$testId],
-                    'estat' => ['programada', 'cancel·lada', 'realitzada'][$appointmentIndex],
-                    'urgencia' => ['no urgent', 'preferent', 'urgent'][$appointmentIndex],
+                    'time'        => $testTimes[$appt['testId']],
+                    'estat'       => $appt['estat'],
+                    'urgencia'    => $appt['urgencia'],
                     'description' => sprintf(
-                        'Seeded appointment %d for patient %d.',
-                        $appointmentIndex + 1,
+                        'Cita %d per al pacient %d (%s).',
+                        $apptIndex + 1,
                         $patientIndex + 1,
+                        $appt['estat'],
                     ),
-                    'created_at' => $now,
-                    'updated_at' => $now,
+                    'created_at'  => $now,
+                    'updated_at'  => $now,
                 ];
 
                 $dateId++;

@@ -2,35 +2,43 @@
 
 namespace App\Http\Controllers\Workers\Doctor;
 
+use App\Actions\Workers\Secretary\GetPatientAction;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Date;
 use App\Models\User;
-use App\Actions\Workers\Secretary\GetPatientAction;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DoctorController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $userId = auth()->id();
 
         $worker = User::find($userId)?->worker;
 
-        $dates = Date::with(['test', 'patient'])
-            ->where('worker_id', $worker?->id)
-            ->get();
+        $dates = Date::with([
+            'test',
+            'patient'
+        ])
+        ->where('worker_id', $worker?->id)
+        ->get();
 
         return Inertia::render('Workers/Dashboard', [
             'doctorDates' => $dates,
         ]);
     }
 
-    public function patientSearch(Request $request, GetPatientAction $getPatientAction)
-    {
+    public function patientSearch(
+        Request $request,
+        GetPatientAction $getPatientAction
+    ) {
+
         $nts = $request->query('nts');
 
-        if (!$nts) {
-            return Inertia::render('Doctor/PatientSearch', [
+        if (! $nts) {
+
+            return Inertia::render('Workers/Doctor/PatientSearch', [
                 'patient' => null,
                 'needs' => [],
                 'reports' => [],
@@ -40,14 +48,17 @@ class DoctorController extends Controller
 
         $result = $getPatientAction->handle($nts);
 
-        if(!$result['available']){
-            return redirect()->route('patientSearch')->with([
-                'status' => $result['status'],
-                'message' => $result['message'],
-            ]);
+        if (! $result['available']) {
+
+            return redirect()
+                ->route('patientSearch')
+                ->with([
+                    'status' => $result['status'],
+                    'message' => $result['message'],
+                ]);
         }
 
-        return Inertia::render('Doctor/PatientSearch', [
+        return Inertia::render('Workers/Doctor/PatientSearch', [
             'patient' => $result['patient'],
             'needs' => $result['needs'],
             'reports' => $result['reports'],

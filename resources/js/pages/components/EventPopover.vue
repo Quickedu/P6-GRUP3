@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { X, Clock } from 'lucide-vue-next'
-import { ref, computed } from 'vue';
 
-const isPatient = computed(() => !user.value?.role);
 
 interface PopoverEvent {
     title: string
@@ -109,7 +107,7 @@ const formatDateTime = (dateStr: string) =>
                     </span>
                 </div>
             </div>
-            <div v-if="event.extendedProps.status !== 'cancel·lada' && isPatient" class="mt-4 pt-3 border-t border-gray-100">
+            <div v-if="event.extendedProps.status !== 'cancel·lada'" class="mt-4 pt-3 border-t border-gray-100">
                 <button
                     @click="emit('cancel', event.extendedProps.id)"
                     class="w-full rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100 transition-colors cursor-pointer"
