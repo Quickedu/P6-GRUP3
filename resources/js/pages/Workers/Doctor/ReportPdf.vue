@@ -189,7 +189,7 @@ onBeforeUnmount(() => {
                                                 type="text"
                                                 name="nts"
                                                 class="h-9 flex-1 bg-background"
-                                                placeholder="Ex: ABCD 0123456789"
+                                                placeholder="Ex: NTSS1234567890"
                                                 autocomplete="off"
                                                 aria-describedby="patient-check-help patient-check-status"
                                             />
