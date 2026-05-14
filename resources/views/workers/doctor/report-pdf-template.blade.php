@@ -148,10 +148,12 @@
                     <br>
 
                     <div class="meta-row">
-                        <span class="lbl">Data sol·licitud:</span> {{ $data['data_request'] ?? '' }}
+                        <span class="lbl">Data sol·licitud:</span>
+                        {{ !empty($data['data_request']) ? \Illuminate\Support\Carbon::parse($data['data_request'])->format('d-m-Y') : '' }}
                     </div>
                     <div class="meta-row">
-                        <span class="lbl">Data exploració:</span> {{ $data['data_exploration'] ?? '' }}
+                        <span class="lbl">Data exploració:</span>
+                        {{ !empty($data['data_exploration']) ? \Illuminate\Support\Carbon::parse($data['data_exploration'])->format('d-m-Y') : '' }}
                     </div>
                     <div class="meta-row">
                         <span class="lbl">Centre destí:</span> {{ $data['center_destination'] ?? '' }}
@@ -171,7 +173,8 @@
                     {{-- <br> --}}
 
                     <div class="meta-row">
-                        <span class="lbl">Data naixement:</span> {{ $data['birth_date'] ?? '' }}
+                        <span class="lbl">Data naixement:</span>
+                        {{ !empty($data['birth_date']) ? \Illuminate\Support\Carbon::parse($data['birth_date'])->format('d-m-Y') : '' }}
                     </div>
                     <div class="meta-row">
                         <span class="lbl">NTS:</span> {{ $data['nts'] ?? '' }}
