@@ -1,6 +1,8 @@
 <!-- DateDetailModal.vue -->
 <script setup lang="ts">
 import { Calendar, Stethoscope, User, FileText, Clock, X } from 'lucide-vue-next'
+import { patientDetail } from '@/routes';
+import { Link } from '@inertiajs/vue3'
 
 interface ScheduledDate {
   id: number;
@@ -80,7 +82,7 @@ const handleBackdropClick = (e: MouseEvent) => {
       
       <div class="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-xl transform transition-all">
         <!--header -->
-        <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-lg flex justify-between items-center">
+        <div class="sticky top-0 bg-[#f0f7f6] border-b border-[#c5d8d5] px-6 py-4 rounded-t-lg flex justify-between items-center">
           <div>
             <h2 class="text-xl font-bold text-pmf-primary">Detalls de la cita</h2>
           </div>
@@ -123,7 +125,9 @@ const handleBackdropClick = (e: MouseEvent) => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ml-7">
               <div>
                 <p class="text-xs text-gray-500">Nom complet</p>
-                <p class="font-medium text-gray-900">{{ date.patient?.name }}</p>
+                <Link :href="patientDetail(date.patient.id)" @click.stop class="font-medium text-pmf-primary hover:underline">
+                  {{ date.patient?.name }}
+                </Link>
               </div>
               <div>
                 <p class="text-xs text-gray-500">NTS</p>

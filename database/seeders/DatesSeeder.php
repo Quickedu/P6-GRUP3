@@ -9,55 +9,64 @@ class DatesSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('dates')->insert([
-            [
-                'patient_id' => 1,
-                'worker_id' => 1,
-                'test_id' => 1,
-                'date_time' => '2026-06-15 15:20:00',
-                'time' => 15,
-                'estat' => 'programada',
-                'urgencia' => 'no urgent',
-                'description' => 'El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'patient_id' => 1,
-                'worker_id' => 1,
-                'test_id' => 2,
-                'date_time' => '2026-04-10 12:30:00',
-                'time' => 5,
-                'estat' => 'cancel·lada',
-                'urgencia' => 'preferent',
-                'description' => 'El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'patient_id' => 1,
-                'worker_id' => 1,
-                'test_id' => 3,
-                'date_time' => '2026-04-01 17:15:00',
-                'time' => 8,
-                'estat' => 'realitzada',
-                'urgencia' => 'urgent',
-                'description' => 'El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta. El pacient presenta una lesió a la mà dreta. 
-                                  El pacient presenta una lesió a la mà dreta.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        $now = now();
+        $patients = DB::table('patients')
+            ->whereIn('nts', ['NTSS0000000001', 'NTSS0000000002', 'NTSS0000000003'])
+            ->orderBy('id')
+            ->pluck('id')
+            ->values();
+
+        $doctorWorkerIds = DB::table('workers')
+            ->join('users', 'users.id', '=', 'workers.user_id')
+            ->where('users.role', 'doctor')
+            ->orderBy('workers.id')
+            ->pluck('workers.id')
+            ->values();
+
+        $testTimes = DB::table('test_types')
+            ->whereIn('id', [1, 2, 3])
+            ->pluck('time', 'id');
+
+        $dates = [];
+        $dateId = 1;
+
+        foreach ($patients as $patientIndex => $patientId) {
+            foreach ([1, 2, 3] as $appointmentIndex => $testId) {
+                $dates[] = [
+                    'id' => $dateId,
+                    'patient_id' => $patientId,
+                    'worker_id' => $doctorWorkerIds[$appointmentIndex % $doctorWorkerIds->count()],
+                    'test_id' => $testId,
+                    'date_time' => now()
+                        ->addDays(($patientIndex * 3) + $appointmentIndex + 1)
+                        ->setTime(9 + $appointmentIndex, $patientIndex * 10)
+                        ->format('Y-m-d H:i:s'),
+                    'time' => $testTimes[$testId],
+                    'estat' => ['programada', 'cancel·lada', 'realitzada'][$appointmentIndex],
+                    'urgencia' => ['no urgent', 'preferent', 'urgent'][$appointmentIndex],
+                    'description' => sprintf(
+                        'Seeded appointment %d for patient %d.',
+                        $appointmentIndex + 1,
+                        $patientIndex + 1,
+                    ),
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+
+                $dateId++;
+            }
+        }
+
+        DB::table('dates')->upsert($dates, ['id'], [
+            'patient_id',
+            'worker_id',
+            'test_id',
+            'date_time',
+            'time',
+            'estat',
+            'urgencia',
+            'description',
+            'updated_at',
         ]);
     }
 }

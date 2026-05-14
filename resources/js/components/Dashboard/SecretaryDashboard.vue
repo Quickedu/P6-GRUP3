@@ -1,10 +1,15 @@
 <script setup lang="ts">
   import { Calendar, Stethoscope, User, FileText, Loader, Clock } from 'lucide-vue-next'
   import { ref } from 'vue'
+  import { patientDetail } from '@/routes'
   import DatesFilterComponent from './DatesFilterComponent.vue'
   import PatientFilterComponent from './PatientFilterComponent.vue'
   import DateDetailModal from '@/pages/components/DateDetailModal.vue'
+<<<<<<< HEAD
+  import { Link } from '@inertiajs/vue3'
+=======
   import RescheduleDateModal from '@/pages/components/RescheduleDateModal.vue'
+>>>>>>> develop
 
   interface ScheduledDate {
     id: number;
@@ -189,10 +194,10 @@
 
       <!--results found-->
       <div v-else-if="displayedDates.length > 0" class="space-y-4">
-        <h3 class="text-2xl font-bold text-pmf-primary">{{ displayedDates.length }} cites trobades</h3>
+        <h3 class="text-lg font-bold text-pmf-primary">Cites trobades: {{ displayedDates.length }}</h3>
         <div class="space-y-4">
-          <div v-for="date in displayedDates" :key="date.id" class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition cursor-pointer"
-              @click="openDateDetail(date)">
+          <div v-for="date in displayedDates" :key="date.id" class="rounded-lg border border-gray-200 bg-white px-4 pt-4 shadow-sm hover:shadow-md transition cursor-pointer"
+            @click="openDateDetail(date)">
             <div class="flex items-start justify-between mb-4">
               <div class="flex-1">
                 <div class="flex items-center">
@@ -218,17 +223,17 @@
               <p class="text-gray-600 line-clamp-2">{{ date.description }}</p>
             </div>
 
-            <div class="mb-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div class="items-start">
+            <div class="mb-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
+              <div class="flex flex-col min-w-0">
                 <div class="inline-flex gap-2">
                   <User class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
                   <p class="text-xs text-gray-600">Pacient</p>
                 </div>
-                <p class="font-semibold text-sm">{{ date.patient?.name }}</p>
+                <Link :href="patientDetail(date.patient.id)" @click.stop class="mt-1 font-semibold text-sm hover:underline text-pmf-primary">{{ date.patient?.name }}</Link>
                 <p class="text-xs text-gray-500">{{ date.patient?.nts }}</p>
               </div>
 
-              <div class="items-start">
+              <div class="items-start min-w-0">
                 <div class="inline-flex gap-2">
                   <Stethoscope class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
                   <p class="text-xs text-gray-600">Doctor</p>
@@ -236,7 +241,7 @@
                 <p class="font-semibold text-sm">{{ date.worker?.user?.name || 'N/A' }}</p>
               </div>
 
-              <div class="items-start">
+              <div class="items-start min-w-0">
                 <div class="inline-flex gap-2">
                   <Calendar class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
                   <p class="text-xs text-gray-600">Data i hora</p>
@@ -245,7 +250,7 @@
                 <p class="text-xs text-gray-500">{{ new Date(date.date_time).toLocaleString('ca-ES', { hour: '2-digit', minute: '2-digit' }) }}</p>
               </div>
 
-              <div class="items-start">
+              <div class="items-start min-w-0">
                 <div class="inline-flex gap-2">
                   <Clock class="bg-pmf-secondary rounded-md p-1 h-6 w-6 text-pmf-primary" />
                   <p class="text-xs text-gray-600">Temps</p>

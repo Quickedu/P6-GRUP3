@@ -115,7 +115,6 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
 
 // DOCTOR AREA
 Route::middleware(['auth:admin', 'Doctor', 'verified'])->group(function () {
-    // Route::get('/dashboard', [DoctorController::class, 'index'])->name('dashboard');
     Route::get('/formReport', [downloadpdfController::class, 'index'])->name('formReport');
     Route::post('/downloadReport', [downloadpdfController::class, 'download'])->name('downloadReport');
     Route::get('/formReport/patient/{nts}', [downloadpdfController::class, 'ajaxPatient'])->name('formReport.patient');
