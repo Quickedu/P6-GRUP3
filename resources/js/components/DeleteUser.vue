@@ -92,7 +92,7 @@ const passwordInput = useTemplateRef('passwordInput');
                                         }
                                     "
                                 >
-                                    Anulla
+                                    Anul·la
                                 </Button>
                             </DialogClose>
 
