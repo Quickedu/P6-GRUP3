@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { router, usePage } from '@inertiajs/vue3';
 import { Download, FileText, Search, X, ChevronLeft, ChevronRight, Microscope } from 'lucide-vue-next';
 import { useRelativeTime } from '@/composables/useRelativeTime';
 import { patientDashboard } from '@/routes';
