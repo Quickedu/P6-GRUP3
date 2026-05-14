@@ -52,8 +52,8 @@ defineProps<{
                 :disabled="processing"
                 data-test="email-password-reset-link-button"
             >
-                <Spinner v-if="processing" />
-                Enllaç de restabliment de contrasenya
+                <Spinner v-if="processing" class="mr-2" />
+                Restablir contrasenya
             </Button>
             </div>
         </Form>

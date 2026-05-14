@@ -89,3 +89,4 @@ jobs:
                       $(which php84) artisan optimize
                       $(which php84) artisan storage:unlink
                       $(which php84) artisan storage:link
+                      $(which php84) artisan lang:publish
