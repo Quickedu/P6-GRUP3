@@ -111,4 +111,28 @@ class DatesController extends Controller
             'message' => $result['message'] ?? '',
         ]);
     }
+
+    public function dateSchedule(string $date)
+    {
+        $dates = Date::with(['patient', 'worker.user', 'test'])
+            ->whereDate('date_time', $date)
+            ->orderBy('date_time')
+            ->get();
+
+        return response()->json($dates);
+    }
+
+    public function reSchedule(Date $date, Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'date_time' => ['required', 'date_format:Y-m-d H:i:s'],
+        ]);
+        $date->update($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Cita reprogramada correctament',
+            'data' => $date->fresh(),
+        ]);
+    }
 }

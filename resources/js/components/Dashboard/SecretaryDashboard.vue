@@ -4,6 +4,7 @@
   import DatesFilterComponent from './DatesFilterComponent.vue'
   import PatientFilterComponent from './PatientFilterComponent.vue'
   import DateDetailModal from '@/pages/components/DateDetailModal.vue'
+  import RescheduleDateModal from '@/pages/components/RescheduleDateModal.vue'
 
   interface ScheduledDate {
     id: number;
@@ -55,7 +56,8 @@
   const activeFilter = ref<ActiveFilter>('dates')
 
   // Modal state
-  const isModalOpen = ref(false)
+  const isDetailModalOpen = ref(false)
+  const isRescheduleModalOpen = ref(false)
   const selectedDate = ref<ScheduledDate | null>(null)
 
   const resetResults = () => {
@@ -103,15 +105,26 @@
     resetResults()
   }
 
-  //open modal with selected date
+  //open detail modal with selected date
   const openDateDetail = (date: ScheduledDate) => {
     selectedDate.value = date
-    isModalOpen.value = true
+    isDetailModalOpen.value = true 
   }
 
-  //close modal
-  const closeModal = () => {
-    isModalOpen.value = false
+  //open reschedule modal with selected date
+  const openRescheduleModal = (date: ScheduledDate) => {
+    selectedDate.value = date
+    isRescheduleModalOpen.value = true
+  }
+
+  //close modals
+  const closeDetailModal = () => {
+    isDetailModalOpen.value = false
+    selectedDate.value = null
+  }
+
+  const closeRescheduleModal = () => {
+    isRescheduleModalOpen.value = false
     selectedDate.value = null
   }
 </script>
@@ -186,9 +199,18 @@
                   <span class="font-semibold mr-1">Test:</span> {{ date.test?.name }}
                 </div>
               </div>
-              <span :class="`inline-block px-2 py-1 rounded-lg text-xs font-medium ${getUrgencyColor(date.urgencia)}`">
-                {{ date.urgencia }}
-              </span>
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  class="rounded-md border border-pmf-primary/30 bg-white px-3 py-1 text-xs font-semibold text-pmf-primary hover:bg-pmf-secondary"
+                  @click.stop="openRescheduleModal(date)"
+                >
+                  Reprogramar
+                </button>
+                <span :class="`inline-block px-2 py-1 rounded-lg text-xs font-medium ${getUrgencyColor(date.urgencia)}`">
+                  {{ date.urgencia }}
+                </span>
+              </div>
             </div>
 
             <div v-if="date.description" class="flex items-start text-sm mb-4">
@@ -241,10 +263,16 @@
       </div>
     </div>
 
-    <!--date detail modal -->
+    <!--detail modal -->
     <DateDetailModal
-      v-model:is-open="isModalOpen"
+      v-model:is-open="isDetailModalOpen"
       :date="selectedDate"
-      @close="closeModal"/>
+      @close="closeDetailModal"/>
+
+    <!--reschedule modal -->
+    <RescheduleDateModal
+      v-model:is-open="isRescheduleModalOpen"
+      :date="selectedDate"
+      @close="closeRescheduleModal"/>
   </div>
 </template>
