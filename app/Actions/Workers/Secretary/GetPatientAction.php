@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Actions\Workers\Secretary;
 
 use App\Models\Patient;

@@ -19,10 +19,10 @@ class DoctorController extends Controller
 
         $dates = Date::with([
             'test',
-            'patient'
+            'patient',
         ])
-        ->where('worker_id', $worker?->id)
-        ->get();
+            ->where('worker_id', $worker?->id)
+            ->get();
 
         return Inertia::render('Workers/Dashboard', [
             'doctorDates' => $dates,

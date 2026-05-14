@@ -43,25 +43,25 @@ class DatesSeeder extends Seeder
         foreach ($patients as $patientIndex => $patientId) {
             foreach ($appointments as $apptIndex => $appt) {
                 $dates[] = [
-                    'id'         => $dateId,
+                    'id' => $dateId,
                     'patient_id' => $patientId,
-                    'worker_id'  => $doctorWorkerIds[$apptIndex % $doctorWorkerIds->count()],
-                    'test_id'    => $appt['testId'],
-                    'date_time'  => now()
+                    'worker_id' => $doctorWorkerIds[$apptIndex % $doctorWorkerIds->count()],
+                    'test_id' => $appt['testId'],
+                    'date_time' => now()
                         ->addDays(($patientIndex * 6) + $apptIndex + 1)
                         ->setTime(9 + $appt['hourOffset'], $appt['minuteOffset'])
                         ->format('Y-m-d H:i:s'),
-                    'time'        => $testTimes[$appt['testId']],
-                    'estat'       => $appt['estat'],
-                    'urgencia'    => $appt['urgencia'],
+                    'time' => $testTimes[$appt['testId']],
+                    'estat' => $appt['estat'],
+                    'urgencia' => $appt['urgencia'],
                     'description' => sprintf(
                         'Cita %d per al pacient %d (%s).',
                         $apptIndex + 1,
                         $patientIndex + 1,
                         $appt['estat'],
                     ),
-                    'created_at'  => $now,
-                    'updated_at'  => $now,
+                    'created_at' => $now,
+                    'updated_at' => $now,
                 ];
 
                 $dateId++;
