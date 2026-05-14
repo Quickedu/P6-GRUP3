@@ -328,7 +328,7 @@ onBeforeUnmount(() => {
                                                 type="text"
                                                 name="center_destination"
                                                 class="h-9 flex-1 bg-background"
-                                                placeholder="Ex: John Doe"
+                                                placeholder="Ex: Hospital de l'Exemple"
                                                 autocomplete="off"
                                                 required
                                                 aria-required="true"

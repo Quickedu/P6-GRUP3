@@ -22,7 +22,7 @@ defineOptions({
     layout: {
         breadcrumbs: [
             {
-                title: 'Profile settings',
+                title: 'Configuració de perfil',
                 href: edit(),
             },
         ],
@@ -34,15 +34,15 @@ const user = computed(() => page.props.auth.user);
 </script>
 
 <template>
-    <Head title="Profile settings" />
+    <Head title="Configuració de perfil" />
 
-    <h1 class="sr-only">Profile settings</h1>
+    <h1 class="sr-only">Configuració de perfil</h1>
 
     <div class="flex flex-col space-y-6">
         <Heading
             variant="small"
-            title="Profile information"
-            description="Update your name and email address"
+            title="Informació del perfil"
+            description="Actualitza la informació del teu perfil i el teu email."
         />
 
         <Form
@@ -51,7 +51,7 @@ const user = computed(() => page.props.auth.user);
             v-slot="{ errors, processing, recentlySuccessful }"
         >
             <div class="grid gap-2">
-                <Label for="name">Name</Label>
+                <Label for="name">Nom</Label>
                 <Input
                     id="name"
                     class="mt-1 block w-full"
@@ -59,13 +59,13 @@ const user = computed(() => page.props.auth.user);
                     :default-value="user.name"
                     required
                     autocomplete="name"
-                    placeholder="Full name"
+                    placeholder="Nom complet"
                 />
                 <InputError class="mt-2" :message="errors.name" />
             </div>
 
             <div class="grid gap-2">
-                <Label for="email">Email address</Label>
+                <Label for="email">Correu electrònic</Label>
                 <Input
                     id="email"
                     type="email"
@@ -74,20 +74,20 @@ const user = computed(() => page.props.auth.user);
                     :default-value="user.email"
                     required
                     autocomplete="username"
-                    placeholder="Email address"
+                    placeholder="Adreça de correu electrònic"
                 />
                 <InputError class="mt-2" :message="errors.email" />
             </div>
 
             <div v-if="mustVerifyEmail && !user.email_verified_at">
                 <p class="-mt-4 text-sm text-muted-foreground">
-                    Your email address is unverified.
+                    La teva adreça de correu electrònic no està verificada.
                     <Link
                         :href="send()"
                         as="button"
                         class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                     >
-                        Click here to resend the verification email.
+                        Fes clic aquí per reenviar el correu de verificació.
                     </Link>
                 </p>
 
@@ -95,13 +95,13 @@ const user = computed(() => page.props.auth.user);
                     v-if="status === 'verification-link-sent'"
                     class="mt-2 text-sm font-medium text-green-600"
                 >
-                    A new verification link has been sent to your email address.
+                    S'ha enviat un nou enllaç de verificació a la teva adreça de correu electrònic.
                 </div>
             </div>
 
             <div class="flex items-center gap-4">
                 <Button :disabled="processing" data-test="update-profile-button"
-                    >Save</Button
+                    >Desa</Button
                 >
 
                 <Transition
@@ -114,7 +114,7 @@ const user = computed(() => page.props.auth.user);
                         v-show="recentlySuccessful"
                         class="text-sm text-neutral-600"
                     >
-                        Saved.
+                        Desat.
                     </p>
                 </Transition>
             </div>
