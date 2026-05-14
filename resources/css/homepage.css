@@ -72,18 +72,15 @@ html {
 }
 
 .home-brand__logo {
-	width: 44px;
-	height: 44px;
+	width: 90px;
+	height: 90px;
 	display: grid;
 	place-items: center;
-	border-radius: 999px;
+	border-radius: 100%;
 	background: rgba(255, 255, 255, 0.95);
-	box-shadow: 0 8px 24px rgba(0, 48, 41, 0.12);
 }
 
 .home-brand__logo img {
-	width: 30px;
-	height: 30px;
 	object-fit: contain;
 }
 

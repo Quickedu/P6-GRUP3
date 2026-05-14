@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Patients;
 
 use App\Http\Controllers\Controller;
 use App\Models\Date;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -27,17 +28,28 @@ class PatientController extends Controller
         ]);
     }
 
-    public function update($date)
+    public function update(Date $date)
     {
-        Date::where('patient_id', Auth::user()->id)
-            ->where('id', $date)
-            ->update([
-                'estat' => 'cancel·lada',
-            ]);
+        if ($date->patient_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $date->update([
+            'estat' => 'cancel·lada',
+        ]);
 
         return redirect()->back()->with([
             'status' => 'correcte',
-            'message' => 'Cita cancelada correctament',
+            'message' => 'Cita cancel·lada correctament',
         ]);
+    }
+
+    public function updateDates()
+    {
+        Date::where('estat', 'programada')
+            ->whereDate('date_time', Carbon::yesterday())
+            ->update([
+                'estat' => 'realitzada',
+            ]);
     }
 }

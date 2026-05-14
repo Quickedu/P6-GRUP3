@@ -2,6 +2,7 @@
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import caLocale from '@fullcalendar/core/locales/ca'
+import { computed } from 'vue'
 
 const props = defineProps({
     events: Array,
@@ -14,8 +15,8 @@ const props = defineProps({
 
 // Can change the calendar view from the parent using the initial-view prop.
 // Available views: 'dayGridMonth' (default), 'dayGridWeek', 'dayGridDay'.
-const calendarOptions = {
-    plugins: [dayGridPlugin],
+const calendarOptions = computed(() => ({
+    plugins: [dayGridPlugin ],
     initialView: props.initialView,
     locale: caLocale,
     headerToolbar: {
@@ -33,7 +34,7 @@ const calendarOptions = {
         minute: '2-digit',
         hour12: false // can change to 24h format - set true for it
     },
-}
+}))
 </script>
 
 <template>
