@@ -25,7 +25,7 @@ defineOptions({
 })
 
 const page = usePage()
-const dates = page.props.dates as DateRecord[]
+const dates = computed(() => page.props.dates as DateRecord[]);
 const flashMessage = computed(() => (page.props.flash as any)?.message);
 const flashStatus = computed(() => (page.props.flash as any)?.status);
 
@@ -73,7 +73,7 @@ const closePopover = () => {
 }
 
 const calendarEvents = computed(() => {
-    return dates.map(date => ({
+    return dates.value.map(date => ({
         start: date.date_time,
         title: date.test.name,
         extendedProps: {
@@ -112,7 +112,7 @@ const getStatusText = (urgencia: string) => {
 
 const now = new Date()
 const todayDates = computed(() =>
-    dates
+    dates.value
         .filter(d => {
             const dt = new Date(d.date_time)
             return dt.toDateString() === now.toDateString()
@@ -120,9 +120,9 @@ const todayDates = computed(() =>
         .sort((a, b) => new Date(a.date_time).getTime() - new Date(b.date_time).getTime())
 )
 
-const totalCount = computed(() => dates.length)
-const programadesCount = computed(() => dates.filter(d => d.estat === 'programada').length)
-const urgentCount = computed(() => dates.filter(d => d.urgencia === 'urgent').length)
+const totalCount = computed(() => dates.value.length)
+const programadesCount = computed(() => dates.value.filter(d => d.estat === 'programada').length)
+const urgentCount = computed(() => dates.value.filter(d => d.urgencia === 'urgent').length)
 
 const formatTime = (date: string) =>
     new Date(date).toLocaleTimeString('ca-ES', {
@@ -149,12 +149,8 @@ const getUrgencyStyle = (urgencia: string) => {
 
 function handleCancel(id: number) {
     closePopover()
-    showCancelModal.value = false
     
     router.post(cancelDate.url(id), {}, {
-        onSuccess: () => {
-            router.reload()
-        },
         onError: (errors) => {
             console.error(errors)
         }
@@ -169,7 +165,7 @@ function handleCancel(id: number) {
         :message="flashMessage"
         :status="flashStatus"/>
 
-    <h1 class="text-pmf-primary font-semibold text-2xl mt-4 mx-6">Visites</h1>
+    <h1 class="text-pmf-primary font-semibold text-2xl mt-4 mx-6">Agenda</h1>
 
     <div class="space-y-6 px-4 py-4 sm:px-6">
 
