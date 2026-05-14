@@ -76,6 +76,16 @@ return [
     'home' => '/dashboard',
 
     /*
+    |
+    | Custom redirects
+    |
+    | Define custom completion redirects for Fortify features.
+    */
+    'redirects' => [
+        'password-reset' => '/loginWorker',
+    ],
+
+    /*
     |--------------------------------------------------------------------------
     | Fortify Routes Prefix / Subdomain
     |--------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 use App\Http\Controllers\LoginAdminController;
 use App\Http\Controllers\LoginPatientController;
 use App\Http\Controllers\Patients\PatientController;
+use App\Http\Controllers\Workers\Admin\DashboardAdminController;
 use App\Http\Controllers\Workers\Admin\NeedAdminController;
 use App\Http\Controllers\Workers\Admin\TestAdminController;
 use App\Http\Controllers\Workers\Admin\WorkerAdminController;
@@ -22,6 +23,14 @@ Route::inertia('/', 'HomePage', [
 Route::get('/dashboard', function (DatesController $datesController) {
     $user = Auth::guard('admin')->user() ?? Auth::guard('patient')->user();
     $role = $user?->role ?? 'patient';
+
+    if ($role === 'admin') {
+        return app(DashboardAdminController::class)->index();
+    }
+
+    if ($role === 'doctor') {
+        return app(DoctorController::class)->index();
+    }
 
     $dates = $role === 'secretary' ? $datesController->seeDates() : [];
     $doctors = $role === 'secretary' ? $datesController->seeDoctors() : [];
@@ -66,6 +75,7 @@ Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
 
 // ADMIN AREA
 Route::middleware(['auth:admin', 'Admin', 'verified'])->group(function () {
+    // Route::get('/adminDashboard', [DashboardAdminController::class, 'index'])->name('adminDashboard');
     Route::resource('tests', TestAdminController::class);
     Route::resource('needs', NeedAdminController::class);
     Route::resource('workers', WorkerAdminController::class);
@@ -76,8 +86,12 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     // New Appointment
     Route::get('/nova-cita', [DatesController::class, 'index'])->name('nova-cita');
     Route::post('/nova-cita', [DatesController::class, 'store'])->name('nova-cita-store');
+    // ajax for new appointment
     Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
     Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
+    // reSchedule appointment
+    Route::get('/dateSchedule/{date}', [DatesController::class, 'dateSchedule'])->name('dateSchedule');
+    Route::put('/dateSchedule/{date}', [DatesController::class, 'reSchedule'])->name('dateSchedule.update');
     //
     Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
     Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');
