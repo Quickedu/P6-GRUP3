@@ -5,11 +5,8 @@
   import DatesFilterComponent from './DatesFilterComponent.vue'
   import PatientFilterComponent from './PatientFilterComponent.vue'
   import DateDetailModal from '@/pages/components/DateDetailModal.vue'
-<<<<<<< HEAD
   import { Link } from '@inertiajs/vue3'
-=======
   import RescheduleDateModal from '@/pages/components/RescheduleDateModal.vue'
->>>>>>> develop
 
   interface ScheduledDate {
     id: number;
