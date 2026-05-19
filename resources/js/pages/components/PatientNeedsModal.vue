@@ -128,7 +128,7 @@ async function removeNeed(needId: number) {
                     v-if="showSelect"
                     class="flex flex-col items-stretch gap-2 rounded-lg border border-dashed border-[#b0ceca] bg-[#f0f7f6] px-4 py-3 sm:flex-row sm:items-center"
                 >
-                <label for="need-select" class="block text-sm font-medium text-pmf-green">
+                <label for="need-select" class="block text-sm font-medium text-pmf-green sr-only">
                     Necessitat
                 </label>
                     <select
