@@ -48,11 +48,6 @@ async function assignNeed() {
     try {
         const res = await fetch(`/patients/${props.patient.id}/needs`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: JSON.stringify({ need_id: selectedNeedId.value }),
         });
         const data = await res.json();
         if (data.status === 'success') {
@@ -69,7 +64,6 @@ async function removeNeed(needId: number) {
     try {
         const res = await fetch(`/patients/${props.patient.id}/needs/${needId}`, {
             method: 'DELETE',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
         });
         const data = await res.json();
         if (data.status === 'success') {
@@ -88,7 +82,6 @@ async function removeNeed(needId: number) {
     >
         <div class="mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl">
 
-            <!-- Header -->
             <div class="flex items-center justify-between border-b border-[#deecea] bg-[#f0f7f6] px-6 py-4">
                 <div>
                     <h3 class="text-[15px] font-semibold text-pmf-green-dark">Gestionar necessitats</h3>
@@ -99,7 +92,6 @@ async function removeNeed(needId: number) {
                 </button>
             </div>
 
-            <!-- Llista de necessitats -->
             <div class="max-h-[50vh] overflow-y-auto px-6 py-4 space-y-2">
 
                 <div v-if="localNeeds.length === 0 && !showSelect"
@@ -123,14 +115,8 @@ async function removeNeed(needId: number) {
                     </button>
                 </div>
 
-                <!-- Selector per afegir -->
-                <div
-                    v-if="showSelect"
-                    class="flex flex-col items-stretch gap-2 rounded-lg border border-dashed border-[#b0ceca] bg-[#f0f7f6] px-4 py-3 sm:flex-row sm:items-center"
-                >
-                <label for="need-select" class="block text-sm font-medium text-pmf-green sr-only">
-                    Necessitat
-                </label>
+                <div v-if="showSelect"
+                    class="flex items-center gap-2 rounded-lg border border-dashed border-[#b0ceca] bg-[#f0f7f6] px-4 py-3">
                     <select
                         v-model="selectedNeedId"
                         id="need-select"
@@ -157,7 +143,6 @@ async function removeNeed(needId: number) {
                 </div>
             </div>
 
-            <!-- Footer -->
             <div class="flex items-center justify-between border-t border-[#deecea] bg-[#f9fcfc] px-6 py-3">
                 <button
                     @click="showSelect = true; selectedNeedId = null"
