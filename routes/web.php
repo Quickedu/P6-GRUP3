@@ -60,6 +60,7 @@ Route::middleware(['auth:patient'])->group(function () {
     Route::get('/dashboardPatient', [PatientController::class, 'index'])->name('patientDashboard');
     Route::post('patient/logout', [LoginPatientController::class, 'destroy'])->name('loginpatientDestroy');
     Route::get('patient/reports', [PatientController::class, 'show'])->name('patientReports');
+    Route::get('patient/information', [PatientController::class, 'information'])->name('patientInformation');
     Route::post('patient/cancelDate/{date}', [PatientController::class, 'update'])->name('cancelDate');
 });
 

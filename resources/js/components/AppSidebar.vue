@@ -12,9 +12,9 @@ import {
     SidebarFooter,
     SidebarHeader,
 } from '@/components/ui/sidebar';
-import { dashboard, novaCita, patientDashboard, patientsList, formReport, patientReports, patientDetail } from '@/routes';
+import { dashboard, novaCita, patientDashboard, patientsList, formReport, patientReports, patientDetail, patientInformation, } from '@/routes';
 import type { NavItem } from '@/types';
-import { Microscope, Users, BookUser, History, Cross, CalendarDays } from 'lucide-vue-next';
+import { Microscope, Users, BookUser, History, Cross, CalendarDays, FileEdit } from 'lucide-vue-next';
 import { Settings } from 'lucide-vue-next';
 import { index as TestIndex } from '@/routes/tests';
 import { index as NeedIndex } from '@/routes/needs';
@@ -67,6 +67,11 @@ const PatientNavItems: NavItem[] = [
         title: 'Agenda',
         href: patientDashboard(),
         icon: CalendarDays,
+    },
+    {
+        title: 'Informació personal',
+        href: patientInformation(),
+        icon: FileEdit,
     },
     {
         title: 'Informe i resultats',

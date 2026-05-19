@@ -27,6 +27,13 @@ class PatientController extends Controller
         ]);
     }
 
+    public function information()
+    {
+        return Inertia::render('Patient/patientInformation', [
+            'patient' => Auth::guard('patient')->user(),
+        ]);
+    }
+
     public function update($date)
     {
         Date::where('patient_id', Auth::user()->id)

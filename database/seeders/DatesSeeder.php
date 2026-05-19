@@ -54,7 +54,7 @@ class DatesSeeder extends Seeder
                 ];
 
                 $dateId++;
-            }
+            }   
         }
 
         DB::table('dates')->upsert($dates, ['id'], [
