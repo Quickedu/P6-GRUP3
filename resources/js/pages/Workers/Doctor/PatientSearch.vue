@@ -113,7 +113,7 @@ function searchPatient() {
 
             <button
                 @click="goBack"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#c5d8d5] bg-white transition-colors hover:bg-[#f4f9f8]"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#c5d8d5] bg-white transition-colors hover:bg-[#f4f9f8]" aria-label="Tornar enrere"
             >
                 <ArrowLeft class="h-4 w-4 text-pmf-green" />
             </button>
@@ -132,11 +132,15 @@ function searchPatient() {
 
             <div class="flex gap-3">
 
+                <label for="nts" class="block text-sm font-medium text-pmf-green sr-only">
+                    Número targeta sanitària
+                </label>
                 <input
                     v-model="nts"
+                    id="nts"
                     type="text"
                     placeholder="Número targeta sanitària"
-                    class="w-full rounded-lg border border-[#c5d8d5]"
+                    class="w-full rounded-lg border border-[#c5d8d5] px-3"
                     @keyup.enter="searchPatient"
                 />
 

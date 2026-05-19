@@ -359,7 +359,9 @@ const handleBackdropClick = (e: MouseEvent) => {
           </div>
           <button
             @click="closeModal"
-            class="text-gray-400 hover:text-gray-600 transition-colors">
+            class="text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label="Tancar modal"
+          >
             <X class="h-6 w-6" />
           </button>
         </div>
@@ -373,7 +375,7 @@ const handleBackdropClick = (e: MouseEvent) => {
             </p>
           </div>
 
-          <div class="grid gap-4 md:grid-cols-3">
+          <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] md:items-end">
             <div class="w-full">
               <label
                 for="reschedule-date"
@@ -396,19 +398,22 @@ const handleBackdropClick = (e: MouseEvent) => {
             <div class="w-full">
               <label
                 class="mb-3 text-xs font-semibold tracking-widest text-gray-500"
+                for="doctor"
               >
                 DOCTOR
               </label>
               <input
+                id="doctor"
                 type="text"
                 :value="doctorName"
+                :aria-label="`Nom del doctor: ${doctorName}`"
                 class="h-9 w-full rounded-md border border-gray-300 bg-gray-50 px-3 text-sm text-gray-700"
                 disabled
               />
             </div>
 
             <button
-              class="mt-7 inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-sm text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              class="inline-flex h-9 w-full cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-sm text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2 md:col-span-1 md:w-auto md:justify-self-end md:whitespace-nowrap"
               type="button"
               @click="checkAvailability"
               :disabled="slotsLoading || !doctorUserId || !dataCita || estimatedMinutes === null"

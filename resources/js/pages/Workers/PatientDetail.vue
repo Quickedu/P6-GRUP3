@@ -91,7 +91,8 @@ const goBack = () => {
             <button
                 @click="goBack"
                 class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-[#c5d8d5] bg-white hover:bg-[#f4f9f8] transition-colors"
-            >
+                aria-label="Tornar enrere"
+                >
                 <ArrowLeft class="h-4 w-4 text-pmf-green" />
             </button>
             <h2 class="text-2xl font-medium text-pmf-green-dark">Detall pacient</h2>

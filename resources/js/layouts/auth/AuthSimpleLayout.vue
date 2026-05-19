@@ -40,8 +40,8 @@ defineProps<{
 
                         <!-- Title + description-->
                         <div class="flex flex-col gap-1.5 text-center">
-                            <h1 class="text-2xl font-bold text-gray-900">{{ title }}</h1>
-                            <p class="text-sm text-muted-foreground leading-relaxed">{{ description }}</p>
+                            <!-- <h1 class="text-2xl font-bold text-gray-900">{{ title || null }}</h1> -->
+                            <!-- <p class="text-sm text-muted-foreground leading-relaxed">{{ description }}</p> -->
                         </div>
 
                         <slot />

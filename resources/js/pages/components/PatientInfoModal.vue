@@ -68,7 +68,7 @@ const submit = () => {
                     <h3 class="text-[15px] font-semibold text-pmf-green-dark">Editar dades personals</h3>
                     <p class="text-xs text-pmf-grey-light mt-0.5">{{ patient.name }}</p>
                 </div>
-                <button @click="close" class="rounded-lg p-1.5 text-pmf-grey-light hover:bg-pmf-secondary cursor-pointer transition-colors">
+                <button @click="close" class="rounded-lg p-1.5 text-pmf-grey-light hover:bg-pmf-secondary cursor-pointer transition-colors" aria-label="Tancar modal">
                     <X class="h-4 w-4" />
                 </button>
             </div>

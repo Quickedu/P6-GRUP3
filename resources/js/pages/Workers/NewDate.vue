@@ -1,13 +1,29 @@
 <script setup lang="ts">
 import { Form, Head, usePage } from '@inertiajs/vue3';
 import { QuillEditor } from '@vueup/vue-quill';
-import { CalendarDays, IdCard, Stethoscope, UserRoundSearch, CalendarRange, CircleCheck, Clock, Microscope, FileText, } from 'lucide-vue-next';
+import {
+    CalendarDays,
+    IdCard,
+    Stethoscope,
+    UserRoundSearch,
+    CalendarRange,
+    CircleCheck,
+    Clock,
+    Microscope,
+    FileText,
+} from 'lucide-vue-next';
 import { ref, computed } from 'vue';
 import InputError from '@/components/InputError.vue';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { useNewDateAppointment } from '@/composables/useNewDateAppointment';
 import textNotify from '@/pages/components/textNotify.vue';
 import { dashboard, home, novaCitaStore as store } from '@/routes';
@@ -98,11 +114,11 @@ const selectedWorkerId = computed(() => {
 
 const canSubmit = computed(() =>
     Boolean(
-        patientId.value
-        && selectedTestId.value
-        && selectedDateTime.value
-        && selectedWorkerId.value
-        && estimatedMinutes.value !== null,
+        patientId.value &&
+        selectedTestId.value &&
+        selectedDateTime.value &&
+        selectedWorkerId.value &&
+        estimatedMinutes.value !== null,
     ),
 );
 
@@ -122,7 +138,7 @@ const submitHint = computed(() => {
     }
 
     if (!selectedDateTime.value) {
-        missingSteps.push('escollir hora d\'inici');
+        missingSteps.push("escollir hora d'inici");
     }
 
     if (missingSteps.length === 0) {
@@ -132,13 +148,17 @@ const submitHint = computed(() => {
     return `Per confirmar la cita falta: ${missingSteps.join(', ')}`;
 });
 
-const plainDescription = computed(() => description.value
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .trim());
+const plainDescription = computed(() =>
+    description.value
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/\s+/g, ' ')
+        .trim(),
+);
 
-const descriptionForSubmit = computed(() => plainDescription.value.slice(0, 255));
+const descriptionForSubmit = computed(() =>
+    plainDescription.value.slice(0, 255),
+);
 
 const resumMinutsProva = computed(() =>
     testMinutes.value !== null ? `${testMinutes.value} min` : 'Pendent',
@@ -168,7 +188,6 @@ const visibleItems = computed(() => {
 
     return props.testTypes.slice(0, 6);
 });
-
 </script>
 
 <template>
@@ -185,25 +204,40 @@ const visibleItems = computed(() => {
                 aria-describedby="appointment-form-help"
             >
                 <p id="appointment-form-help" class="sr-only">
-                    Completa les dades del pacient, prova i franja horaria abans de
-                    confirmar la cita.
+                    Completa les dades del pacient, prova i franja horaria abans
+                    de confirmar la cita.
                 </p>
-                <input type="hidden" name="date_time" :value="selectedDateTime" />
+                <input
+                    type="hidden"
+                    name="date_time"
+                    :value="selectedDateTime"
+                />
                 <input type="hidden" name="time" :value="estimatedMinutes" />
                 <input type="hidden" name="estat" value="programada" />
-                <input type="hidden" name="worker_id" :value="selectedWorkerId" />
-                <input type="hidden" name="description" :value="descriptionForSubmit" />
+                <input
+                    type="hidden"
+                    name="worker_id"
+                    :value="selectedWorkerId"
+                />
+                <input
+                    type="hidden"
+                    name="description"
+                    :value="descriptionForSubmit"
+                />
 
                 <div
                     class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12"
                 >
-                    <div class="lg:col-span-8 flex flex-col">
+                    <div class="flex flex-col lg:col-span-8">
                         <div class="">
-                            <h1 class="text-3xl font-extrabold tracking-tight text-pmf-primary sm:text-4xl"
-                            >Crear Nova Cita
+                            <h1
+                                class="text-3xl font-extrabold tracking-tight text-pmf-primary sm:text-4xl"
+                            >
+                                Crear Nova Cita
                             </h1>
                             <p class="mt-2 text-muted-foreground">
-                                Empleneu els detalls per programar una nova citatext
+                                Empleneu els detalls per programar una nova
+                                citatext
                             </p>
                         </div>
                         <!-- Detall de la cita -->
@@ -239,7 +273,7 @@ const visibleItems = computed(() => {
                                 <div class="mt-4">
                                     <Label
                                         for="patient_id"
-                                        class="text-xs font-semibold tracking-widest text-muted-foreground"
+                                        class="text-xs font-semibold tracking-widest text-gray-600"
                                     >
                                         TARGETA SANITÀRIA (CIP)
                                     </Label>
@@ -257,6 +291,7 @@ const visibleItems = computed(() => {
                                             autocomplete="off"
                                             required
                                             aria-required="true"
+                                            
                                             aria-describedby="patient-check-help patient-check-status"
                                         />
                                         <input
@@ -265,7 +300,7 @@ const visibleItems = computed(() => {
                                             :value="patientId ?? ''"
                                         />
                                         <button
-                                            class="inline-flex h-9 w-full shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 md:w-auto"
+                                            class="inline-flex h-9 w-full shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 focus-visible:outline-none md:w-auto"
                                             type="button"
                                             @click="validatePatient"
                                             aria-describedby="patient-check-help"
@@ -277,7 +312,10 @@ const visibleItems = computed(() => {
                                             Comprovar usuari
                                         </button>
                                     </div>
-                                    <InputError :message="errors.patient_id" class="mt-2" />
+                                    <InputError
+                                        :message="errors.patient_id"
+                                        class="mt-2"
+                                    />
                                 </div>
                             </CardContent>
                         </Card>
@@ -307,7 +345,11 @@ const visibleItems = computed(() => {
                                 </CardHeader>
                                 <div
                                     class="grid grid-cols-1 flex-wrap items-center justify-center gap-4 p-5 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
-                                    :aria-describedby="isAvaible ? 'test-selection-status' : 'test-selection-help'"
+                                    :aria-describedby="
+                                        isAvaible
+                                            ? 'test-selection-status'
+                                            : 'test-selection-help'
+                                    "
                                 >
                                     <legend class="sr-only">
                                         Seleccio de proves diagnostiques
@@ -315,7 +357,11 @@ const visibleItems = computed(() => {
                                     <label
                                         v-for="test in visibleItems"
                                         :key="test.id"
-                                        :class="isAvaible ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'"
+                                        :class="
+                                            isAvaible
+                                                ? 'cursor-pointer'
+                                                : 'cursor-not-allowed opacity-60'
+                                        "
                                     >
                                         <input
                                             type="radio"
@@ -331,20 +377,23 @@ const visibleItems = computed(() => {
                                         />
 
                                         <div
-                                            class="flex min-h-29 flex-col items-center justify-center rounded-2xl border-2 bg-white p-5 text-center text-black transition hover:bg-gray-50 peer-checked:border-pmf-turquoise peer-focus-visible:ring-2 peer-focus-visible:ring-pmf-primary peer-focus-visible:ring-offset-2"
+                                            class="flex min-h-29 flex-col items-center justify-center rounded-2xl border-2 bg-white p-5 text-center text-black transition peer-checked:border-pmf-turquoise peer-focus-visible:ring-2 peer-focus-visible:ring-pmf-primary peer-focus-visible:ring-offset-2 hover:bg-gray-50"
                                         >
-                                            <span class="mt-2 text-sm font-bold">{{ test.name }}</span>
+                                            <span
+                                                class="mt-2 text-sm font-bold"
+                                                >{{ test.name }}</span
+                                            >
                                         </div>
                                     </label>
                                     <p
                                         v-if="!isAvaible"
                                         id="test-selection-help"
-                                        class="col-span-full text-center text-sm text-muted-foreground"
+                                        class="col-span-full text-center text-sm text-gray-600"
                                         role="status"
                                         aria-live="polite"
                                     >
-                                        Primer valida el pacient per activar la selecció
-                                        de proves.
+                                        Primer valida el pacient per activar la
+                                        selecció de proves.
                                     </p>
                                     <div
                                         class="col-span-full flex items-center justify-center"
@@ -352,7 +401,7 @@ const visibleItems = computed(() => {
                                         <button
                                             v-if="!showAll"
                                             @click="showAll = true"
-                                            class="mt-3 flex cursor-pointer items-center justify-center rounded-full bg-pmf-green px-5 py-3 text-pmf-secondary transition hover:bg-pmf-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2"
+                                            class="mt-3 flex cursor-pointer items-center justify-center rounded-full bg-pmf-green px-5 py-3 text-pmf-secondary transition hover:bg-pmf-green/90 focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 focus-visible:outline-none"
                                             type="button"
                                         >
                                             Veure totes les proves
@@ -373,7 +422,10 @@ const visibleItems = computed(() => {
                                             {{ estimatedMinutes }} min
                                         </span>
                                     </p>
-                                    <InputError :message="errors.test_id" class="col-span-full text-center" />
+                                    <InputError
+                                        :message="errors.test_id"
+                                        class="col-span-full text-center"
+                                    />
                                 </div>
                             </Card>
                         </div>
@@ -405,7 +457,7 @@ const visibleItems = computed(() => {
                                 <div class="mt-4 grid gap-4">
                                     <Label
                                         for="description-editor"
-                                        class="text-xs font-semibold tracking-widest text-muted-foreground"
+                                        class="text-xs font-semibold tracking-widest text-gray-600"
                                     >
                                         OBSERVACIONS DE LA CITA
                                     </Label>
@@ -416,21 +468,21 @@ const visibleItems = computed(() => {
                                         contentType="html"
                                         theme="snow"
                                         rows="4"
-                                        class="min-h-24 w-full min-w-0 overflow-hidden rounded-md border border-pmf-primary/30 bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:border-pmf-primary focus-within:ring-2 focus-within:ring-pmf-primary/30 md:text-sm [&_.ql-toolbar.ql-snow]:border-0 [&_.ql-toolbar.ql-snow]:border-b [&_.ql-toolbar.ql-snow]:border-pmf-primary/20 [&_.ql-toolbar.ql-snow]:bg-pmf-secondary/40 [&_.ql-container.ql-snow]:border-0 [&_.ql-editor]:relative [&_.ql-editor]:min-h-32 [&_.ql-editor]:px-3 [&_.ql-editor]:py-2 [&_.ql-editor]:text-foreground [&_.ql-editor.ql-blank::before]:left-3 [&_.ql-editor.ql-blank::before]:right-3 [&_.ql-editor.ql-blank::before]:top-2 [&_.ql-editor.ql-blank::before]:text-muted-foreground [&_.ql-editor.ql-blank::before]:not-italic [&_.ql-stroke]:stroke-pmf-primary [&_.ql-fill]:fill-pmf-primary [&_.ql-picker]:text-pmf-primary [&_.ql-snow_.ql-picker-options]:border-pmf-primary/20"
+                                        class="min-h-24 w-full min-w-0 overflow-hidden rounded-md border border-pmf-primary/30 bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:border-pmf-primary focus-within:ring-2 focus-within:ring-pmf-primary/30 md:text-sm [&_.ql-container.ql-snow]:border-0 [&_.ql-editor]:relative [&_.ql-editor]:min-h-32 [&_.ql-editor]:px-3 [&_.ql-editor]:py-2 [&_.ql-editor]:text-foreground [&_.ql-editor.ql-blank::before]:top-2 [&_.ql-editor.ql-blank::before]:right-3 [&_.ql-editor.ql-blank::before]:left-3 [&_.ql-editor.ql-blank::before]:text-muted-foreground [&_.ql-editor.ql-blank::before]:not-italic [&_.ql-fill]:fill-pmf-primary [&_.ql-picker]:text-pmf-primary [&_.ql-snow_.ql-picker-options]:border-pmf-primary/20 [&_.ql-stroke]:stroke-pmf-primary [&_.ql-toolbar.ql-snow]:border-0 [&_.ql-toolbar.ql-snow]:border-b [&_.ql-toolbar.ql-snow]:border-pmf-primary/20 [&_.ql-toolbar.ql-snow]:bg-pmf-secondary/40"
                                         placeholder="Afegeix observacions de la cita..."
                                         aria-label="Observacions de la cita"
                                         aria-describedby="description-help"
                                     />
                                     <p
                                         id="description-help"
-                                        class="text-xs text-muted-foreground"
+                                        class="text-xs text-gray-600"
                                     >
-                                        Aquest camp es opcional i permet afegir notes
-                                        cliniques per al professional.
+                                        Aquest camp es opcional i permet afegir
+                                        notes cliniques per al professional.
                                     </p>
                                     <InputError :message="errors.description" />
                                 </div>
-                             </CardContent>
+                            </CardContent>
                         </Card>
 
                         <Card
@@ -461,14 +513,18 @@ const visibleItems = computed(() => {
                                     <div class="w-full">
                                         <Label
                                             for="date-time"
-                                            class="text-xs font-semibold tracking-widest text-muted-foreground"
+                                            class="text-xs font-semibold tracking-widest text-gray-600"
                                         >
                                             DATA DE LA CITA
                                         </Label>
                                         <Input
                                             id="date-time"
                                             type="date"
-                                            :min="new Date().toISOString().split('T')[0]"
+                                            :min="
+                                                new Date()
+                                                    .toISOString()
+                                                    .split('T')[0]
+                                            "
                                             v-model="dataCita"
                                             class="mt-3 h-9 bg-background"
                                             placeholder="Ex: ABCD 0123456789"
@@ -481,7 +537,7 @@ const visibleItems = computed(() => {
                                         <Label
                                             id="worker_id_label"
                                             for="worker_id"
-                                            class="mb-3 text-xs font-semibold tracking-widest text-muted-foreground"
+                                            class="mb-3 text-xs font-semibold tracking-widest text-gray-600"
                                         >
                                             DOCTOR
                                         </Label>
@@ -513,21 +569,29 @@ const visibleItems = computed(() => {
                                         </Select>
                                     </div>
                                     <button
-                                            class="mt-7 inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-sm text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-                                            type="button"
-                                            @click="validateDoctorSlots"
-                                            :disabled="!professionalId || !dataCita || estimatedMinutes === null"
-                                        >
-                                            <CircleCheck
-                                                class="mr-3 size-5"
-                                                aria-hidden="true"
-                                            />
-                                            Veure dates disponibles
-                                        </button>
-
+                                        class="mt-7 inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-sm text-pmf-secondary hover:bg-pmf-green focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                                        type="button"
+                                        @click="validateDoctorSlots"
+                                        :disabled="
+                                            !professionalId ||
+                                            !dataCita ||
+                                            estimatedMinutes === null
+                                        "
+                                    >
+                                        <CircleCheck
+                                            class="mr-3 size-5"
+                                            aria-hidden="true"
+                                        />
+                                        Veure dates disponibles
+                                    </button>
                                 </div>
-                                <div class="mt-4 rounded-md border border-pmf-primary/20 bg-white p-4">
-                                    <p id="slots-heading" class="text-sm font-medium text-pmf-primary">
+                                <div
+                                    class="mt-4 rounded-md border border-pmf-primary/20 bg-white p-4"
+                                >
+                                    <p
+                                        id="slots-heading"
+                                        class="text-sm font-medium text-pmf-primary"
+                                    >
                                         Franges horaries del doctor
                                     </p>
 
@@ -562,7 +626,7 @@ const visibleItems = computed(() => {
                                                 :aria-label="`Seleccionar hora ${startTime}`"
                                             />
                                             <span
-                                                class="inline-flex items-center rounded-md border border-pmf-primary/25 px-3 py-1.5 text-sm text-pmf-primary transition hover:bg-pmf-secondary/70 peer-checked:border-pmf-primary peer-checked:bg-pmf-primary peer-checked:text-pmf-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-pmf-primary peer-focus-visible:ring-offset-2"
+                                                class="inline-flex items-center rounded-md border border-pmf-primary/25 px-3 py-1.5 text-sm text-pmf-primary transition peer-checked:border-pmf-primary peer-checked:bg-pmf-primary peer-checked:text-pmf-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-pmf-primary peer-focus-visible:ring-offset-2 hover:bg-pmf-secondary/70"
                                             >
                                                 {{ startTime }}
                                             </span>
@@ -575,16 +639,20 @@ const visibleItems = computed(() => {
                                         role="status"
                                         aria-live="polite"
                                     >
-                                        Data i hora seleccionada: {{ selectedDateTime }}
+                                        Data i hora seleccionada:
+                                        {{ selectedDateTime }}
                                     </p>
-                                    <InputError :message="errors.date_time" class="mt-2" />
+                                    <InputError
+                                        :message="errors.date_time"
+                                        class="mt-2"
+                                    />
                                 </div>
 
                                 <div class="mt-4 w-full lg:mb-25">
                                     <Label
                                         id="urgencia_label"
                                         for="urgencia"
-                                        class="mb-3 text-xs font-semibold tracking-widest text-muted-foreground"
+                                        class="mb-3 text-xs font-semibold tracking-widest text-gray-600"
                                     >
                                         PRIORITAT DE LA CITA
                                     </Label>
@@ -611,7 +679,10 @@ const visibleItems = computed(() => {
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
-                                    <InputError :message="errors.urgencia" class="mt-2" />
+                                    <InputError
+                                        :message="errors.urgencia"
+                                        class="mt-2"
+                                    />
                                 </div>
                             </CardContent>
                         </Card>
@@ -726,15 +797,21 @@ const visibleItems = computed(() => {
                                             </p>
 
                                             <button
-                                                class="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                                                class="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                                                 type="submit"
-                                                :disabled="!canSubmit || processing"
+                                                :disabled="
+                                                    !canSubmit || processing
+                                                "
                                             >
                                                 <CircleCheck
                                                     class="mr-3 size-5"
                                                     aria-hidden="true"
                                                 />
-                                                {{ processing ? 'Guardant...' : 'Confirmar Nova Cita' }}
+                                                {{
+                                                    processing
+                                                        ? 'Guardant...'
+                                                        : 'Confirmar Nova Cita'
+                                                }}
                                             </button>
                                         </div>
                                     </div>
