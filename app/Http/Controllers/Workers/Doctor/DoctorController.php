@@ -29,7 +29,7 @@ class DoctorController extends Controller
         ]);
     }
 
-    public function patientSearch(Request $request, GetPatientAction $getPatientAction) 
+    public function patientSearch(Request $request, GetPatientAction $getPatientAction)
     {
         $nts = $request->query('nts');
         if (! $nts) {
