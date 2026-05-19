@@ -26,12 +26,17 @@ test('patient patient-need and need relationships work as expected', function ()
         'need_id' => $need->id,
     ]);
 
-    expect($patient->fresh()->patientNeeds)->toHaveCount(1)
-        ->and($patient->fresh()->patientNeeds->first()->is($patientNeed))->toBeTrue()
+    $patientNeeds = $patient->fresh()->patientNeeds;
+    $needPatientNeeds = $need->fresh()->patientNeeds;
+
+    expect($patientNeeds)->toHaveCount(1)
+        ->and($patientNeeds->first()->patient_id)->toBe($patient->id)
+        ->and($patientNeeds->first()->need_id)->toBe($need->id)
         ->and($patientNeed->need->is($need))->toBeTrue()
         ->and($patientNeed->patient->is($patient))->toBeTrue()
         ->and($patient->needs)->toHaveCount(1)
         ->and($patient->needs->first()->is($need))->toBeTrue()
-        ->and($need->patientNeeds)->toHaveCount(1)
-        ->and($need->patientNeeds->first()->is($patientNeed))->toBeTrue();
+        ->and($needPatientNeeds)->toHaveCount(1)
+        ->and($needPatientNeeds->first()->patient_id)->toBe($patient->id)
+        ->and($needPatientNeeds->first()->need_id)->toBe($need->id);
 });

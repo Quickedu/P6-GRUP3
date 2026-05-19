@@ -15,7 +15,7 @@ test('database seeder creates workers patients and patient dates', function () {
 
     expect(DB::table('patients')->count())->toBe(3)
         ->and(DB::table('workers')->count())->toBe(12)
-        ->and(DB::table('dates')->count())->toBe(9);
+        ->and(DB::table('dates')->count())->toBe(18);
 
     $doctorWorkerIds = DB::table('workers')
         ->join('users', 'users.id', '=', 'workers.user_id')
@@ -25,8 +25,8 @@ test('database seeder creates workers patients and patient dates', function () {
     DB::table('patients')->orderBy('id')->pluck('id')->each(function (int $patientId) use ($doctorWorkerIds): void {
         $patientDates = DB::table('dates')->where('patient_id', $patientId)->get();
 
-        expect($patientDates)->toHaveCount(3)
-            ->and($patientDates->pluck('date_time')->unique())->toHaveCount(3)
+        expect($patientDates)->toHaveCount(6)
+            ->and($patientDates->pluck('date_time')->unique())->toHaveCount(6)
             ->and($patientDates->pluck('worker_id')->diff($doctorWorkerIds))->toBeEmpty();
     });
 });

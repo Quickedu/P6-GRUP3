@@ -23,35 +23,41 @@ class DatesSeeder extends Seeder
             ->pluck('workers.id')
             ->values();
 
-        $testTimes = DB::table('test_types')
-            ->whereIn('id', [1, 2, 3])
-            ->pluck('time', 'id');
+        $testTypes = DB::table('test_types')
+            ->orderBy('id')
+            ->limit(3)
+            ->get(['id', 'time'])
+            ->values();
 
-        // 6 citas por paciente: los primeros 3 testId se repiten con distinto dia/hora
+        // 6 citas por paciente: las primeras 3 pruebas se repiten con distinto dia/hora
         $appointments = [
-            ['testId' => 1, 'estat' => 'realitzada',   'urgencia' => 'no urgent',  'hourOffset' => 0,  'minuteOffset' => 0],
-            ['testId' => 2, 'estat' => 'realitzada',   'urgencia' => 'preferent',  'hourOffset' => 1,  'minuteOffset' => 15],
-            ['testId' => 3, 'estat' => 'cancel·lada',  'urgencia' => 'urgent',     'hourOffset' => 2,  'minuteOffset' => 30],
-            ['testId' => 1, 'estat' => 'programada',   'urgencia' => 'no urgent',  'hourOffset' => 3,  'minuteOffset' => 0],
-            ['testId' => 2, 'estat' => 'programada',   'urgencia' => 'preferent',  'hourOffset' => 4,  'minuteOffset' => 15],
-            ['testId' => 3, 'estat' => 'programada',   'urgencia' => 'urgent',     'hourOffset' => 5,  'minuteOffset' => 30],
+            ['testIndex' => 0, 'estat' => 'realitzada',   'urgencia' => 'no urgent',  'hourOffset' => 0,  'minuteOffset' => 0],
+            ['testIndex' => 1, 'estat' => 'realitzada',   'urgencia' => 'preferent',  'hourOffset' => 1,  'minuteOffset' => 15],
+            ['testIndex' => 2, 'estat' => 'cancel·lada',  'urgencia' => 'urgent',     'hourOffset' => 2,  'minuteOffset' => 30],
+            ['testIndex' => 0, 'estat' => 'programada',   'urgencia' => 'no urgent',  'hourOffset' => 3,  'minuteOffset' => 0],
+            ['testIndex' => 1, 'estat' => 'programada',   'urgencia' => 'preferent',  'hourOffset' => 4,  'minuteOffset' => 15],
+            ['testIndex' => 2, 'estat' => 'programada',   'urgencia' => 'urgent',     'hourOffset' => 5,  'minuteOffset' => 30],
         ];
+
+        $appointmentCount = count($appointments);
 
         $dates = [];
         $dateId = 1;
 
         foreach ($patients as $patientIndex => $patientId) {
             foreach ($appointments as $apptIndex => $appt) {
+                $testType = $testTypes[$appt['testIndex']];
+
                 $dates[] = [
                     'id' => $dateId,
                     'patient_id' => $patientId,
                     'worker_id' => $doctorWorkerIds[$apptIndex % $doctorWorkerIds->count()],
-                    'test_id' => $appt['testId'],
+                    'test_id' => $testType->id,
                     'date_time' => now()
-                        ->addDays(($patientIndex * 6) + $apptIndex + 1)
+                        ->addDays(($patientIndex * $appointmentCount) + $apptIndex + 1)
                         ->setTime(9 + $appt['hourOffset'], $appt['minuteOffset'])
                         ->format('Y-m-d H:i:s'),
-                    'time' => $testTimes[$appt['testId']],
+                    'time' => $testType->time,
                     'estat' => $appt['estat'],
                     'urgencia' => $appt['urgencia'],
                     'description' => sprintf(

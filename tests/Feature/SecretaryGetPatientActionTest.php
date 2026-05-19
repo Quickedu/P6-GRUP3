@@ -33,6 +33,6 @@ test('it returns patient data when found', function () {
 
     expect($response['status'])->toBe('success')
         ->and($response['available'])->toBeTrue()
-        ->and($response['data'])->toBeInstanceOf(Patient::class)
-        ->and($response['data']->is($patient))->toBeTrue();
+        ->and($response['data']['patient'])->toBeInstanceOf(Patient::class)
+        ->and($response['data']['patient']->is($patient))->toBeTrue();
 });
