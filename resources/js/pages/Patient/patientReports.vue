@@ -146,6 +146,7 @@ const groupedReports = computed((): Group[] => {
                         <input
                             type="date"
                             v-model="dateFrom"
+                            aria-label="Data des de"
                             class="rounded-lg border border-[#c5d8d5] bg-white px-3 py-2 text-sm text-pmf-green-dark focus:outline-none focus:ring-2 focus:ring-pmf-green/30 focus:border-pmf-green transition-colors pr-8"
                         />
                     </div>
@@ -157,6 +158,7 @@ const groupedReports = computed((): Group[] => {
                     <div class="relative">
                         <input
                             type="date"
+                            aria-label="Data fins a"
                             v-model="dateTo"
                             class="rounded-lg border border-[#c5d8d5] bg-white px-3 py-2 text-sm text-pmf-green-dark focus:outline-none focus:ring-2 focus:ring-pmf-green/30 focus:border-pmf-green transition-colors pr-8"
                         />
@@ -225,6 +227,7 @@ const groupedReports = computed((): Group[] => {
                         <button
                             @click="prevPage"
                             :disabled="currentPage === 1"
+                            aria-label="Pàgina anterior"
                             class="inline-flex items-center justify-center w-7 h-7 rounded-lg border border-[#c5d8d5] bg-white text-pmf-green transition-colors hover:bg-[#f0f7f6] disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                             <ChevronLeft class="h-4 w-4" />
@@ -232,6 +235,7 @@ const groupedReports = computed((): Group[] => {
                         <button
                             @click="nextPage"
                             :disabled="currentPage === totalPages"
+                            aria-label="Pàgina següent"
                             class="inline-flex items-center justify-center w-7 h-7 rounded-lg border border-[#c5d8d5] bg-white text-pmf-green transition-colors hover:bg-[#f0f7f6] disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                             <ChevronRight class="h-4 w-4" />
