@@ -32,48 +32,66 @@ defineOptions({
 
 		<!-- Header -->
 		<header class="sticky top-0 z-30 bg-white/85 border-b border-[rgba(0,101,87,0.12)] backdrop-blur-md">
-			<div class="w-full max-w-[72rem] mx-auto px-6 flex items-center justify-between gap-6 py-4">
-				<!-- Brand -->
-				<div class="flex items-center gap-3">
-					<div class="w-[60px] h-[60px] grid place-items-center rounded-full bg-white/95">
-						<img src="/images/logo1.png" alt="Logo PMF" class="object-contain w-full h-full" />
+			<div class="w-full max-w-[72rem] mx-auto px-6 py-4">
+				<div class="flex flex-wrap items-center justify-between gap-4">
+					<!-- Brand -->
+					<div class="flex items-center gap-3">
+						<div class="w-[60px] h-[60px] grid place-items-center rounded-full bg-white/95">
+							<img src="/images/logo1.png" alt="Logo PMF" class="object-contain w-full h-full" />
+						</div>
+						<div>
+							<p class="font-['Space_Grotesk'] text-[1.1rem] font-semibold text-[#006557] m-0">PMF Salut</p>
+							<p class="text-xs text-[#7a9e99] m-0">Programa de millora de flux</p>
+						</div>
 					</div>
-					<div>
-						<p class="font-['Space_Grotesk'] text-[1.1rem] font-semibold text-[#006557] m-0">PMF Salut</p>
-						<p class="text-xs text-[#7a9e99] m-0">Programa millora de flux</p>
-					</div>
-				</div>
 
-				<!-- Nav desktop -->
-				<nav class="hidden md:flex items-center gap-6 text-sm font-medium">
-					<a
-						v-for="item in navItems"
-						:key="item.id"
-						:href="`#${item.id}`"
-						class="text-[#7a9e99] no-underline hover:text-[#006557] transition-colors duration-200"
+					<!-- Nav desktop -->
+					<nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+						<a
+							v-for="item in navItems"
+							:key="item.id"
+							:href="`#${item.id}`"
+							class="text-[#7a9e99] no-underline hover:text-[#006557] transition-colors duration-200"
+						>
+							{{ item.label }}
+						</a>
+					</nav>
+
+					<Link
+						:href="login()"
+						class="hidden sm:inline-flex items-center justify-center px-5 py-2 rounded-full bg-[#00574b] text-[#d4f0eb] text-sm font-semibold shadow-[0_10px_25px_rgba(0,101,87,0.18)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200"
 					>
-						{{ item.label }}
-					</a>
-				</nav>
+						Àrea personal
+					</Link>
+				</div>
 
 				<Link
 					:href="login()"
-					class="inline-flex items-center justify-center px-5 py-2 rounded-full bg-[#00574b] text-[#d4f0eb] text-sm font-semibold shadow-[0_10px_25px_rgba(0,101,87,0.18)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200"
+					class="sm:hidden mt-4 inline-flex w-full items-center justify-center px-5 py-2 rounded-full bg-[#00574b] text-[#d4f0eb] text-sm font-semibold shadow-[0_10px_25px_rgba(0,101,87,0.18)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200"
 				>
-					Area personal
+					Àrea personal
 				</Link>
-			</div>
 
-			<!-- Nav mobile -->
-			<div class="md:hidden w-full max-w-[72rem] mx-auto px-6 flex flex-wrap gap-4 pb-4">
-				<a
-					v-for="item in navItems"
-					:key="item.id"
-					:href="`#${item.id}`"
-					class="text-[#7a9e99] no-underline hover:text-[#006557] transition-colors duration-200 text-sm"
-				>
-					{{ item.label }}
-				</a>
+				<details class="md:hidden mt-4 rounded-[20px] border border-[rgba(0,101,87,0.12)] bg-white/90 px-4 py-3 shadow-[0_14px_24px_rgba(0,48,41,0.08)]">
+					<summary class="flex items-center justify-between gap-3 cursor-pointer text-sm font-semibold text-[#006557] [&::-webkit-details-marker]:hidden">
+						Menú
+						<span class="relative w-5 h-4">
+							<span class="absolute inset-x-0 top-0 h-0.5 rounded-full bg-[#00574b]"></span>
+							<span class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-0.5 rounded-full bg-[#00574b]"></span>
+							<span class="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-[#00574b]"></span>
+						</span>
+					</summary>
+					<nav class="mt-3 grid gap-2 text-sm font-medium">
+						<a
+							v-for="item in navItems"
+							:key="item.id"
+							:href="`#${item.id}`"
+							class="rounded-full px-4 py-2 text-[#7a9e99] no-underline hover:text-[#006557] hover:bg-[#d4f0eb] transition-colors duration-200"
+						>
+							{{ item.label }}
+						</a>
+					</nav>
+				</details>
 			</div>
 		</header>
 
@@ -98,7 +116,7 @@ defineOptions({
 							:href="login()"
 							class="inline-flex items-center justify-center px-7 py-3 rounded-full bg-[#00574b] text-[#d4f0eb] text-sm font-semibold shadow-[0_12px_24px_rgba(0,101,87,0.2)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200"
 						>
-							Area personal
+							Àrea personal
 						</Link>
 					</div>
 					<div class="grid gap-4 mt-6 grid-cols-[repeat(auto-fit,minmax(170px,1fr))]">
@@ -228,10 +246,20 @@ defineOptions({
 						:href="login()"
 						class="inline-flex items-center justify-center px-7 py-3 rounded-full bg-[#00574b] text-[#d4f0eb] text-sm font-semibold shadow-[0_12px_24px_rgba(0,101,87,0.2)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200 shrink-0"
 					>
-						Entrar a àrea personal
+						Entrar a l'àrea personal
 					</Link>
 				</div>
 			</section>
+
+			<footer class="pt-12 mt-12 border-t border-[rgba(0,101,87,0.12)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-sm text-[#7a9e99]">
+				<p class="m-0">PMF Salut</p>
+				<Link
+					href="/privacitat"
+					class="text-[#006557] font-semibold no-underline hover:text-[#00a38e] transition-colors"
+				>
+					Política de privacitat
+				</Link>
+			</footer>
 
 		</main>
 	</div>
