@@ -2,17 +2,15 @@
 import { ref, computed } from 'vue';
 import { router, usePage, Link } from '@inertiajs/vue3';
 import { ArrowLeft, Download, Plus } from 'lucide-vue-next';
-
 import textNotify from '@/pages/components/textNotify.vue';
 import { formReport, patientSearch } from '@/routes';
 
 const page = usePage();
 
-const nts = ref('');
-
 const user = computed(() => page.props.auth?.user);
 
-const isSecretary = computed(() => user.value?.role === 'secretary');
+const nts = ref(page.props.searchedNts || '');
+
 const isDoctor = computed(() => user.value?.role === 'doctor');
 
 defineOptions({
@@ -76,7 +74,7 @@ const goBack = () => {
 };
 
 function searchPatient() {
-    router.get(('patientSearch'), {
+    router.get(patientSearch(), {
         nts: nts.value
     });
 }
@@ -92,7 +90,6 @@ function searchPatient() {
             :status="flashStatus"
         />
 
-        <!-- Breadcrumb -->
         <div class="flex items-center gap-1.5 text-sm text-pmf-grey-light">
             <button
                 @click="goBack"
@@ -108,9 +105,7 @@ function searchPatient() {
             </span>
         </div>
 
-        <!-- Header -->
         <div class="flex items-center gap-3">
-
             <button
                 @click="goBack"
                 class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#c5d8d5] bg-white transition-colors hover:bg-[#f4f9f8]" aria-label="Tornar enrere"
@@ -123,13 +118,10 @@ function searchPatient() {
             </h2>
         </div>
 
-        <!-- Search -->
         <div class="rounded-xl border border-[#c5d8d5] bg-white p-6">
-
             <h2 class="mb-4 text-xl font-medium text-pmf-green-dark">
                 Buscar pacient
             </h2>
-
             <div class="flex gap-3">
 
                 <label for="nts" class="block text-sm font-medium text-pmf-green sr-only">
@@ -140,7 +132,7 @@ function searchPatient() {
                     id="nts"
                     type="text"
                     placeholder="Número targeta sanitària"
-                    class="w-full rounded-lg border border-[#c5d8d5] px-3"
+                    class="w-full rounded-lg border border-[#c5d8d5] px-2 text-md"
                     @keyup.enter="searchPatient"
                 />
 
@@ -153,10 +145,7 @@ function searchPatient() {
             </div>
         </div>
 
-        <!-- Patient Content -->
         <div v-if="props.patient" class="space-y-4">
-
-            <!-- Dades Personals -->
             <div class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white">
 
                 <div class="flex items-center justify-between border-b border-[#c5d8d5] bg-[#f0f7f6] px-5 py-3">
@@ -164,14 +153,12 @@ function searchPatient() {
                         Dades personals
                     </h3>
                 </div>
-
                 <div class="grid grid-cols-2 gap-x-8 gap-y-4 px-5 py-4 md:grid-cols-3">
 
                     <div>
                         <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
                             Nom i cognoms
                         </p>
-
                         <p class="text-sm text-pmf-green-dark">
                             {{ props.patient.name }}
                         </p>
@@ -181,7 +168,6 @@ function searchPatient() {
                         <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
                             Número de telèfon
                         </p>
-
                         <p class="text-sm text-pmf-green-dark">
                             {{ props.patient.phone }}
                         </p>
@@ -228,7 +214,6 @@ function searchPatient() {
                         <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
                             Correu electrònic
                         </p>
-
                         <p class="text-sm text-pmf-green-dark">
                             {{ props.patient.email }}
                         </p>
@@ -238,7 +223,6 @@ function searchPatient() {
                         <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
                             Adreça
                         </p>
-
                         <p class="text-sm text-pmf-green-dark">
                             {{ props.patient.address }}
                         </p>
@@ -246,7 +230,6 @@ function searchPatient() {
                 </div>
             </div>
 
-            <!-- Necessitats -->
             <div class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white">
 
                 <div class="border-b border-[#c5d8d5] bg-[#f0f7f6] px-5 py-3">
@@ -279,7 +262,6 @@ function searchPatient() {
                 </div>
             </div>
 
-            <!-- Informes -->
             <div class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white">
 
                 <div class="flex items-center justify-between border-b border-[#c5d8d5] bg-[#f0f7f6] px-5 py-3">
@@ -334,7 +316,6 @@ function searchPatient() {
                             </td>
 
                             <td class="px-5 py-3">
-
                                 <a
                                     :href="`/storage/${report.pdf_path}`"
                                     target="_blank"
@@ -343,12 +324,10 @@ function searchPatient() {
                                     <Download class="h-3.5 w-3.5" />
                                     Descarregar
                                 </a>
-
                             </td>
                         </tr>
                     </tbody>
                 </table>
-
                 <div
                     v-else
                     class="px-5 py-12 text-center text-sm text-pmf-grey-light"
