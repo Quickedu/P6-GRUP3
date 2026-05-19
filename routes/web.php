@@ -20,6 +20,8 @@ Route::inertia('/', 'HomePage', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
+Route::inertia('/privacitat', 'PrivacyPolicy')->name('privacy');
+
 Route::get('/dashboard', function (DatesController $datesController) {
     $user = Auth::guard('admin')->user() ?? Auth::guard('patient')->user();
     $role = $user?->role ?? 'patient';
@@ -60,6 +62,7 @@ Route::middleware(['auth:patient'])->group(function () {
     Route::get('/dashboardPatient', [PatientController::class, 'index'])->name('patientDashboard');
     Route::post('patient/logout', [LoginPatientController::class, 'destroy'])->name('loginpatientDestroy');
     Route::get('patient/reports', [PatientController::class, 'show'])->name('patientReports');
+    Route::get('patient/information', [PatientController::class, 'information'])->name('patientInformation');
     Route::post('patient/cancelDate/{date}', [PatientController::class, 'update'])->name('cancelDate');
 });
 

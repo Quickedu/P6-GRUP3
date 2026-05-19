@@ -31,8 +31,8 @@ watch(activeIndex, (newIndex, oldIndex) => {
 
 <template>
     <SidebarGroup class="px-0 py-0">
-        <SidebarGroupLabel v-if="label" class="px-4 py-2">{{ label }}</SidebarGroupLabel>
-        <SidebarMenu class="gap-2">
+        <SidebarGroupLabel v-if="label" class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm">{{ label }}</SidebarGroupLabel>
+        <SidebarMenu class="gap-1 sm:gap-2">
             <SidebarMenuItem
                 v-for="item in items"
                 :key="item.title"
@@ -47,13 +47,13 @@ watch(activeIndex, (newIndex, oldIndex) => {
 
                 <Link
                     :href="item.href"
-                    class="flex w-full items-center gap-3 rounded px-4 py-3 text-sm font-medium text-sidebar-foreground no-underline transition-colors duration-150 ease-in hover:bg-[color:rgba(0,163,142,0.08)] hover:text-[var(--pmf-primary)]"
+                    class="flex w-full items-center gap-2 sm:gap-3 rounded px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium text-sidebar-foreground no-underline transition-colors duration-150 ease-in hover:bg-[color:rgba(0,163,142,0.08)] hover:text-[var(--pmf-primary)]"
                     :class="isCurrentUrl(item.href)
                         ? 'bg-[color:rgba(0,163,142,0.12)] font-semibold text-[var(--pmf-primary)]'
                         : ''"
                 >
-                    <component :is="item.icon" class="h-5 w-5 shrink-0" />
-                    <span>{{ item.title }}</span>
+                    <component :is="item.icon" class="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+                    <span class="truncate">{{ item.title }}</span>
                 </Link>
             </SidebarMenuItem>
         </SidebarMenu>

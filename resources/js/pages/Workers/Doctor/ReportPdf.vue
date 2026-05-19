@@ -178,7 +178,7 @@ onBeforeUnmount(() => {
                                     <div>
                                         <Label
                                             for="patient_id"
-                                            class="mb-2 text-xs font-semibold tracking-widest text-muted-foreground"
+                                            class="mb-2 text-xs font-semibold tracking-widest text-gray-600"
                                         >
                                             NTS
                                         </Label>
@@ -209,13 +209,13 @@ onBeforeUnmount(() => {
 
                                     <div>
                                         <Label
-                                            for="patient_id"
-                                            class="mb-2 text-xs font-semibold tracking-widest text-muted-foreground"
+                                            for="names"
+                                            class="mb-2 text-xs font-semibold tracking-widest text-gray-600"
                                         >
                                             Nom i cognoms
                                         </Label>
                                         <Input
-                                            id="patient_id"
+                                            id="names"
                                             v-model="patientForm.name"
                                             type="text"
                                             name="name"
@@ -229,13 +229,13 @@ onBeforeUnmount(() => {
 
                                     <div>
                                         <Label
-                                            for="patient_id"
-                                            class="mb-2 text-xs font-semibold tracking-widest text-muted-foreground"
+                                            for="address"
+                                            class="mb-2 text-xs font-semibold tracking-widest text-gray-600"
                                         >
                                             Adreça
                                         </Label>
                                         <Input
-                                            id="patient_id"
+                                            id="address"
                                             v-model="patientForm.address"
                                             type="text"
                                             name="address"
@@ -249,13 +249,13 @@ onBeforeUnmount(() => {
 
                                     <div>
                                         <Label
-                                            for="patient_id"
-                                            class="mb-2 text-xs font-semibold tracking-widest text-muted-foreground"
+                                            for="birth_date"
+                                            class="mb-2 text-xs font-semibold tracking-widest text-gray-600"
                                         >
                                             Data de naixement
                                         </Label>
                                         <Input
-                                            id="patient_id"
+                                            id="birth_date"
                                             v-model="patientForm.birth_date"
                                             type="date"
                                             name="birth_date"
@@ -297,13 +297,13 @@ onBeforeUnmount(() => {
                                     >
                                         <div>
                                             <Label
-                                                for="patient_id"
-                                                class="mb-2 text-xs font-semibold tracking-widest text-muted-foreground"
+                                                for="center_requested"
+                                                class="mb-2 text-xs font-semibold tracking-widest text-gray-600"
                                             >
                                                 Centre sol·licitant
                                             </Label>
                                             <Input
-                                                id="patient_id"
+                                                id="center_requested"
                                                 type="text"
                                                 name="center_requested"
                                                 class="h-9 flex-1 bg-background"
@@ -318,13 +318,13 @@ onBeforeUnmount(() => {
 
                                         <div>
                                             <Label
-                                                for="patient_id"
+                                                for="center_destination"
                                                 class="mb-2 text-xs font-semibold tracking-widest text-muted-foreground"
                                             >
                                                 Centre de Destinació
                                             </Label>
                                             <Input
-                                                id="patient_id"
+                                                id="center_destination"
                                                 type="text"
                                                 name="center_destination"
                                                 class="h-9 flex-1 bg-background"
@@ -338,13 +338,13 @@ onBeforeUnmount(() => {
 
                                         <div>
                                             <Label
-                                                for="patient_id"
+                                                for="doctor_name"
                                                 class="mb-2 text-xs font-semibold tracking-widest text-muted-foreground"
                                             >
                                                 Metge Sol·licitant
                                             </Label>
                                             <Input
-                                                id="patient_id"
+                                                id="doctor_name"
                                                 type="text"
                                                 name="doctor_name"
                                                 class="h-9 flex-1 bg-background"
@@ -429,7 +429,7 @@ onBeforeUnmount(() => {
                                     <div class="mt-4 gap-4">
                                         <div>
                                             <Label
-                                                for="patient_id"
+                                                for="reason"
                                                 class="mb-2 text-xs font-semibold tracking-widest text-muted-foreground"
                                             >
                                                 Motiu de la sol·licitud
@@ -450,14 +450,14 @@ onBeforeUnmount(() => {
                                     >
                                         <div class="flex flex-col gap-2">
                                             <Label
-                                                for="request_date"
+                                                for="report"
                                                 class="text-xs font-semibold tracking-widest text-muted-foreground"
                                             >
                                                 Informe clínic
                                             </Label>
 
                                             <Input
-                                                id="request_date"
+                                                id="report"
                                                 type="text"
                                                 name="report"
                                                 class="h-9 w-full bg-background"
@@ -470,13 +470,13 @@ onBeforeUnmount(() => {
 
                                         <div class="flex flex-col gap-2">
                                             <Label
-                                                for="exploration_date"
+                                                for="exploration_clinical"
                                                 class="text-xs font-semibold tracking-widest text-muted-foreground"
                                             >
                                                 Exploració clínica
                                             </Label>
                                             <Input
-                                                id="exploration_date"
+                                                id="exploration_clinical"
                                                 type="text"
                                                 name="exploration"
                                                 class="h-9 w-full bg-background"

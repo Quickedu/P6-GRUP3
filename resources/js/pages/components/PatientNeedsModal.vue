@@ -48,11 +48,6 @@ async function assignNeed() {
     try {
         const res = await fetch(`/patients/${props.patient.id}/needs`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: JSON.stringify({ need_id: selectedNeedId.value }),
         });
         const data = await res.json();
         if (data.status === 'success') {
@@ -69,7 +64,6 @@ async function removeNeed(needId: number) {
     try {
         const res = await fetch(`/patients/${props.patient.id}/needs/${needId}`, {
             method: 'DELETE',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
         });
         const data = await res.json();
         if (data.status === 'success') {
@@ -88,18 +82,16 @@ async function removeNeed(needId: number) {
     >
         <div class="mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl">
 
-            <!-- Header -->
             <div class="flex items-center justify-between border-b border-[#deecea] bg-[#f0f7f6] px-6 py-4">
                 <div>
                     <h3 class="text-[15px] font-semibold text-pmf-green-dark">Gestionar necessitats</h3>
                     <p class="text-xs text-pmf-grey-light mt-0.5">{{ patient.name }}</p>
                 </div>
-                <button @click="close" class="rounded-lg p-1.5 text-pmf-grey-light hover:bg-pmf-secondary cursor-pointer transition-colors">
+                <button @click="close" class="rounded-lg p-1.5 text-pmf-grey-light hover:bg-pmf-secondary cursor-pointer transition-colors" aria-label="Tancar modal">
                     <X class="h-4 w-4" />
                 </button>
             </div>
 
-            <!-- Llista de necessitats -->
             <div class="max-h-[50vh] overflow-y-auto px-6 py-4 space-y-2">
 
                 <div v-if="localNeeds.length === 0 && !showSelect"
@@ -117,18 +109,18 @@ async function removeNeed(needId: number) {
                     <button
                         @click="removeNeed(need.id)"
                         :disabled="loading"
-                        class="rounded-lg p-1.5 text-pmf-grey-light hover:bg-red-50 hover:text-red-500 cursor-pointer transition-colors disabled:opacity-40"
+                        class="rounded-lg p-1.5 text-pmf-grey-light hover:bg-red-50 hover:text-red-500 cursor-pointer transition-colors disabled:opacity-40" aria-label="Eliminar necessitat"
                     >
                         <Trash2 class="h-3.5 w-3.5" />
                     </button>
                 </div>
 
-                <!-- Selector per afegir -->
                 <div v-if="showSelect"
                     class="flex items-center gap-2 rounded-lg border border-dashed border-[#b0ceca] bg-[#f0f7f6] px-4 py-3">
                     <select
                         v-model="selectedNeedId"
-                        class="flex-1 rounded-lg border border-[#c5d8d5] bg-white px-3 py-1.5 text-sm text-pmf-green-dark outline-none focus:border-pmf-turquoise"
+                        id="need-select"
+                        class="w-full min-w-0 flex-1 rounded-lg border border-[#c5d8d5] bg-white px-3 py-1.5 text-sm text-pmf-green-dark outline-none focus:border-pmf-turquoise"
                     >
                         <option :value="null" disabled>Selecciona una necessitat...</option>
                         <option v-for="n in unassignedNeeds" :key="n.id" :value="n.id">{{ n.name }}</option>
@@ -136,20 +128,21 @@ async function removeNeed(needId: number) {
                     <button
                         @click="assignNeed"
                         :disabled="!selectedNeedId || loading"
-                        class="btn-primary text-xs py-1.5 px-3"
+                        class="btn-primary w-full text-xs py-1.5 px-3 sm:w-auto"
+                        aria-label="Assignar necessitat"
                     >
                         Assignar
                     </button>
                     <button
                         @click="showSelect = false; selectedNeedId = null"
-                        class="btn-secondary text-xs py-1.5 px-3"
+                        aria-label="Cancel·lar"
+                        class="btn-secondary w-full text-xs py-1.5 px-3 sm:w-auto"
                     >
                         Cancel·lar
                     </button>
                 </div>
             </div>
 
-            <!-- Footer -->
             <div class="flex items-center justify-between border-t border-[#deecea] bg-[#f9fcfc] px-6 py-3">
                 <button
                     @click="showSelect = true; selectedNeedId = null"

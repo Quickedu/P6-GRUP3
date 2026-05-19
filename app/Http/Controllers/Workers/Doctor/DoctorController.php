@@ -29,15 +29,10 @@ class DoctorController extends Controller
         ]);
     }
 
-    public function patientSearch(
-        Request $request,
-        GetPatientAction $getPatientAction
-    ) {
-
+    public function patientSearch(Request $request, GetPatientAction $getPatientAction)
+    {
         $nts = $request->query('nts');
-
         if (! $nts) {
-
             return Inertia::render('Workers/Doctor/PatientSearch', [
                 'patient' => null,
                 'needs' => [],
@@ -49,19 +44,16 @@ class DoctorController extends Controller
         $result = $getPatientAction->handle($nts);
 
         if (! $result['available']) {
-
-            return redirect()
-                ->route('patientSearch')
-                ->with([
-                    'status' => $result['status'],
-                    'message' => $result['message'],
-                ]);
+            return back()->with([
+                'status' => $result['status'],
+                'message' => $result['message'],
+            ]);
         }
 
         return Inertia::render('Workers/Doctor/PatientSearch', [
-            'patient' => $result['patient'],
-            'needs' => $result['needs'],
-            'reports' => $result['reports'],
+            'patient' => $result['data']['patient'],
+            'needs' => $result['data']['needs'],
+            'reports' => $result['data']['reports'],
             'searchedNts' => $nts,
         ]);
     }

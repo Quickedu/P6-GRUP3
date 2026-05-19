@@ -93,11 +93,16 @@ const handleReset = () => {
 
       <div class="flex gap-2">
         <div class="flex-1">
+          <label for="nts" class="block mb-1 text-sm font-medium text-gray-700 sr-only">
+            NTS del pacient
+          </label>
           <input
             v-model="nts"
+            id="nts"
             type="text"
-            placeholder="Ej: ABCD1234567890"
+            placeholder="Ex: ABCD1234567890"
             @keydown.enter="handleSearch"
+            aria-lavel="NTS del pacient"
             class="w-full rounded-lg px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pmf-primary bg-white cursor-pointer"
             maxlength="14"/>
           <p v-if="nts && !isValidNts" class="mt-1 text-sm text-red-600">
