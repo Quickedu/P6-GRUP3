@@ -32,7 +32,6 @@ const authOptions = [
 <template>
     <Head title="Iniciar sessió" />
 
-    <!-- Title -->
     <div class="text-center">
         <h1 class="text-3xl font-bold text-gray-900">Inicia sessió</h1>
         <p class="mt-2 text-sm text-gray-600">Introdueix les teves credencials per accedir al portal.</p>
@@ -45,14 +44,12 @@ const authOptions = [
         v-slot="{ errors, processing }"
         class="flex flex-col gap-5 animate-fade-slide-up-delay-2"
     >
-        <!-- Auth method tabs -->
         <AuthTabs
             v-model="authMethod"
             :options="authOptions"
             label="Mètode d'autenticació"
         />
 
-        <!-- Para enviar el valor -->
         <input type="hidden" name="auth_method" :value="authMethod" />
 
         <!-- DNI field -->
@@ -88,6 +85,8 @@ const authOptions = [
                 name="nts"
                 required
                 autofocus
+                pattern="^[A-Za-z]{4}[0-9]{11}$"
+                title="Tiene que contener 4 letras y 11 números"
                 placeholder="ABCD1234567890"
             />
             <InputError :message="errors.nts" />
