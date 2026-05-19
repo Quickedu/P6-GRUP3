@@ -58,7 +58,7 @@ defineOptions({
 
 				<Link
 					:href="login()"
-					class="inline-flex items-center justify-center px-5 py-2 rounded-full bg-[#006557] text-[#d4f0eb] text-sm font-semibold shadow-[0_10px_25px_rgba(0,101,87,0.18)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200"
+					class="inline-flex items-center justify-center px-5 py-2 rounded-full bg-[#00574b] text-[#d4f0eb] text-sm font-semibold shadow-[0_10px_25px_rgba(0,101,87,0.18)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200"
 				>
 					Area personal
 				</Link>
@@ -84,7 +84,7 @@ defineOptions({
 			<section id="resum" class="grid gap-12 items-center lg:grid-cols-[1.05fr_0.95fr]">
 				<!-- Copy -->
 				<div class="max-w-[34rem]">
-					<p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4f0eb] text-[#006557] text-[0.65rem] tracking-[0.2em] uppercase font-semibold">
+					<p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4f0eb] text-[#003d35] text-[0.65rem] tracking-[0.2em] uppercase font-semibold">
 						Salut digital
 					</p>
 					<h1 class="font-['Space_Grotesk'] text-[clamp(2.2rem,3vw,3.6rem)] leading-[1.1] text-[#003d35] mt-4 mb-0">
@@ -96,7 +96,7 @@ defineOptions({
 					<div class="flex flex-wrap gap-4 mt-6">
 						<Link
 							:href="login()"
-							class="inline-flex items-center justify-center px-7 py-3 rounded-full bg-[#006557] text-[#d4f0eb] text-sm font-semibold shadow-[0_12px_24px_rgba(0,101,87,0.2)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200"
+							class="inline-flex items-center justify-center px-7 py-3 rounded-full bg-[#00574b] text-[#d4f0eb] text-sm font-semibold shadow-[0_12px_24px_rgba(0,101,87,0.2)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200"
 						>
 							Area personal
 						</Link>
@@ -149,23 +149,23 @@ defineOptions({
 				</div>
 				<div class="grid gap-6 mt-6 grid-cols-[repeat(auto-fit,minmax(220px,1fr))]">
 					<article class="bg-white border border-[rgba(0,101,87,0.12)] rounded-[20px] p-6 shadow-[0_18px_32px_rgba(0,48,41,0.08)]">
-						<div class="w-12 h-12 rounded-full bg-[#d4f0eb] text-[#006557] font-semibold grid place-items-center">01</div>
+						<div class="w-12 h-12 rounded-full bg-[#d4f0eb] text-[#00574b] font-semibold grid place-items-center">01</div>
 						<h3 class="mt-4 font-semibold text-[#006557]">Agenda personal</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[#7a9e99]">
+						<p class="mt-2 text-sm leading-relaxed text-[#356058]">
 							Consulta totes les cites, canvis d'hora i detalls amb un sol cop d'ull.
 						</p>
 					</article>
 					<article class="bg-white border border-[rgba(0,101,87,0.12)] rounded-[20px] p-6 shadow-[0_18px_32px_rgba(0,48,41,0.08)]">
-						<div class="w-12 h-12 rounded-full bg-[#d4f0eb] text-[#006557] font-semibold grid place-items-center">02</div>
+						<div class="w-12 h-12 rounded-full bg-[#d4f0eb] text-[#00574b] font-semibold grid place-items-center">02</div>
 						<h3 class="mt-4 font-semibold text-[#006557]">Informes digitals</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[#7a9e99]">
+						<p class="mt-2 text-sm leading-relaxed text-[#356058]">
 							Descarrega els informes quan vulguis i guarda l'historial al teu espai.
 						</p>
 					</article>
 					<article class="bg-white border border-[rgba(0,101,87,0.12)] rounded-[20px] p-6 shadow-[0_18px_32px_rgba(0,48,41,0.08)]">
-						<div class="w-12 h-12 rounded-full bg-[#d4f0eb] text-[#006557] font-semibold grid place-items-center">03</div>
+						<div class="w-12 h-12 rounded-full bg-[#d4f0eb] text-[#00574b] font-semibold grid place-items-center">03</div>
 						<h3 class="mt-4 font-semibold text-[#006557]">Seguiment segur</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[#7a9e99]">
+						<p class="mt-2 text-sm leading-relaxed text-[#356058]">
 							Les teves dades es mantenen protegides amb accés controlat i clar.
 						</p>
 					</article>
@@ -194,7 +194,7 @@ defineOptions({
 					<div class="bg-white/92 border border-[rgba(0,101,87,0.12)] rounded-[24px] p-6 shadow-[0_18px_32px_rgba(0,48,41,0.08)]">
 						<div class="flex items-center justify-between">
 							<p class="text-[0.95rem] font-semibold text-[#006557] m-0">Informe de prova</p>
-							<span class="bg-[#d4f0eb] text-[#006557] rounded-full px-3 py-1 text-[0.7rem] font-semibold">PDF</span>
+							<span class="bg-[#d4f0eb] text-[#00574b] rounded-full px-3 py-1 text-[0.7rem] font-semibold">PDF</span>
 						</div>
 						<p class="mt-3 text-[#7a9e99] text-sm">
 							Diagnosi, recomanacions i seguiment en una sola fitxa.
@@ -226,7 +226,7 @@ defineOptions({
 					</div>
 					<Link
 						:href="login()"
-						class="inline-flex items-center justify-center px-7 py-3 rounded-full bg-[#006557] text-[#d4f0eb] text-sm font-semibold shadow-[0_12px_24px_rgba(0,101,87,0.2)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200 shrink-0"
+						class="inline-flex items-center justify-center px-7 py-3 rounded-full bg-[#00574b] text-[#d4f0eb] text-sm font-semibold shadow-[0_12px_24px_rgba(0,101,87,0.2)] no-underline hover:bg-[#00a38e] hover:-translate-y-px transition-all duration-200 shrink-0"
 					>
 						Entrar a àrea personal
 					</Link>

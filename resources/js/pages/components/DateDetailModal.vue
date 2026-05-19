@@ -88,7 +88,8 @@ const handleBackdropClick = (e: MouseEvent) => {
           </div>
           <button
             @click="closeModal"
-            class="text-gray-400 hover:text-gray-600 transition-colors">
+            class="text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label="Tancar modal">
             <X class="h-6 w-6" />
           </button>
         </div>
