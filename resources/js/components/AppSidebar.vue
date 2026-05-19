@@ -12,7 +12,7 @@ import {
     SidebarFooter,
     SidebarHeader,
 } from '@/components/ui/sidebar';
-import { dashboard, novaCita, patientDashboard, patientsList, formReport, patientReports, patientDetail, patientInformation, } from '@/routes';
+import { dashboard, novaCita, patientDashboard, patientsList, formReport, patientReports, patientDetail, patientInformation, patientSearch } from '@/routes';
 import type { NavItem } from '@/types';
 import { Microscope, Users, BookUser, History, Cross, CalendarDays, FileEdit } from 'lucide-vue-next';
 import { Settings } from 'lucide-vue-next';
@@ -88,7 +88,7 @@ const DoctorNavItems: NavItem[] = [
     },
     {
         title: 'Dades pacients',
-        href: '#',
+        href: patientSearch(),
         icon: Users,
     },
     {

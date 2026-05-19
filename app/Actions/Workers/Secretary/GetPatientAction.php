@@ -18,7 +18,9 @@ class GetPatientAction
                 'status' => 'error',
                 'message' => 'Pacient no trobat',
                 'available' => false,
-                'data' => [],
+                'patient' => null,
+                'needs' => [],
+                'reports' => [],
             ];
         }
 
@@ -26,7 +28,9 @@ class GetPatientAction
             'status' => 'success',
             'message' => 'Pacient trobat',
             'available' => true,
-            'data' => $patient,
+            'patient' => $patient,
+            'needs' => $patient->needs,
+            'reports' => $patient->reports()->with('worker.user')->latest()->get(),
         ];
     }
 }

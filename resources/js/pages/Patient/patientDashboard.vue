@@ -6,6 +6,7 @@ import { Calendar, Clock, AlertCircle, X } from 'lucide-vue-next'
 import FullCalendar from '@/pages/components/FullCalendar.vue'
 import EventPopover from '@/pages/components/EventPopover.vue'
 import textNotify from '@/pages/components/textNotify.vue';
+import DeleteModal from '@/pages/components/CancelModal.vue';
 
 interface DateRecord {
     id: number;
@@ -24,7 +25,7 @@ defineOptions({
 })
 
 const page = usePage()
-const dates = page.props.dates as DateRecord[]
+const dates = computed(() => page.props.dates as DateRecord[]);
 const flashMessage = computed(() => (page.props.flash as any)?.message);
 const flashStatus = computed(() => (page.props.flash as any)?.status);
 
@@ -39,6 +40,13 @@ const popover = ref<{
     y: 0,
     event: null
 })
+const showCancelModal = ref(false)
+const selectedDateId = ref<number | null>(null)
+
+function openCancelModal(id: number) {
+    selectedDateId.value = id
+    showCancelModal.value = true
+}
 
 const handleEventClick = (info: any) => {
     const rect = info.el.getBoundingClientRect()
@@ -65,7 +73,7 @@ const closePopover = () => {
 }
 
 const calendarEvents = computed(() => {
-    return dates.map(date => ({
+    return dates.value.map(date => ({
         start: date.date_time,
         title: date.test.name,
         extendedProps: {
@@ -104,7 +112,7 @@ const getStatusText = (urgencia: string) => {
 
 const now = new Date()
 const todayDates = computed(() =>
-    dates
+    dates.value
         .filter(d => {
             const dt = new Date(d.date_time)
             return dt.toDateString() === now.toDateString()
@@ -112,9 +120,9 @@ const todayDates = computed(() =>
         .sort((a, b) => new Date(a.date_time).getTime() - new Date(b.date_time).getTime())
 )
 
-const totalCount = computed(() => dates.length)
-const programadesCount = computed(() => dates.filter(d => d.estat === 'programada').length)
-const urgentCount = computed(() => dates.filter(d => d.urgencia === 'urgent').length)
+const totalCount = computed(() => dates.value.length)
+const programadesCount = computed(() => dates.value.filter(d => d.estat === 'programada').length)
+const urgentCount = computed(() => dates.value.filter(d => d.urgencia === 'urgent').length)
 
 const formatTime = (date: string) =>
     new Date(date).toLocaleTimeString('ca-ES', {
@@ -139,19 +147,14 @@ const getUrgencyStyle = (urgencia: string) => {
     }
 }
 
-async function handleCancel(id: number) {
-    try {
-        const res = await fetch(cancelDate.url(id), {
-            method: 'POST',
-        })
-        if (res.ok) {
-            window.location.reload()
-        } else {
-            console.error('Error al cancel·lar la cita')
+function handleCancel(id: number) {
+    closePopover()
+    
+    router.post(cancelDate.url(id), {}, {
+        onError: (errors) => {
+            console.error(errors)
         }
-    } catch (error) {
-        console.error('Error cancel·lant la cita', error)
-    }
+    })
 }
 </script>
 
@@ -162,7 +165,7 @@ async function handleCancel(id: number) {
         :message="flashMessage"
         :status="flashStatus"/>
 
-    <h1 class="text-pmf-primary font-semibold text-2xl mt-4 mx-6">Visites</h1>
+    <h1 class="text-pmf-primary font-semibold text-2xl mt-4 mx-6">Agenda</h1>
 
     <div class="space-y-6 px-4 py-4 sm:px-6">
 
@@ -235,7 +238,7 @@ async function handleCancel(id: number) {
                             {{ formatTime(date.date_time) }}
                         </div>
                         <button v-if="date.estat !== 'cancel·lada'"
-                            @click="handleCancel(date.id)"
+                            @click="openCancelModal(date.id)"
                             class="mt-2 w-full rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100 transition-colors cursor-pointer"
                         >
                             Cancel·lar cita
@@ -257,6 +260,13 @@ async function handleCancel(id: number) {
         :x="popover.x"
         :y="popover.y"
         @close="closePopover"
-        @cancel="handleCancel"
+        @cancel="openCancelModal"
+    />
+    <DeleteModal
+        v-model="showCancelModal"
+        title="Cancel·lar cita"
+        name="Aquesta cita mèdica"
+        :id="selectedDateId"
+        @confirm="handleCancel"
     />
 </template>
