@@ -18,9 +18,9 @@ class GetPatientAction
                 'status' => 'error',
                 'message' => 'Pacient no trobat',
                 'available' => false,
-                'patient' => null,
-                'needs' => [],
-                'reports' => [],
+                'data' => [
+
+                ],
             ];
         }
 

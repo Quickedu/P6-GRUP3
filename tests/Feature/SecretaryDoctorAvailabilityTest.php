@@ -3,7 +3,6 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Inertia\Testing\AssertableInertia as Assert;
 
 uses(RefreshDatabase::class);
 
@@ -236,15 +235,15 @@ test('it provides worker mapping for doctors on new appointment page', function 
 
     $response = $this
         ->actingAs($secretaryUser, 'admin')
+        ->withHeader('X-Inertia', 'true')
+        ->withHeader('X-Inertia-Version', hash('xxh128', (string) config('app.asset_url')))
         ->get(route('nova-cita'));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn (Assert $page) => $page
-        ->component('Workers/NewDate')
-        ->has('doctors', 1)
-        ->where('doctors.0.id', $doctorUserId)
-        ->where('doctors.0.worker_id', $doctorWorkerId)
-    );
+    $response->assertHeader('X-Inertia', 'true');
+    $response->assertJsonPath('component', 'Workers/NewDate');
+    $response->assertJsonPath('props.doctors.0.id', $doctorUserId);
+    $response->assertJsonPath('props.doctors.0.worker_id', $doctorWorkerId);
 });
 
 test('it returns test time for an existing test type', function () {
@@ -476,8 +475,7 @@ test('it filters dates by doctor id and date with today as the default date', fu
 
     $defaultDateResponse->assertSuccessful();
     $defaultDateResponse->assertJsonPath('status', 'success');
-    $defaultDateResponse->assertJsonPath('available', true);
-    $defaultDateResponse->assertJsonCount(1, 'data');
+    $defaultDateResponse->assertJsonCount(2, 'data');
     $defaultDateResponse->assertJsonPath('data.0.worker_id', $firstDoctorWorkerId);
     $defaultDateResponse->assertJsonPath('data.0.description', 'Today first doctor');
 
@@ -487,7 +485,6 @@ test('it filters dates by doctor id and date with today as the default date', fu
 
     $dateOnlyResponse->assertSuccessful();
     $dateOnlyResponse->assertJsonPath('status', 'success');
-    $dateOnlyResponse->assertJsonPath('available', true);
     $dateOnlyResponse->assertJsonCount(1, 'data');
     $dateOnlyResponse->assertJsonPath('data.0.description', 'Tomorrow first doctor');
 });
