@@ -69,6 +69,8 @@ const authOptions = [
                 required
                 autofocus
                 placeholder="12345678A"
+                pattern="^\d{8}[A-Za-z]$"
+                title="El DNI ha de tenir 8 dígits seguits d'una lletra (p.ex: 12345678A)"
             />
             <InputError :message="errors.dni" />
         </div>
