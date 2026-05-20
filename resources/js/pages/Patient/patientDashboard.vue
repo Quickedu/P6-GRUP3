@@ -2,7 +2,7 @@
 import { Head, usePage, router } from '@inertiajs/vue3'
 import { patientDashboard, cancelDate } from '@/routes'
 import { computed, ref } from 'vue'
-import { Calendar, Clock, AlertCircle, X } from 'lucide-vue-next'
+import { Calendar, Clock, AlertCircle } from 'lucide-vue-next'
 import FullCalendar from '@/pages/components/FullCalendar.vue'
 import EventPopover from '@/pages/components/EventPopover.vue'
 import textNotify from '@/pages/components/textNotify.vue';

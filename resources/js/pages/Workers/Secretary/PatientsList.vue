@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
-import { SquarePen } from 'lucide-vue-next';
 import searchInput from '@/pages/components/searchInput.vue';
 import textNotify from '@/pages/components/textNotify.vue';
 import { patientDetail } from '@/routes';
@@ -33,11 +32,6 @@ const props = defineProps<{
 
 const isPatientModalOpen = ref(false);
 const selectedPatient = ref<Patient | null>(null);
-
-const openEditModal = (patient: Patient) => {
-    selectedPatient.value = patient;
-    isPatientModalOpen.value = true;
-};
 
 const flashMessage = computed(() => (page.props.flash as any)?.message);
 const flashStatus = computed(() => (page.props.flash as any)?.status);

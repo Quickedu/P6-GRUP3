@@ -32,7 +32,7 @@ interface ScheduledDate {
   };
 }
 
-const props = defineProps<{
+const { isOpen, date } = defineProps<{
   isOpen: boolean
   date: ScheduledDate | null
 }>()
@@ -49,16 +49,6 @@ const getUrgencyColor = (urgency: string) => {
     'no urgent': 'bg-green-100 text-green-800',
   };
   return colors[urgency] || 'bg-gray-100 text-gray-800';
-};
-
-const getStatusText = (status: string) => {
-  const statusMap: Record<string, string> = {
-    'scheduled': 'Programada',
-    'completed': 'Completada',
-    'cancelled': 'Cancel·lada',
-    'pending': 'Pendent'
-  };
-  return statusMap[status] || status;
 };
 
 const closeModal = () => {

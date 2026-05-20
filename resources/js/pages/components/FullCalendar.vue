@@ -1,23 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import caLocale from '@fullcalendar/core/locales/ca'
 import { computed } from 'vue'
 
-const props = defineProps({
-    events: Array,
-    onEventClick: Function,
-    initialView: {
-        type: String,
-        default: 'dayGridMonth'
-    }
-})
+const props = defineProps<{
+    events?: any[]
+    onEventClick?: (info: any) => void
+    initialView?: string
+}>()
 
 // Can change the calendar view from the parent using the initial-view prop.
 // Available views: 'dayGridMonth' (default), 'dayGridWeek', 'dayGridDay'.
 const calendarOptions = computed(() => ({
     plugins: [dayGridPlugin ],
-    initialView: props.initialView,
+    initialView: props.initialView || 'dayGridMonth',
     locale: caLocale,
     headerToolbar: {
         left: 'prev',

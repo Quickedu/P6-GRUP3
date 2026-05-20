@@ -117,9 +117,10 @@
         "skipLibCheck": true /* Skip type checking all .d.ts files. */
     },
     "include": [
-        "resources/js/**/*.ts",
-        "resources/js/**/*.d.ts",
-        "resources/js/**/*.tsx", 
-        "resources/js/**/*.vue"
+        "resources/**/*.ts",
+        "resources/**/*.vue",
+        "playwright.config.ts",
+        "vitest.config.ts",
+        "tests/**/*.ts"
     ]
 }

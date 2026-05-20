@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Head, usePage } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import { patientDashboard } from '@/routes'
 import { computed, ref } from 'vue'
-import { Calendar, Clock, AlertCircle, X } from 'lucide-vue-next'
+import { Calendar, Clock, AlertCircle } from 'lucide-vue-next'
 import FullCalendar from '@/pages/components/FullCalendar.vue'
 import EventPopover from '@/pages/components/EventPopover.vue'
 
@@ -102,14 +102,14 @@ const getStatusText = (urgencia: string) => {
     }
 }
 
-const getStatusStyle = (estat: string) => {
-    switch (estat) {
-        case 'programada':  return { bg: 'bg-blue-100 text-blue-700',   label: 'Programada' }
-        case 'realitzada':  return { bg: 'bg-[#f0f7f6] text-pmf-green', label: 'Realitzada' }
-        case 'cancel·lada': return { bg: 'bg-red-100 text-red-700',     label: 'Cancel·lada' }
-        default:            return { bg: 'bg-gray-100 text-gray-600',   label: estat }
-    }
-}
+// const getStatusStyle = (estat: string) => {
+//     switch (estat) {
+//         case 'programada':  return { bg: 'bg-blue-100 text-blue-700',   label: 'Programada' }
+//         case 'realitzada':  return { bg: 'bg-[#f0f7f6] text-pmf-green', label: 'Realitzada' }
+//         case 'cancel·lada': return { bg: 'bg-red-100 text-red-700',     label: 'Cancel·lada' }
+//         default:            return { bg: 'bg-gray-100 text-gray-600',   label: estat }
+//     }
+// }
 
 const now = new Date()
 const todayDates = computed(() =>

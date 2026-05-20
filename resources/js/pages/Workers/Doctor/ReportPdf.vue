@@ -32,6 +32,8 @@ const props = defineProps<{
     workerId: number;
 }>();
 
+const localUser = ref({ ...props.currentUser });
+
 interface Patient {
     id: number;
     nts: string;
@@ -356,7 +358,7 @@ onBeforeUnmount(() => {
                                                 required
                                                 aria-required="true"
                                                 aria-describedby="patient-check-help patient-check-status"
-                                                v-model="props.currentUser.name"
+                                                v-model="localUser.name"
                                             />
                                         </div>
 
