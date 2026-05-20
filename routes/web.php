@@ -21,6 +21,7 @@ Route::inertia('/', 'HomePage', [
 ])->name('home');
 
 Route::inertia('/privacitat', 'PrivacyPolicy')->name('privacy');
+Route::get('/cookies', fn () => Inertia::render('Cookies'))->name('cookies');
 
 Route::get('/dashboard', function (DatesController $datesController) {
     $user = Auth::guard('admin')->user() ?? Auth::guard('patient')->user();
@@ -78,7 +79,6 @@ Route::middleware(['auth:admin', 'Worker', 'verified'])->group(function () {
 
 // ADMIN AREA
 Route::middleware(['auth:admin', 'Admin', 'verified'])->group(function () {
-    // Route::get('/adminDashboard', [DashboardAdminController::class, 'index'])->name('adminDashboard');
     Route::resource('tests', TestAdminController::class);
     Route::resource('needs', NeedAdminController::class);
     Route::resource('workers', WorkerAdminController::class);
