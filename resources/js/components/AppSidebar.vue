@@ -142,7 +142,7 @@ const footerNavItems: NavItem[] = [
         </SidebarContent>
 
         <SidebarFooter class="pmf-sidebar-footer">
-            <NavFooter :items="footerNavItems" />
+            <NavFooter :items="footerNavItems" v-if="isAdmin || isDoctor || isSecretary || isWorker" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>

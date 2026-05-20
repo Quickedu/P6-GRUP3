@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('admin can delete a worker', async ({ page }) => {
+test('admin can create a worker', async ({ page }) => {
     const adminEmail = process.env.TEST_USER;
     const adminPassword = process.env.TEST_PASSWORD;
 
@@ -34,6 +34,9 @@ test('admin can delete a worker', async ({ page }) => {
     await page.getByRole('button', { name: 'Desar els canvis' }).click();
 
     const workerRow = page.locator('tbody tr', { hasText: workerName });
+
+    await page.getByRole('button', { name: 'Següent' }).click();
+
     await expect(workerRow).toHaveCount(1);
 
     await workerRow.getByTitle('Eliminar treballador').click();
