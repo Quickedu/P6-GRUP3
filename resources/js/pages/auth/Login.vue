@@ -79,8 +79,8 @@ const authOptions = [
                 name="nts"
                 required
                 autofocus
-                pattern="^[A-Za-z]{4}[0-9]{11}$"
-                title="Tiene que contener 4 letras y 11 números"
+                pattern="^[A-Za-z]{4}[0-9]{10}$"
+                title="Tiene que contener 4 letras y 10 números"
                 placeholder="ABCD1234567890"
             />
             <InputError :message="errors.nts" />
