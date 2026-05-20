@@ -15,9 +15,7 @@ const isDoctor = computed(() => user.value?.role === 'doctor');
 
 defineOptions({
     layout: {
-        breadcrumbs: [
-            { title: 'Inici', href: patientSearch() },
-        ],
+        breadcrumbs: [{ title: 'Inici', href: patientSearch() }],
     },
 });
 
@@ -75,14 +73,13 @@ const goBack = () => {
 
 function searchPatient() {
     router.get(patientSearch(), {
-        nts: nts.value
+        nts: nts.value,
     });
 }
 </script>
 
 <template>
     <div class="mx-5 mt-5 space-y-4">
-
         <textNotify
             v-if="flashMessage"
             class="mb-4"
@@ -100,15 +97,14 @@ function searchPatient() {
 
             <span>/</span>
 
-            <span class="text-pmf-green-dark">
-                Informe pacient
-            </span>
+            <span class="text-pmf-green-dark"> Informe pacient </span>
         </div>
 
         <div class="flex items-center gap-3">
             <button
                 @click="goBack"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#c5d8d5] bg-white transition-colors hover:bg-[#f4f9f8]" aria-label="Tornar enrere"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#c5d8d5] bg-white transition-colors hover:bg-[#f4f9f8]"
+                aria-label="Tornar enrere"
             >
                 <ArrowLeft class="h-4 w-4 text-pmf-green" />
             </button>
@@ -123,8 +119,10 @@ function searchPatient() {
                 Buscar pacient
             </h2>
             <div class="flex gap-3">
-
-                <label for="nts" class="block text-sm font-medium text-pmf-green sr-only">
+                <label
+                    for="nts"
+                    class="sr-only block text-sm font-medium text-pmf-green"
+                >
                     Número targeta sanitària
                 </label>
                 <input
@@ -132,7 +130,7 @@ function searchPatient() {
                     id="nts"
                     type="text"
                     placeholder="Número targeta sanitària"
-                    class="w-full rounded-lg border border-[#c5d8d5] px-2 text-md"
+                    class="text-md w-full rounded-lg border border-[#c5d8d5] px-2"
                     @keyup.enter="searchPatient"
                 />
 
@@ -146,17 +144,25 @@ function searchPatient() {
         </div>
 
         <div v-if="props.patient" class="space-y-4">
-            <div class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white">
-
-                <div class="flex items-center justify-between border-b border-[#c5d8d5] bg-[#f0f7f6] px-5 py-3">
-                    <h3 class="text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+            <div
+                class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white"
+            >
+                <div
+                    class="flex items-center justify-between border-b border-[#c5d8d5] bg-[#f0f7f6] px-5 py-3"
+                >
+                    <h3
+                        class="text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                    >
                         Dades personals
                     </h3>
                 </div>
-                <div class="grid grid-cols-2 gap-x-8 gap-y-4 px-5 py-4 md:grid-cols-3">
-
+                <div
+                    class="grid grid-cols-2 gap-x-8 gap-y-4 px-5 py-4 md:grid-cols-3"
+                >
                     <div>
-                        <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+                        <p
+                            class="mb-1 text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                        >
                             Nom i cognoms
                         </p>
                         <p class="text-sm text-pmf-green-dark">
@@ -165,7 +171,9 @@ function searchPatient() {
                     </div>
 
                     <div>
-                        <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+                        <p
+                            class="mb-1 text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                        >
                             Número de telèfon
                         </p>
                         <p class="text-sm text-pmf-green-dark">
@@ -174,24 +182,29 @@ function searchPatient() {
                     </div>
 
                     <div>
-                        <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+                        <p
+                            class="mb-1 text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                        >
                             Data de naixement
                         </p>
 
                         <p class="text-sm text-pmf-green-dark">
                             {{
-                                new Date(props.patient.birth_date)
-                                    .toLocaleDateString('es-ES', {
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric'
-                                    })
+                                new Date(
+                                    props.patient.birth_date,
+                                ).toLocaleDateString('es-ES', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                })
                             }}
                         </p>
                     </div>
 
                     <div>
-                        <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+                        <p
+                            class="mb-1 text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                        >
                             DNI
                         </p>
 
@@ -201,7 +214,9 @@ function searchPatient() {
                     </div>
 
                     <div>
-                        <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+                        <p
+                            class="mb-1 text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                        >
                             NTS
                         </p>
 
@@ -211,7 +226,9 @@ function searchPatient() {
                     </div>
 
                     <div>
-                        <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+                        <p
+                            class="mb-1 text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                        >
                             Correu electrònic
                         </p>
                         <p class="text-sm text-pmf-green-dark">
@@ -220,7 +237,9 @@ function searchPatient() {
                     </div>
 
                     <div class="col-span-2 md:col-span-3">
-                        <p class="mb-1 text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+                        <p
+                            class="mb-1 text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                        >
                             Adreça
                         </p>
                         <p class="text-sm text-pmf-green-dark">
@@ -230,16 +249,18 @@ function searchPatient() {
                 </div>
             </div>
 
-            <div class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white">
-
+            <div
+                class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white"
+            >
                 <div class="border-b border-[#c5d8d5] bg-[#f0f7f6] px-5 py-3">
-                    <h3 class="text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+                    <h3
+                        class="text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                    >
                         Necessitats
                     </h3>
                 </div>
 
                 <div class="px-5 py-4">
-
                     <div
                         v-if="props.needs.length > 0"
                         class="flex flex-wrap gap-2"
@@ -253,20 +274,21 @@ function searchPatient() {
                         </span>
                     </div>
 
-                    <p
-                        v-else
-                        class="py-2 text-sm text-pmf-grey-light"
-                    >
+                    <p v-else class="py-2 text-sm text-pmf-grey-light">
                         No hi ha cap necessitat registrada.
                     </p>
                 </div>
             </div>
 
-            <div class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white">
-
-                <div class="flex items-center justify-between border-b border-[#c5d8d5] bg-[#f0f7f6] px-5 py-3">
-
-                    <h3 class="text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+            <div
+                class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white"
+            >
+                <div
+                    class="flex items-center justify-between border-b border-[#c5d8d5] bg-[#f0f7f6] px-5 py-3"
+                >
+                    <h3
+                        class="text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                    >
                         Informes mèdics
                     </h3>
 
@@ -280,11 +302,10 @@ function searchPatient() {
                     </Link>
                 </div>
 
-                <table
-                    v-if="props.reports.length > 0"
-                    class="w-full text-sm"
-                >
-                    <thead class="border-b border-[#c5d8d5] text-left text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+                <table v-if="props.reports.length > 0" class="w-full text-sm">
+                    <thead
+                        class="border-b border-[#c5d8d5] text-left text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                    >
                         <tr>
                             <th class="px-5 py-3">Informe</th>
                             <th class="px-5 py-3">Metge</th>
@@ -294,13 +315,14 @@ function searchPatient() {
                     </thead>
 
                     <tbody class="divide-y divide-[#eaf2f1]">
-
                         <tr
                             v-for="report in props.reports"
                             :key="report.id"
                             class="transition-colors hover:bg-[#f4f9f8]"
                         >
-                            <td class="px-5 py-3 font-medium text-pmf-green-dark">
+                            <td
+                                class="px-5 py-3 font-medium text-pmf-green-dark"
+                            >
                                 Informe {{ report.id }}
                             </td>
 
@@ -310,8 +332,9 @@ function searchPatient() {
 
                             <td class="px-5 py-3 text-pmf-grey-light">
                                 {{
-                                    new Date(report.created_at)
-                                        .toLocaleDateString('es-ES')
+                                    new Date(
+                                        report.created_at,
+                                    ).toLocaleDateString('es-ES')
                                 }}
                             </td>
 

@@ -19,7 +19,7 @@ const authMethod = ref<'dni' | 'targeta'>('dni');
 
 const authOptions = [
     { value: 'dni', label: 'DNI', icon: IdCard },
-    { value: 'targeta', label: 'Targeta sanitària', icon: CreditCard }
+    { value: 'targeta', label: 'Targeta sanitària', icon: CreditCard },
 ];
 </script>
 
@@ -28,7 +28,9 @@ const authOptions = [
 
     <div class="text-center">
         <h1 class="text-3xl font-bold text-gray-900">Inicia sessió</h1>
-        <p class="mt-2 text-sm text-gray-600">Introdueix les teves credencials per accedir al portal.</p>
+        <p class="mt-2 text-sm text-gray-600">
+            Introdueix les teves credencials per accedir al portal.
+        </p>
     </div>
 
     <Form
@@ -36,7 +38,7 @@ const authOptions = [
         method="post"
         :reset-on-success="['password']"
         v-slot="{ errors, processing }"
-        class="flex flex-col gap-5 animate-fade-slide-up-delay-2"
+        class="animate-fade-slide-up-delay-2 flex flex-col gap-5"
     >
         <AuthTabs
             v-model="authMethod"
@@ -67,11 +69,7 @@ const authOptions = [
         </div>
 
         <!-- Targeta field -->
-        <div
-            v-else
-            id="panel-targeta"
-            class="flex flex-col gap-1.5"
-        >
+        <div v-else id="panel-targeta" class="flex flex-col gap-1.5">
             <Label for="nts">Número targeta sanitària</Label>
             <Input
                 id="nts"
@@ -89,7 +87,7 @@ const authOptions = [
         <!-- Submit -->
         <Button
             type="submit"
-            class="submit-btn w-full mt-1"
+            class="submit-btn mt-1 w-full"
             :disabled="processing"
             data-test="login-button"
         >

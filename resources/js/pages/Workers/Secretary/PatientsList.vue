@@ -7,7 +7,7 @@ import { patientDetail } from '@/routes';
 
 const search = ref('');
 const page = usePage();
-const user = computed(() => page.props.auth?.user)
+const user = computed(() => page.props.auth?.user);
 const isSecretary = computed(() => user.value?.role === 'secretary');
 
 interface Patient {
@@ -37,15 +37,19 @@ const flashMessage = computed(() => (page.props.flash as any)?.message);
 const flashStatus = computed(() => (page.props.flash as any)?.status);
 
 const handleSearch = () => {
-    router.get('/patientsList', { search: search.value }, {
-        preserveState: true,
-        replace: true,
-    });
+    router.get(
+        '/patientsList',
+        { search: search.value },
+        {
+            preserveState: true,
+            replace: true,
+        },
+    );
 };
 </script>
 
 <template>
-    <div class="space-y-4 mx-5 mt-5">
+    <div class="mx-5 mt-5 space-y-4">
         <textNotify
             class="mb-4"
             v-if="flashMessage"
@@ -55,9 +59,14 @@ const handleSearch = () => {
         <!-- Header -->
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <h2 class="text-2xl font-medium text-pmf-green-dark">Llistat de pacients</h2>
-                <span class="rounded-full bg-pmf-secondary px-3 py-0.5 text-xs font-medium text-pmf-green-dark">
-                    {{ props.patients.length }} {{ props.patients.length === 1 ? 'pacient' : 'pacients' }}
+                <h2 class="text-2xl font-medium text-pmf-green-dark">
+                    Llistat de pacients
+                </h2>
+                <span
+                    class="rounded-full bg-pmf-secondary px-3 py-0.5 text-xs font-medium text-pmf-green-dark"
+                >
+                    {{ props.patients.length }}
+                    {{ props.patients.length === 1 ? 'pacient' : 'pacients' }}
                 </span>
             </div>
             <label for="search"></label>
@@ -69,10 +78,14 @@ const handleSearch = () => {
         </div>
 
         <!-- Table -->
-        <div class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white">
+        <div
+            class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white"
+        >
             <table class="w-full text-sm">
                 <thead class="bg-[#f0f7f6]">
-                    <tr class="border-b border-[#c5d8d5] text-left text-[11px] font-medium uppercase tracking-wider text-pmf-green">
+                    <tr
+                        class="border-b border-[#c5d8d5] text-left text-[11px] font-medium tracking-wider text-pmf-green uppercase"
+                    >
                         <th class="px-4 py-3">Núm.</th>
                         <th class="px-4 py-3">Nom i cognoms</th>
                         <th class="px-4 py-3">Adreça</th>
@@ -90,20 +103,37 @@ const handleSearch = () => {
                         class="transition-colors hover:bg-[#f4f9f8]"
                     >
                         <td class="px-4 py-3">
-                            <span class="rounded-full bg-pmf-secondary px-2 py-0.5 text-[11px] font-medium text-pmf-green">
+                            <span
+                                class="rounded-full bg-pmf-secondary px-2 py-0.5 text-[11px] font-medium text-pmf-green"
+                            >
                                 {{ String(patient.id).padStart(3, '0') }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-pmf-grey-light cursor-pointer" @click="router.get(patientDetail(patient.id))">{{ patient.name }}</td>
-                        <td class="px-4 py-3 text-pmf-grey-light">{{ patient.address }}</td>
-                        <td class="px-4 py-3 text-pmf-grey-light">{{ patient.dni }}</td>
-                        <td class="px-4 py-3 text-pmf-grey-light">{{ patient.nts }}</td>
-                        <td class="px-4 py-3 text-pmf-grey-light">{{ patient.phone }}</td>
-                        <td class="px-4 py-3 text-pmf-grey-light">{{ patient.email }}</td>
+                        <td
+                            class="cursor-pointer px-4 py-3 text-pmf-grey-light"
+                            @click="router.get(patientDetail(patient.id))"
+                        >
+                            {{ patient.name }}
+                        </td>
+                        <td class="px-4 py-3 text-pmf-grey-light">
+                            {{ patient.address }}
+                        </td>
+                        <td class="px-4 py-3 text-pmf-grey-light">
+                            {{ patient.dni }}
+                        </td>
+                        <td class="px-4 py-3 text-pmf-grey-light">
+                            {{ patient.nts }}
+                        </td>
+                        <td class="px-4 py-3 text-pmf-grey-light">
+                            {{ patient.phone }}
+                        </td>
+                        <td class="px-4 py-3 text-pmf-grey-light">
+                            {{ patient.email }}
+                        </td>
                         <td v-if="isSecretary" class="px-4 py-3">
                             <button
                                 @click="router.get(patientDetail(patient.id))"
-                                class="inline-flex items-center gap-1.5 rounded-lg border border-[#b0ceca] bg-pmf-primary px-2.5 py-1.5 text-md font-medium text-white transition-colors hover:bg-pmf-primary cursor-pointer"
+                                class="text-md inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#b0ceca] bg-pmf-primary px-2.5 py-1.5 font-medium text-white transition-colors hover:bg-pmf-primary"
                                 title="Detall pacient"
                             >
                                 <!-- <SquarePen class="h-3.5 w-3.5" /> -->
@@ -112,7 +142,10 @@ const handleSearch = () => {
                         </td>
                     </tr>
                     <tr v-if="!props.patients || props.patients.length === 0">
-                        <td colspan="8" class="px-5 py-12 text-center text-pmf-grey-light">
+                        <td
+                            colspan="8"
+                            class="px-5 py-12 text-center text-pmf-grey-light"
+                        >
                             No hi ha cap pacient registrat.
                         </td>
                     </tr>
@@ -121,5 +154,9 @@ const handleSearch = () => {
         </div>
     </div>
 
-    <PatientModal v-model="isPatientModalOpen" :patient="selectedPatient" :available-needs="props.needs" />
+    <PatientModal
+        v-model="isPatientModalOpen"
+        :patient="selectedPatient"
+        :available-needs="props.needs"
+    />
 </template>

@@ -12,7 +12,8 @@ import { update } from '@/routes/password';
 defineOptions({
     layout: {
         title: 'Restablir contrasenya',
-        description: 'Si us plau, introdueix la teva nova contrasenya a continuació',
+        description:
+            'Si us plau, introdueix la teva nova contrasenya a continuació',
     },
 });
 
@@ -62,7 +63,9 @@ const inputEmail = ref(props.email);
             </div>
 
             <div class="grid gap-2">
-                <Label for="password_confirmation"> Confirmar contrasenya </Label>
+                <Label for="password_confirmation">
+                    Confirmar contrasenya
+                </Label>
                 <PasswordInput
                     id="password_confirmation"
                     name="password_confirmation"
@@ -75,7 +78,7 @@ const inputEmail = ref(props.email);
 
             <Button
                 type="submit"
-                class="mt-4 w-full submit-btn"
+                class="submit-btn mt-4 w-full"
                 :disabled="processing"
                 data-test="reset-password-button"
             >
