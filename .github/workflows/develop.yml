@@ -163,7 +163,7 @@ jobs:
               with:
                   host: ${{ secrets.SSH_HOST }}
                   username: ${{ secrets.SSH_USER }}
-                  key: ${{ secrets.SSH_KEY }}
+                  password: ${{ secrets.SSH_PASS }}
                   port: ${{ secrets.SSH_PORT }}
                   source: 'app.tgz'
                   target: ${{ secrets.DOCUMENT_ROOT }}
@@ -173,7 +173,7 @@ jobs:
               with:
                   host: ${{ secrets.SSH_HOST }}
                   username: ${{ secrets.SSH_USER }}
-                  key: ${{ secrets.SSH_KEY }}
+                  password: ${{ secrets.SSH_PASS }}
                   port: ${{ secrets.SSH_PORT }}
                   script: |
                       cd ${{ secrets.DOCUMENT_ROOT }}
