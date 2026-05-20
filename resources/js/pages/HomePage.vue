@@ -210,9 +210,17 @@ defineOptions({
                                 "
                             >
                                 <img
-                                    src="/images/grup2.jpeg"
+                                    src="/images/grup2-desktop.avif"
+                                    srcset="
+                                        /images/grup2-mobile.avif 360w,
+                                        /images/grup2-tablet.avif 600w,
+                                        /images/grup2-desktop.avif 800w
+                                    "
+                                    sizes="(max-width: 640px) 360px, (max-width: 1024px) 600px, 800px"
                                     alt="Equip mèdic"
                                     class="block h-full w-full object-cover"
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                             </figure>
                             <!-- Slice 2 -->
@@ -228,9 +236,17 @@ defineOptions({
                                 "
                             >
                                 <img
-                                    src="/images/logo.png"
+                                    src="/images/logo-desktop.avif"
+                                    srcset="
+                                        /images/logo-mobile.avif 360w,
+                                        /images/logo-tablet.avif 600w,
+                                        /images/logo-desktop.avif 800w
+                                    "
+                                    sizes="(max-width: 640px) 360px, (max-width: 1024px) 600px, 800px"
                                     alt="Logo PMF"
                                     class="block h-full w-full object-contain p-6"
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                             </figure>
                             <!-- Slice 3 -->
@@ -246,9 +262,17 @@ defineOptions({
                                 "
                             >
                                 <img
-                                    src="/images/nosaltres1.jpeg"
+                                    src="/images/nosaltres1-desktop.avif"
+                                    srcset="
+                                        /images/nosaltres1-mobile.avif 360w,
+                                        /images/nosaltres1-tablet.avif 600w,
+                                        /images/nosaltres1-desktop.avif 800w
+                                    "
+                                    sizes="(max-width: 640px) 360px, (max-width: 1024px) 600px, 800px"
                                     alt="Equip de programadors"
                                     class="block h-full w-full object-cover"
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                             </figure>
                         </div>
