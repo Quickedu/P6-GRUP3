@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { defineComponent, nextTick, type ComponentPublicInstance } from 'vue';
+import { defineComponent, nextTick  } from 'vue';
 import SecretaryDashboard from '../../resources/js/components/Dashboard/SecretaryDashboard.vue';
 
 const DatesFilterComponentStub = defineComponent({
@@ -32,15 +32,15 @@ const DateDetailModalStub = defineComponent({
     template: '<div />',
 });
 
-const LinkStub = defineComponent({
-    name: 'Link',
+const InertiaLinkStub = defineComponent({
+    name: 'InertiaLink',
     props: {
         href: {
             type: String,
             default: '',
         },
     },
-    template: '<a><slot /></a>',
+    template: '<div><slot /></div>',
 });
 
 const buildDate = () => ({
@@ -88,6 +88,7 @@ describe('SecretaryDashboard reschedule modal', () => {
             wrapper.unmount();
             wrapper = undefined;
         }
+
         document.body.innerHTML = '';
         globalThis.fetch = originalFetch;
     });
@@ -100,7 +101,7 @@ describe('SecretaryDashboard reschedule modal', () => {
                     DatesFilterComponent: DatesFilterComponentStub,
                     PatientFilterComponent: PatientFilterComponentStub,
                     DateDetailModal: DateDetailModalStub,
-                    Link: LinkStub,
+                    Link: InertiaLinkStub,
                 },
             },
         });

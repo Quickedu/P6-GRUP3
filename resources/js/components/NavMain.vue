@@ -24,7 +24,10 @@ const activeIndex = computed(() =>
 const direction = ref<'down' | 'up'>('down');
 
 watch(activeIndex, (newIndex, oldIndex) => {
-    if (newIndex === -1 || oldIndex === -1) return;
+    if (newIndex === -1 || oldIndex === -1) {
+return;
+}
+
     direction.value = newIndex > oldIndex ? 'down' : 'up';
 });
 </script>

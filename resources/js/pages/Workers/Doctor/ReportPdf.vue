@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { onBeforeUnmount, ref } from 'vue';
 import { CircleCheck, UserRoundSearch } from 'lucide-vue-next';
+import { onBeforeUnmount, ref } from 'vue';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -64,6 +64,7 @@ function loadPatient() {
 
     if (!nts) {
         clearPatientFields();
+
         return;
     }
 

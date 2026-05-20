@@ -2,8 +2,8 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { initializeTheme } from '@/composables/useAppearance';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
-import { initCookieConsent } from './composables/useCookieConsent';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { initCookieConsent } from './composables/useCookieConsent';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

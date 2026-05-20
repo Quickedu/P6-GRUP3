@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
-import InputError from '@/components/InputError.vue';
 import { X, Mail, Phone } from 'lucide-vue-next';
 import { watch } from 'vue';
+import InputError from '@/components/InputError.vue';
 
 interface Patient {
     id: number;

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import * as CookieConsent from 'vanilla-cookieconsent';
 import AuthSimpleLayout from '@/layouts/auth/AuthSimpleLayout.vue';
 import AppFooter from '@/components/AppFooter.vue';
-import * as CookieConsent from 'vanilla-cookieconsent';
 
 function accio_ObrirPreferencies() {
     CookieConsent.showPreferences();

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { Trash2 } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 const props = defineProps({
     modelValue: { type: Boolean, required: false },
@@ -25,7 +25,10 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'confirm', 'close']);
 
 const visible = computed(() => {
-    if (typeof props.modelValue !== 'undefined') return props.modelValue;
+    if (typeof props.modelValue !== 'undefined') {
+return props.modelValue;
+}
+
     return Boolean(props.show);
 });
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
 import searchInput from '@/pages/components/searchInput.vue';
 import textNotify from '@/pages/components/textNotify.vue';
 import { patientDetail } from '@/routes';

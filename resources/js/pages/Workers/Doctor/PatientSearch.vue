@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
 import { router, usePage, Link } from '@inertiajs/vue3';
 import { ArrowLeft, Download, Plus } from 'lucide-vue-next';
+import { ref, computed } from 'vue';
 import textNotify from '@/pages/components/textNotify.vue';
 import { formReport, patientSearch } from '@/routes';
 

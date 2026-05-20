@@ -41,7 +41,7 @@ class GeneratePatientReportPdf
 
     /**
      * Persist uploaded report images and link them to the report.
-    */
+     */
     private function createImageReport(array $data, Report $report): void
     {
         $images = $data['images'] ?? [];
@@ -58,7 +58,7 @@ class GeneratePatientReportPdf
 
     /**
      * Create the report model and assign its initial PDF path.
-    */
+     */
     private function createReport(array $data): Report
     {
         $report = Report::create([
@@ -80,7 +80,7 @@ class GeneratePatientReportPdf
 
     /**
      * Build the QR payload and return its SVG content.
-    */
+     */
     private function generateCode(array $data): string
     {
         $renderer = new ImageRenderer(
@@ -117,7 +117,7 @@ class GeneratePatientReportPdf
 
     /**
      * Render the PDF HTML template with the report data and QR code.
-    */
+     */
     private function generateHtml(array $data, string $Code): string
     {
         return View::make('workers.doctor.report-pdf-template', [

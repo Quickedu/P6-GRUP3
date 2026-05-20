@@ -43,34 +43,47 @@ const unassignedNeeds = computed(() =>
 const close = () => emit('update:modelValue', false);
 
 async function assignNeed() {
-    if (!selectedNeedId.value) return;
+    if (!selectedNeedId.value) {
+return;
+}
+
     loading.value = true;
+
     try {
         const res = await fetch(`/patients/${props.patient.id}/needs`, {
             method: 'POST',
         });
         const data = await res.json();
+
         if (data.status === 'success') {
             localNeeds.value.push(data.data);
             selectedNeedId.value = null;
             showSelect.value = false;
         }
-    } catch { console.error('Error assignant necessitat'); }
-    finally { loading.value = false; }
+    } catch {
+ console.error('Error assignant necessitat'); 
+} finally {
+ loading.value = false; 
+}
 }
 
 async function removeNeed(needId: number) {
     loading.value = true;
+
     try {
         const res = await fetch(`/patients/${props.patient.id}/needs/${needId}`, {
             method: 'DELETE',
         });
         const data = await res.json();
+
         if (data.status === 'success') {
             localNeeds.value = localNeeds.value.filter(n => n.id !== needId);
         }
-    } catch { console.error('Error eliminant necessitat'); }
-    finally { loading.value = false; }
+    } catch {
+ console.error('Error eliminant necessitat'); 
+} finally {
+ loading.value = false; 
+}
 }
 </script>
 

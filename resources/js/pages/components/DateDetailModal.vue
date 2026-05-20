@@ -1,8 +1,8 @@
 <!-- DateDetailModal.vue -->
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3'
 import { Calendar, Stethoscope, User, FileText, Clock, X } from 'lucide-vue-next'
 import { patientDetail } from '@/routes';
-import { Link } from '@inertiajs/vue3'
 
 interface ScheduledDate {
   id: number;
@@ -48,6 +48,7 @@ const getUrgencyColor = (urgency: string) => {
     'preferent': 'bg-yellow-100 text-yellow-800',
     'no urgent': 'bg-green-100 text-green-800',
   };
+
   return colors[urgency] || 'bg-gray-100 text-gray-800';
 };
 

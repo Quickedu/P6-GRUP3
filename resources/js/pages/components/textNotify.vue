@@ -48,6 +48,7 @@ const statusWrapperClasses = computed(() => {
         'avís':   'border-amber-200 bg-amber-50',
         'informació': 'border-blue-200 bg-blue-50',
     };
+
     return classes[statusForClasses.value];
 });
 
@@ -58,6 +59,7 @@ const statusTextClasses = computed(() => {
         'avís':   'text-amber-700',
         'informació': 'text-blue-700',
     };
+
     return classes[statusForClasses.value];
 });
 
@@ -68,6 +70,7 @@ const statusBadgeClasses = computed(() => {
         'avís':   'bg-amber-100 text-amber-800',
         'informació': 'bg-blue-100 text-blue-800',
     };
+
     return classes[statusForClasses.value];
 });
 
@@ -78,6 +81,7 @@ const statusCloseClasses = computed(() => {
         'avís':   'text-amber-400 hover:text-amber-600 hover:bg-amber-100',
         'informació': 'text-blue-400 hover:text-blue-600 hover:bg-blue-100',
     };
+
     return classes[statusForClasses.value];
 });
 </script>
