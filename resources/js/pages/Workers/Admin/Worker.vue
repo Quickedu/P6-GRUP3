@@ -71,22 +71,27 @@ const updateForm = useForm({
     phone: '',
 });
 
+// Clears the currently selected worker
 const resetSelectedWorker = () => {
     selectedWorker.value = createEmptyWorker();
 };
 
+
+// Resets the create form and its validation errors
 const resetCreateForm = () => {
     createForm.reset();
     createForm.clearErrors();
     resetSelectedWorker();
 };
 
+// Resets the update form and its validation errors
 const resetUpdateForm = () => {
     updateForm.reset();
     updateForm.clearErrors();
     resetSelectedWorker();
 };
 
+// Sets the selected worker used by edit/delete flows
 const setSelectedWorker = (worker: Worker) => {
     selectedWorker.value = {
         ...worker,
@@ -105,21 +110,26 @@ const hasMore = computed(
     () => limit.value * perPage < filteredWorkers.value.length,
 );
 
+// Opens the "create worker" modal and resets the form state
 const OpenCreateModal = () => {
     isWorkerModalOpen.value = true;
     resetCreateForm();
 };
 
+// Closes the "create worker" modal and clears form state
 const closeModal = () => {
     isWorkerModalOpen.value = false;
     resetCreateForm();
 };
 
+
+// Closes the "edit worker" modal and clears form state
 const closeModalUpdate = () => {
     isWorkerUpdateModalOpen.value = false;
     resetUpdateForm();
 };
 
+// Submits the "create worker" form to the backend
 const createWorker = () => {
     createForm.post(store().url, {
         preserveScroll: true,
@@ -132,6 +142,7 @@ const createWorker = () => {
     });
 };
 
+// Opens the "edit worker" modal and populates the update form
 const openEditModal = (worker: Worker) => {
     setSelectedWorker(worker);
     updateForm.email = worker.email;
@@ -141,6 +152,7 @@ const openEditModal = (worker: Worker) => {
     isWorkerUpdateModalOpen.value = true;
 };
 
+// Submits the "edit worker" form to the backend
 function updateWorker() {
     const id = selectedWorker.value.id;
     updateForm.put(update(id).url, {
@@ -154,6 +166,7 @@ function updateWorker() {
     });
 }
 
+// Deletes the selected worker after confirmation
 function destroyWorker() {
     const form = useForm({});
     const id = selectedWorker.value.id;
@@ -171,6 +184,7 @@ function destroyWorker() {
     });
 }
 
+// Opens the confirmation modal for deleting a worker
 function openDeleteModal(worker: Worker) {
     setSelectedWorker(worker);
     showDeleteModal.value = true;
@@ -202,7 +216,7 @@ function openDeleteModal(worker: Worker) {
                 </button>
             </div>
         </div>
-        <!-- Table -->
+        <!-- Workers table -->
         <div
             class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white"
         >
@@ -333,7 +347,7 @@ function openDeleteModal(worker: Worker) {
         @confirm="destroyWorker"
     />
 
-    <!-- Modal create -->
+    <!-- Create worker modal -->
 
     <div
         v-if="isWorkerModalOpen"
@@ -343,7 +357,7 @@ function openDeleteModal(worker: Worker) {
         <div
             class="relative mx-4 w-full max-w-2xl overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl"
         >
-            <!-- Header -->
+            <!-- Modal header -->
             <div
                 class="flex items-center justify-between border-b border-[#deecea] bg-[#f0f7f6] px-6 py-3"
             >
@@ -561,7 +575,7 @@ function openDeleteModal(worker: Worker) {
                     </div>
                 </div>
 
-                <!-- Footer -->
+                <!-- Modal footer -->
                 <div
                     class="flex items-center justify-end gap-3 border-t border-[#deecea] bg-[#f9fcfc] px-6 py-4"
                 >
@@ -588,7 +602,7 @@ function openDeleteModal(worker: Worker) {
         </div>
     </div>
 
-    <!-- Modal update -->
+    <!-- Edit worker modal -->
 
     <div
         v-if="isWorkerUpdateModalOpen"
@@ -598,7 +612,7 @@ function openDeleteModal(worker: Worker) {
         <div
             class="relative mx-4 w-full max-w-2xl overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl"
         >
-            <!-- Header -->
+            <!-- Modal header -->
             <div
                 class="flex items-center justify-between border-b border-[#deecea] bg-[#f0f7f6] px-6 py-3"
             >
@@ -737,7 +751,7 @@ function openDeleteModal(worker: Worker) {
                     </div>
                 </div>
 
-                <!-- Footer -->
+                <!-- Modal footer -->
                 <div
                     class="flex items-center justify-end gap-3 border-t border-[#deecea] bg-[#f9fcfc] px-6 py-4"
                 >

@@ -43,6 +43,8 @@ const hasMore = computed(
     () => limit.value * perPage < filteredNeeds.value.length,
 );
 
+// Opens the "create need" modal and resets the form state.
+ 
 const OpenCreateModal = () => {
     selectedNeed.value = {
         id: 0,
@@ -52,16 +54,22 @@ const OpenCreateModal = () => {
     isNeedModalOpen.value = true;
 };
 
+
+// Closes the "create need" modal and clears the selected need
 const closeModal = () => {
     isNeedModalOpen.value = false;
     selectedNeed.value = { id: 0, name: '', time: 0 };
 };
 
+
+// Closes the "edit need" modal and clears the selected need
 const closeModalUpdate = () => {
     isNeedUpdateModalOpen.value = false;
     selectedNeed.value = { id: 0, name: '', time: 0 };
 };
 
+
+// Submits the "create need" form to the backend
 const createNeed = () => {
     const form = useForm({
         name: selectedNeed.value.name,
@@ -76,6 +84,8 @@ const createNeed = () => {
     });
 };
 
+
+// Opens the "edit need" modal and loads the selected need into the form.
 const openEditModal = (need: Need) => {
     selectedNeed.value = {
         id: need.id,
@@ -85,6 +95,8 @@ const openEditModal = (need: Need) => {
     isNeedUpdateModalOpen.value = true;
 };
 
+
+// Submits the "edit need" form to the backend
 function updateNeed() {
     const form = useForm({
         name: selectedNeed.value.name,
@@ -100,6 +112,8 @@ function updateNeed() {
     });
 }
 
+
+// Deletes the selected need after confirmation
 function destroyNeed() {
     const form = useForm({});
     const id = selectedNeed.value.id;
@@ -117,6 +131,8 @@ function destroyNeed() {
     });
 }
 
+
+// Opens the confirmation modal for deleting a need.
 function openDeleteModal(need: Need) {
     selectedNeed.value = {
         id: need.id,
@@ -152,7 +168,7 @@ function openDeleteModal(need: Need) {
                 </button>
             </div>
         </div>
-        <!-- Table -->
+        <!-- Needs table -->
         <div
             class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white"
         >
@@ -262,7 +278,7 @@ function openDeleteModal(need: Need) {
         @confirm="destroyNeed"
     />
 
-    <!-- Modal create -->
+    <!-- Create need modal -->
 
     <div
         v-if="isNeedModalOpen"
@@ -272,7 +288,7 @@ function openDeleteModal(need: Need) {
         <div
             class="relative mx-4 w-full max-w-2xl overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl"
         >
-            <!-- Header -->
+            <!-- Modal header -->
             <div
                 class="flex items-center justify-between border-b border-[#deecea] bg-[#f0f7f6] px-6 py-3"
             >
@@ -333,7 +349,7 @@ function openDeleteModal(need: Need) {
                     </div>
                 </div>
 
-                <!-- Footer -->
+                <!-- Modal footer -->
                 <div
                     class="flex items-center justify-end gap-3 border-t border-[#deecea] bg-[#f9fcfc] px-6 py-4"
                 >
@@ -355,7 +371,7 @@ function openDeleteModal(need: Need) {
         </div>
     </div>
 
-    <!-- Modal update -->
+    <!-- Edit need modal -->
 
     <div
         v-if="isNeedUpdateModalOpen"
@@ -365,7 +381,7 @@ function openDeleteModal(need: Need) {
         <div
             class="relative mx-4 w-full max-w-2xl overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl"
         >
-            <!-- Header -->
+            <!-- Modal header -->
             <div
                 class="flex items-center justify-between border-b border-[#deecea] bg-[#f0f7f6] px-6 py-3"
             >
@@ -426,7 +442,7 @@ function openDeleteModal(need: Need) {
                     </div>
                 </div>
 
-                <!-- Footer -->
+                <!-- Modal footer -->
                 <div
                     class="flex items-center justify-end gap-3 border-t border-[#deecea] bg-[#f9fcfc] px-6 py-4"
                 >

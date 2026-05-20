@@ -38,9 +38,11 @@ class WorkerAdminController extends Controller
     }
 
     /**
-        * Reserved for a create form (not implemented here).
+     * Reserved for a create form (not implemented here).
      */
-    public function create() {}
+    public function create()
+    {
+    }
 
     /**
      * Create a user and the linked worker record.
@@ -65,7 +67,7 @@ class WorkerAdminController extends Controller
             'phone' => $validated['phone'],
         ]);
 
-        return redirect()->back()->with(['status' => 'correcte', 'message' => 'Treballador creat correctament   ']);
+        return redirect()->back()->with(['status' => 'correcte', 'message' => 'Treballador creat correctament']);
     }
 
     /**

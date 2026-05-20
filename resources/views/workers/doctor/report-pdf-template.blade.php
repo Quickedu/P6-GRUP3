@@ -1,3 +1,7 @@
+{{--
+    HTML template used to render the doctor report PDF.
+    This is rendered server-side and converted to PDF by the backend.
+--}}
 <!DOCTYPE html>
 <html lang="ca">
 
