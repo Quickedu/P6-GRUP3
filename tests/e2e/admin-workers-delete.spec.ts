@@ -29,7 +29,7 @@ test('admin can create a worker', async ({ page }) => {
     await page.locator('input#nss').fill(workerNss);
     await page.locator('input#dni').fill(workerDni);
     await page.locator('input#address').fill('Carrer E2E 1');
-    await page.locator('input#license_number').fill(workerLicense);
+    await page.locator('input#license_number').fill(workerLicense); 
     await page.locator('input#phone').fill('612345678');
     await page.getByRole('button', { name: 'Desar els canvis' }).click();
 

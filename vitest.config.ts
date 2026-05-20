@@ -1,17 +1,19 @@
-import { fileURLToPath } from 'node:url';
-import { resolve } from 'node:path';
 import vue from '@vitejs/plugin-vue';
+import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
     plugins: [vue()],
     resolve: {
         alias: {
-            '@': resolve(fileURLToPath(new URL('.', import.meta.url)), 'resources/js'),
+            '@': path.resolve(__dirname, 'resources/js'),
         },
     },
     test: {
-        environment: 'jsdom',
+        environment: 'node',
+        environmentMatchGlobs: [
+            ['tests/vitest/rescheduleModal.test.ts', 'jsdom'],
+        ],
         include: ['tests/vitest/**/*.test.{js,ts}'],
     },
 });
