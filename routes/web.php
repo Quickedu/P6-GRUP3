@@ -95,6 +95,7 @@ Route::middleware(['auth:admin', 'Secretary', 'verified'])->group(function () {
     // reSchedule appointment
     Route::get('/dateSchedule/{date}', [DatesController::class, 'dateSchedule'])->name('dateSchedule');
     Route::put('/dateSchedule/{date}', [DatesController::class, 'reSchedule'])->name('dateSchedule.update');
+    Route::post('/dateSchedule/{date}/cancel', [DatesController::class, 'cancel'])->name('dateSchedule.cancel');
     //
     Route::get('/patientConsult/{nts}', [DatesController::class, 'ajaxPatient'])->name('ajax-patient');
     Route::get('/testConsult/{id}', [DatesController::class, 'ajaxTest'])->name('ajax-test');

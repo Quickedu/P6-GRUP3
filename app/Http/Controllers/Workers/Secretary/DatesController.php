@@ -208,4 +208,26 @@ class DatesController extends Controller
             'data' => $date->fresh(),
         ]);
     }
+
+    public function cancel(Date $date): JsonResponse
+    {
+        // Validate that the date is in the future
+        if ($date->date_time <= now()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No es pot cancel·lar una cita passada',
+            ], 422);
+        }
+
+        // Cancel the date
+        $date->update([
+            'estat' => 'cancel·lada',
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Cita cancel·lada correctament',
+            'data' => $date->fresh(),
+        ]);
+    }
 }
