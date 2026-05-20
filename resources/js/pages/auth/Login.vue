@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import { register } from '@/routes';
 import { loginpatientStore } from '@/routes';
-import { store } from '@/routes/login';
-import { request } from '@/routes/password';
 import { ref } from 'vue';
 import AuthTabs from '@/components/AuthTabs.vue';
 import { IdCard, CreditCard } from 'lucide-vue-next';
@@ -85,8 +79,8 @@ const authOptions = [
                 name="nts"
                 required
                 autofocus
-                pattern="^[A-Za-z]{4}[0-9]{11}$"
-                title="Tiene que contener 4 letras y 11 números"
+                pattern="^[A-Za-z]{4}[0-9]{10}$"
+                title="Tiene que contener 4 letras y 10 números"
                 placeholder="ABCD1234567890"
             />
             <InputError :message="errors.nts" />
