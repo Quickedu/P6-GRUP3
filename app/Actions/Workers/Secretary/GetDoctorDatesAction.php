@@ -5,10 +5,21 @@ namespace App\Actions\Workers\Secretary;
 use App\Models\Date;
 use Carbon\Carbon;
 
+/**
+ * Action that retrieves scheduled dates (appointments) filtered by date
+ * and/or doctor. Returns structured data suitable for JSON responses.
+ *
+ * Called from: `App\Http\Controllers\Workers\Secretary\DatesController::filterDates()`
+ */
 class GetDoctorDatesAction
 {
     /**
-     * @return array<string, mixed>
+    * Handle the query for doctor dates.
+    *
+    * @param string|null $date Optional date string to filter (Y-m-d).
+    * @param int|null $doctorId Optional worker/doctor id to filter results.
+    * @param bool $defaultToToday When true and no date/doctor provided, default to today.
+    * @return array<string, mixed>
      */
     public function handle(?string $date = null, ?int $doctorId = null, bool $defaultToToday = true): array
     {
