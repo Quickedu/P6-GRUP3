@@ -153,5 +153,7 @@ class GeneratePatientReportPdf
             basename($path),
             ['Content-Type' => 'application/pdf']
         );
+
+        
     }
 }
