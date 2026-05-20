@@ -1,6 +1,7 @@
-import { App as InertiaApp } from '@inertiajs/vue3';
-import { mount } from '@vue/test-utils';
+// @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
+import { mount } from '@vue/test-utils';
+import { App as InertiaApp } from '@inertiajs/vue3';
 import Worker from '@/pages/Workers/Admin/Worker.vue';
 
 const buildPage = (workers) => ({
