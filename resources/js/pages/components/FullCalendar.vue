@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import caLocale from '@fullcalendar/core/locales/ca'

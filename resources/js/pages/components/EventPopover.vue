@@ -13,7 +13,7 @@ interface PopoverEvent {
     }
 }
 
-const props = defineProps<{
+const { event, x, y, visible } = defineProps<{
     event: PopoverEvent | null
     x: number
     y: number

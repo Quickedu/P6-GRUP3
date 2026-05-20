@@ -16,11 +16,6 @@ interface Need {
     name: string;
 }
 
-interface Worker {
-    id: number;
-    name: string;
-}
-
 interface Report {
     id: number;
     patient_id: string;
