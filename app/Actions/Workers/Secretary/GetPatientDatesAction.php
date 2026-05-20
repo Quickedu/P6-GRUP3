@@ -6,10 +6,17 @@ use App\Models\Date;
 use App\Models\Patient;
 use Carbon\Carbon;
 
+/**
+ * Action to fetch upcoming scheduled dates for a patient (by NTS).
+ *
+ * Called from: `DatesController::filterPatientDates()` when the frontend
+ * requests a patient's future appointments.
+ */
 class GetPatientDatesAction
 {
     /**
-     * @return array<string, mixed>
+    * @param string $nts
+    * @return array<string, mixed>
      */
     public function handle(string $nts): array
     {

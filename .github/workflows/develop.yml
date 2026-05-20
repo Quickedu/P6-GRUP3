@@ -1,0 +1,192 @@
+name: Deploy Develop
+
+on:
+    pull_request:
+        branches: ['develop']
+
+    push:
+        branches: ['develop']
+
+    workflow_dispatch:
+
+env:
+    PHP_VERSION: '8.4'
+    NODE_VERSION: '20'
+
+jobs:
+    laravel-pint-lint:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.head_ref }}
+
+            - name: Setup PHP and Composer
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ env.PHP_VERSION }}
+                  tools: composer
+                  extensions: curl, mbstring, pdo_mysql, tokenizer, xml, zip, zlib, ctype, openssl, fileinfo, bcmath
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            - name: Install Laravel Pint
+              run: composer global require laravel/pint
+
+            - name: Install Dependencies
+              run: |
+                  composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+                  npm install
+
+            - name: Run Pint
+              run: pint
+
+            - name: Format Frontend
+              run: npm run format
+
+            - name: Lint Frontend
+              run: npm run lint --fix
+
+            - name: Commit Changes
+              if: github.event_name == 'push'
+              uses: stefanzweifel/git-auto-commit-action@v7
+              with:
+                  commit_message: fix code style
+                  commit_options: '--no-verify'
+
+    tests:
+        runs-on: ubuntu-latest
+        needs: laravel-pint-lint
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ env.PHP_VERSION }}
+                  tools: composer:v2
+                  coverage: xdebug
+                  extensions: curl, mbstring, pdo_mysql, pdo_sqlite, tokenizer, xml, zip, zlib, ctype, openssl, fileinfo, bcmath
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            - name: Install Node Dependencies
+              run: npm install
+
+            - name: Install PHP Dependencies
+              run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            - name: Copy Environment File
+              run: cp .env.example .env
+
+            - name: Generate Application Key
+              run: php artisan key:generate
+
+            - name: Build Frontend
+              run: npm run build
+
+            - name: Run Tests
+              run: |
+                composer run test
+              #  APP_ENV=testing npm run test:vitest
+
+    deploy:
+        runs-on: ubuntu-latest
+        # needs: tests
+
+        # SOLO deploy en push
+        if: github.event_name == 'push'
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ env.PHP_VERSION }}
+                  extensions: curl, mbstring, pdo_mysql, tokenizer, xml, zip, zlib, ctype, openssl, fileinfo, bcmath
+
+            - name: Install Dependencies
+              run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            - name: Install Node Dependencies
+              run: npm install
+
+            - name: Configure .env
+              run: |
+                  cp .env.example .env
+
+                  sed -i "s|DB_HOST=127.0.0.1|DB_HOST=${{ secrets.DB_HOST }}|g" .env
+                  sed -i "s|DB_PORT=3306|DB_PORT=${{ secrets.DB_PORT }}|g" .env
+                  sed -i "s|DB_DATABASE=.*|DB_DATABASE=${{ secrets.DB_DATABASE }}|g" .env
+                  sed -i "s|DB_USERNAME=.*|DB_USERNAME=${{ secrets.DB_USERNAME }}|g" .env
+                  sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|g" .env
+
+                  sed -i "s|MAIL_HOST=.*|MAIL_HOST=${{ secrets.MAIL_HOST }}|g" .env
+                  sed -i "s|MAIL_PORT=.*|MAIL_PORT=${{ secrets.MAIL_PORT }}|g" .env
+                  sed -i "s|MAIL_USERNAME=.*|MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}|g" .env
+                  sed -i "s|MAIL_PASSWORD=.*|MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}|g" .env
+                  sed -i "s|MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}|g" .env
+
+            - name: Build Frontend
+              run: npm run build
+
+            - name: Cleanup
+              run: |
+                  rm -rf node_modules
+                  rm -rf storage
+
+            - name: Compress Project
+              run: tar -czf app.tgz $(ls -A)
+
+            - name: Upload to Server
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USER }}
+                  password: ${{ secrets.SSH_PASS }}
+                  port: ${{ secrets.SSH_PORT }}
+                  source: 'app.tgz'
+                  target: ${{ secrets.DOCUMENT_ROOT }}
+
+            - name: Deploy via SSH
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USER }}
+                  password: ${{ secrets.SSH_PASS }}
+                  port: ${{ secrets.SSH_PORT }}
+                  script: |
+                      cd ${{ secrets.DOCUMENT_ROOT }}
+
+                      tar -xzf app.tgz
+
+                      $(which php84) artisan config:clear
+                      $(which php84) artisan key:generate
+
+                      $(which php84) artisan migrate --force
+
+                      $(which php84) artisan optimize:clear
+                      $(which php84) artisan optimize
+
+                      $(which php84) artisan storage:unlink
+                      $(which php84) artisan storage:link

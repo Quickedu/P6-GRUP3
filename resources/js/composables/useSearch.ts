@@ -17,7 +17,11 @@ export function useSearch<T extends object>() {
     /**
      * Filter items using search text over the provided fields.
      */
-    function filterBySearch<K extends keyof T>(items: T[], searchText: string, fields: K[]): T[] {
+    function filterBySearch<K extends keyof T>(
+        items: T[],
+        searchText: string,
+        fields: K[],
+    ): T[] {
         const query = normalize(searchText.trim());
 
         if (query === '') {

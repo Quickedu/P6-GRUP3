@@ -16,7 +16,7 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue']);
 
 const currentIndex = computed(() =>
-    props.options.findIndex(o => o.value === props.modelValue)
+    props.options.findIndex((o) => o.value === props.modelValue),
 );
 
 const select = (value: string) => {
@@ -37,13 +37,9 @@ const move = (direction: 'next' | 'prev') => {
 </script>
 
 <template>
-    <div
-        class="auth-tab-group"
-        role="radiogroup"
-        :aria-label="label"
-    >
+    <div class="auth-tab-group" role="radiogroup" :aria-label="label">
         <div
-            v-for="(option, index) in options"
+            v-for="option in options"
             :key="option.value"
             class="auth-tab-option"
             :class="{ active: modelValue === option.value }"

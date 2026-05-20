@@ -117,7 +117,10 @@
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
     color: var(--pmf-grey-light);
     user-select: none;
     position: relative;
@@ -137,7 +140,9 @@
 .auth-tab-option.active {
     background-color: #ffffff;
     color: var(--pmf-primary);
-    box-shadow: 0 1px 4px rgba(0, 107, 92, 0.12), 0 0 0 1px rgba(0, 107, 92, 0.06);
+    box-shadow:
+        0 1px 4px rgba(0, 107, 92, 0.12),
+        0 0 0 1px rgba(0, 107, 92, 0.06);
     font-weight: 600;
 }
 
@@ -169,7 +174,10 @@
     font-size: 1rem !important;
     font-weight: 600 !important;
     letter-spacing: 0.01em;
-    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease !important;
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease,
+        box-shadow 0.2s ease !important;
     box-shadow: 0 2px 8px rgba(0, 163, 142, 0.3) !important;
 }
 
@@ -216,13 +224,21 @@
 .form-side {
     background-color: #ffffff;
     background-image:
-        radial-gradient(ellipse 55% 45% at 0% 0%, rgba(0, 163, 142, 0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 55% 45% at 100% 100%, rgba(0, 163, 142, 0.18) 0%, transparent 70%);
+        radial-gradient(
+            ellipse 55% 45% at 0% 0%,
+            rgba(0, 163, 142, 0.18) 0%,
+            transparent 70%
+        ),
+        radial-gradient(
+            ellipse 55% 45% at 100% 100%,
+            rgba(0, 163, 142, 0.18) 0%,
+            transparent 70%
+        );
 }
 
 /* AppSidebar Styles */
 .pmf-sidebar {
-    background-color: #DCE7ED;
+    background-color: #dce7ed;
     border-right: 1px solid rgba(0, 0, 0, 0.05);
 }
 
@@ -250,17 +266,17 @@
 }
 
 /* Sidebar Group Styles */
-[data-sidebar="group"],
-[data-sidebar="content"],
-[data-sidebar="footer"],
-[data-sidebar="header"] {
+[data-sidebar='group'],
+[data-sidebar='content'],
+[data-sidebar='footer'],
+[data-sidebar='header'] {
     background-color: transparent;
 }
 
-[data-slot="sidebar-group"],
-[data-slot="sidebar-content"],
-[data-slot="sidebar-footer"],
-[data-slot="sidebar-header"] {
+[data-slot='sidebar-group'],
+[data-slot='sidebar-content'],
+[data-slot='sidebar-footer'],
+[data-slot='sidebar-header'] {
     background-color: transparent;
 }
 
@@ -275,7 +291,9 @@
     font-weight: 500;
     color: var(--pmf-grey-light, #6b7280);
     text-decoration: none;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
     position: relative;
     width: 100%;
 }
@@ -322,7 +340,9 @@
 
 .bar-down-enter-active,
 .bar-down-leave-active {
-    transition: transform 0.25s ease, opacity 0.2s ease;
+    transition:
+        transform 0.25s ease,
+        opacity 0.2s ease;
 }
 
 .bar-down-enter-from {
@@ -337,7 +357,9 @@
 
 .bar-up-enter-active,
 .bar-up-leave-active {
-    transition: transform 0.25s ease, opacity 0.2s ease;
+    transition:
+        transform 0.25s ease,
+        opacity 0.2s ease;
 }
 
 .bar-up-enter-from {
@@ -488,10 +510,10 @@
     --sidebar: hsl(0 0% 98%);
 
     --pmf-primary: #006557;
-    --pmf-secondary: #D8E5E3;
+    --pmf-secondary: #d8e5e3;
     --pmf-turquoise: #006457;
-    --pmf-green-light: #83F2E3;
-    --pmf-green: #006F65;
+    --pmf-green-light: #83f2e3;
+    --pmf-green: #006f65;
     --pmf-green-dark: #003029;
     --pmf-grey-light: #414856;
 }

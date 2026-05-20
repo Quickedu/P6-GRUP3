@@ -12,6 +12,9 @@ use Inertia\Inertia;
 
 class DashboardAdminController extends Controller
 {
+    /**
+     * Show the admin dashboard with totals and 7-day activity charts.
+     */
     public function index()
     {
         $totalPatients = Patient::query()->count('*');

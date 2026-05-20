@@ -66,7 +66,7 @@ const barChartSeries = computed(() => [
 
         <!-- Summary Cards -->
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <!-- Pacients -->
+            <!-- Patients -->
             <div
                 class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
             >
@@ -107,7 +107,7 @@ const barChartSeries = computed(() => [
                 </div>
             </div>
 
-            <!-- Treballadors -->
+            <!-- Workers -->
             <div
                 class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
             >
@@ -147,7 +147,7 @@ const barChartSeries = computed(() => [
                 </div>
             </div>
 
-            <!-- Informes -->
+            <!-- Reports -->
             <div
                 class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
             >
@@ -182,7 +182,7 @@ const barChartSeries = computed(() => [
                 </div>
             </div>
 
-            <!-- Necessitats -->
+            <!-- Needs -->
             <div
                 class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
             >
@@ -220,7 +220,7 @@ const barChartSeries = computed(() => [
 
         <!-- Charts Section -->
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <!-- Line Chart - Informes -->
+            <!-- Line chart - reports -->
             <div
                 class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
             >
@@ -237,7 +237,7 @@ const barChartSeries = computed(() => [
                 />
             </div>
 
-            <!-- Bar Chart - Treballadors -->
+            <!-- Bar chart - workers -->
             <div
                 class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
             >

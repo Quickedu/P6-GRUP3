@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class downloadpdfController extends Controller
 {
+    /**
+     * Render the report PDF page with patient and worker data.
+     */
     public function index(Patient $patient)
     {
         $workerId = Worker::query()
@@ -35,11 +38,17 @@ class downloadpdfController extends Controller
         ]);
     }
 
+    /**
+     * Stream the generated patient report PDF.
+     */
     public function download(DownloadPdfRequest $request, GeneratePatientReportPdf $generatePdf): StreamedResponse
     {
         return $generatePdf->pdf($request->validated());
     }
 
+    /**
+     * Fetch patient data by NTS for the PDF form.
+     */
     public function ajaxPatient(string $nts): JsonResponse
     {
         $patient = Patient::query()
@@ -63,6 +72,9 @@ class downloadpdfController extends Controller
         ]);
     }
 
+    /**
+     * Normalize a birth date value to Y-m-d for UI usage.
+     */
     private function formatBirthDate(mixed $birthDate): ?string
     {
         if (! $birthDate) {

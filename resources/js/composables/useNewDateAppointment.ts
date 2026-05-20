@@ -1,6 +1,10 @@
 import { computed, ref } from 'vue';
 import type { ComputedRef, Ref } from 'vue';
-import { ajaxDoctor, ajaxPatient, ajaxTest } from '@/actions/App/Http/Controllers/Workers/Secretary/DatesController';
+import {
+    ajaxDoctor,
+    ajaxPatient,
+    ajaxTest,
+} from '@/actions/App/Http/Controllers/Workers/Secretary/DatesController';
 
 export type UseNewDateAppointmentReturn = {
     dataCita: Ref<string>;
@@ -47,7 +51,19 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
     const requiredSlotMinutes = ref<number | null>(null);
     const extraTime = ref(0);
 
-    function parseDateTimeFromParts(dateValue: string, timeValue: string): Date | null {
+    /**
+     * Parse a date string and a time string into a JavaScript Date.
+     *
+     * dateValue: expected format "YYYY-MM-DD".
+     * timeValue: expected format "HH:MM" (24h).
+     * Returns a Date set to the given date and time or `null` if input is invalid.
+     *
+     * Called by: `buildStartTimeOptions` and the `selectedDateTime` computed.
+     */
+    function parseDateTimeFromParts(
+        dateValue: string,
+        timeValue: string,
+    ): Date | null {
         const [rawHours, rawMinutes] = timeValue.split(':');
         const hours = Number(rawHours);
         const minutes = Number(rawMinutes);
@@ -71,6 +87,12 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         return dateTime;
     }
 
+    /**
+     * Format a Date into a string suitable for backend submission.
+     * Output format: "YYYY-MM-DD HH:MM:00".
+     *
+     * Called by: `selectedDateTime` when the user picks a start time.
+     */
     function formatDateTimeForSubmit(dateValue: Date): string {
         const year = dateValue.getFullYear();
         const month = String(dateValue.getMonth() + 1).padStart(2, '0');
@@ -81,6 +103,11 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         return `${year}-${month}-${day} ${hour}:${minute}:00`;
     }
 
+    /**
+     * Format a Date into a short time string "HH:MM" for display in UI.
+     *
+     * Called by: `buildStartTimeOptions` when generating available start times.
+     */
     function formatTimeForDisplay(dateValue: Date): string {
         const hour = String(dateValue.getHours()).padStart(2, '0');
         const minute = String(dateValue.getMinutes()).padStart(2, '0');
@@ -88,6 +115,12 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         return `${hour}:${minute}`;
     }
 
+    /**
+     * Round a Date up to the next multiple of `interval` minutes.
+     * Returns a new Date instance.
+     *
+     * Called by: `buildStartTimeOptions` to align candidate start times.
+     */
     function roundUpToMinutes(dateValue: Date, interval: number): Date {
         const rounded = new Date(dateValue.getTime());
         const minutes = rounded.getMinutes();
@@ -102,6 +135,13 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         return rounded;
     }
 
+    /**
+     * Reset all slot selection state (available slots, startTimeOptions,
+     * selectedStartTime and requiredSlotMinutes).
+     *
+     * Called by: `validatePatient`, `validateTimeTest`, and `validateDoctorSlots`
+     * when data changes that invalidate previously computed slots.
+     */
     function resetSlotSelection() {
         availableSlots.value = [];
         startTimeOptions.value = [];
@@ -109,12 +149,23 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         requiredSlotMinutes.value = null;
     }
 
+    /**
+     * Build a list of valid start time strings ("HH:MM") from an array of
+     * slot range strings like "09:00 - 12:30".
+     *
+     * It considers the required duration (from `requiredSlotMinutes` or
+     * `estimatedMinutes`) and steps through ranges in 15-minute increments.
+     *
+     * Called by: `validateDoctorSlots` when API does not provide explicit
+     * `start_times` and by internal logic to present selectable start times.
+     */
     function buildStartTimeOptions(slotRanges: string[]): string[] {
         if (!dataCita.value || estimatedMinutes.value === null) {
             return [];
         }
 
-        const requiredMinutes = requiredSlotMinutes.value ?? estimatedMinutes.value;
+        const requiredMinutes =
+            requiredSlotMinutes.value ?? estimatedMinutes.value;
         const validStartTimes = new Set<string>();
 
         slotRanges.forEach((slotRange) => {
@@ -124,7 +175,10 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
                 return;
             }
 
-            const slotStart = parseDateTimeFromParts(dataCita.value, rawStartTime);
+            const slotStart = parseDateTimeFromParts(
+                dataCita.value,
+                rawStartTime,
+            );
             const slotEnd = parseDateTimeFromParts(dataCita.value, rawEndTime);
 
             if (!slotStart || !slotEnd || slotStart >= slotEnd) {
@@ -133,7 +187,10 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
 
             const first = roundUpToMinutes(slotStart, 5);
 
-            if (first.getTime() + requiredMinutes * 60_000 <= slotEnd.getTime()) {
+            if (
+                first.getTime() + requiredMinutes * 60_000 <=
+                slotEnd.getTime()
+            ) {
                 validStartTimes.add(formatTimeForDisplay(first));
             }
 
@@ -144,7 +201,10 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
                 cursor.setMinutes(cursor.getMinutes() + 15);
             }
 
-            while (cursor.getTime() + requiredMinutes * 60_000 <= slotEnd.getTime()) {
+            while (
+                cursor.getTime() + requiredMinutes * 60_000 <=
+                slotEnd.getTime()
+            ) {
                 validStartTimes.add(formatTimeForDisplay(cursor));
                 cursor.setMinutes(cursor.getMinutes() + 15);
             }
@@ -152,7 +212,10 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
 
         return [...validStartTimes].sort((firstTime, secondTime) => {
             const firstDate = parseDateTimeFromParts(dataCita.value, firstTime);
-            const secondDate = parseDateTimeFromParts(dataCita.value, secondTime);
+            const secondDate = parseDateTimeFromParts(
+                dataCita.value,
+                secondTime,
+            );
 
             if (!firstDate || !secondDate) {
                 return 0;
@@ -162,16 +225,35 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         });
     }
 
+    /**
+     * Computed string used as the `date_time` form value. When both the date
+     * (`dataCita`) and a start time (`selectedStartTime`) are set, this
+     * produces the backend-friendly datetime via `formatDateTimeForSubmit`.
+     *
+     * Consumed by: the `NewDate.vue` form (hidden input `date_time`).
+     */
     const selectedDateTime = computed(() => {
         if (!dataCita.value || !selectedStartTime.value) {
             return '';
         }
 
-        const startDateTime = parseDateTimeFromParts(dataCita.value, selectedStartTime.value);
+        const startDateTime = parseDateTimeFromParts(
+            dataCita.value,
+            selectedStartTime.value,
+        );
 
         return startDateTime ? formatDateTimeForSubmit(startDateTime) : '';
     });
 
+    /**
+     * Validate the patient by CIP (`cip` state) against the backend.
+     * - Fetches patient info via `ajaxPatient.url(currentCip)` and updates
+     *   `patientId`, `confirmedPatient`, `extraTime`, and `estimatedMinutes`.
+     * - Updates `validatedClass` to reflect visual validation state.
+     *
+     * Called from: `NewDate.vue` when the user clicks the "Comprovar usuari"
+     * button or interacts with the CIP field.
+     */
     const validatePatient = async (): Promise<void> => {
         const currentCip = cip.value.trim();
 
@@ -197,7 +279,7 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
             : '!border-red-500 !focus:border-red-500 !focus:ring-red-500';
 
         patientId.value = patientAvailable.value
-            ? (data?.data?.id ?? null) 
+            ? (data?.data?.id ?? null)
             : null;
         confirmedPatient.value = patientAvailable.value ? currentCip : '';
         extraTime.value = Number(data?.data?.number) || 0;
@@ -210,6 +292,14 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         isAvaible.value = true;
     };
 
+    /**
+     * Validate the selected test (`testId`) by calling `ajaxTest.url(testId)`.
+     * Updates `testMinutes`, `estimatedMinutes` and `timeValidationMessage`.
+     * If the API call fails or returns non-success, it resets related state.
+     *
+     * Called from: `NewDate.vue` when a test radio is changed
+     * (`@change="validateTimeTest(test.id)"`).
+     */
     const validateTimeTest = async (testId: number): Promise<void> => {
         selectedTestId.value = testId;
 
@@ -249,11 +339,24 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         }
     };
 
+    /**
+     * Query available slots for the currently selected doctor on a given date
+     * for the estimated duration. Uses `ajaxDoctor.url(...)` to request
+     * `slots` and optional `start_times` from the API and fills
+     * `startTimeOptions` and `availableSlots`.
+     *
+     * Called from: `NewDate.vue` when the user clicks
+     * "Veure dates disponibles" (button bound to `validateDoctorSlots`).
+     */
     const validateDoctorSlots = async (): Promise<void> => {
-        if (!professionalId.value || !dataCita.value || estimatedMinutes.value === null) {
+        if (
+            !professionalId.value ||
+            !dataCita.value ||
+            estimatedMinutes.value === null
+        ) {
             resetSlotSelection();
             slotsMessage.value =
-                'Selecciona data i prova abans d\'escollir el doctor per veure franges.';
+                "Selecciona data i prova abans d'escollir el doctor per veure franges.";
 
             return;
         }
@@ -263,33 +366,44 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         slotsMessage.value = '';
 
         try {
-            const response = await fetch(ajaxDoctor.url({id: professionalId.value}, {
-                query: {
-                    date: dataCita.value,
-                    time: estimatedMinutes.value,
-                },
-            }));
+            const response = await fetch(
+                ajaxDoctor.url(
+                    { id: professionalId.value },
+                    {
+                        query: {
+                            date: dataCita.value,
+                            time: estimatedMinutes.value,
+                        },
+                    },
+                ),
+            );
             const data = await response.json();
 
-            availableSlots.value = Array.isArray(data?.data?.slots) ? data.data.slots : [];
-            requiredSlotMinutes.value = Number(data?.data?.required_minutes) || estimatedMinutes.value;
+            availableSlots.value = Array.isArray(data?.data?.slots)
+                ? data.data.slots
+                : [];
+            requiredSlotMinutes.value =
+                Number(data?.data?.required_minutes) || estimatedMinutes.value;
             const apiStartTimes = Array.isArray(data?.data?.start_times)
                 ? data.data.start_times
                 : [];
 
-            startTimeOptions.value = apiStartTimes.length > 0
-                ? apiStartTimes
-                : buildStartTimeOptions(availableSlots.value);
+            startTimeOptions.value =
+                apiStartTimes.length > 0
+                    ? apiStartTimes
+                    : buildStartTimeOptions(availableSlots.value);
             selectedStartTime.value = startTimeOptions.value[0] || '';
 
-            slotsMessage.value = startTimeOptions.value.length > 0
-                ? 'Selecciona una hora d\'inici disponible:'
-                : availableSlots.value.length > 0
-                    ? 'No hi ha hores d\'inici possibles per la durada indicada.'
-                    : 'Aquest doctor no té franges disponibles amb aquest temps.';
+            slotsMessage.value =
+                startTimeOptions.value.length > 0
+                    ? "Selecciona una hora d'inici disponible:"
+                    : availableSlots.value.length > 0
+                      ? "No hi ha hores d'inici possibles per la durada indicada."
+                      : 'Aquest doctor no té franges disponibles amb aquest temps.';
         } catch {
             resetSlotSelection();
-            slotsMessage.value = 'Error de connexió consultant les franges del doctor.';
+            slotsMessage.value =
+                'Error de connexió consultant les franges del doctor.';
         } finally {
             slotsLoading.value = false;
         }

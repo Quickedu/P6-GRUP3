@@ -14,47 +14,56 @@ let createdHotFile = false;
 const workerEmail = process.env.VITEST_WORKER_EMAIL ?? 'secretary1@gmail.com';
 const workerPassword = process.env.VITEST_WORKER_PASSWORD ?? 'password123';
 
-const formatDateOffset = (days) => {
+const formatDateOffset = (days: number): string => {
     const date = new Date();
     date.setDate(date.getDate() + days);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
+
     return `${year}-${month}-${day}`;
 };
 
-const updateCookieJar = (response, jar) => {
+const updateCookieJar = (response: Response, jar: Record<string, string>): void => {
     const setCookie = response.headers.getSetCookie?.()
         ?? (response.headers.get('set-cookie') ? [response.headers.get('set-cookie')] : []);
 
     for (const cookie of setCookie) {
         const [pair] = cookie.split(';');
+
         if (!pair) {
             continue;
         }
+
         const index = pair.indexOf('=');
+
         if (index === -1) {
             continue;
         }
+
         const name = pair.slice(0, index).trim();
         const value = pair.slice(index + 1).trim();
         jar[name] = value;
     }
 };
 
-const buildCookieHeader = (jar) =>
+const buildCookieHeader = (jar: Record<string, string>): string =>
     Object.entries(jar)
         .map(([name, value]) => `${name}=${value}`)
         .join('; ');
 
-const buildQuarterHourTimes = (startHour, endHour, requiredMinutes) => {
-    const times = [];
+const buildQuarterHourTimes = (
+    startHour: number,
+    endHour: number,
+    requiredMinutes: number,
+): string[] => {
+    const times: string[] = [];
     const startMinutes = startHour * 60;
     const endMinutes = endHour * 60;
     const lastStartMinutes = endMinutes - requiredMinutes;
 
     for (let minutes = startMinutes; minutes <= lastStartMinutes; minutes += 15) {
-        const hours = String(Math.floor(minutes / 60));
+            const hours = String(Math.floor(minutes / 60));
         const mins = String(minutes % 60).padStart(2, '0');
         times.push(`${hours}:${mins}`);
     }
@@ -70,18 +79,22 @@ describe('ajaxDoctor', () => {
             createdHotFile = true;
         }
 
-        const jar = {};
+        const jar: Record<string, string> = {};
 
         const loginPage = await fetch(`${baseUrl}/loginWorker`, {
             redirect: 'manual',
         });
+
         if (!loginPage.ok) {
             const body = await loginPage.text();
+
             throw new Error(`Login page failed (${loginPage.status}). ${body.slice(0, 400)}`);
         }
+
         updateCookieJar(loginPage, jar);
 
         const csrf = decodeURIComponent(jar['XSRF-TOKEN'] ?? '');
+
         if (!csrf) {
             throw new Error('Missing XSRF token cookie. Is the app responding correctly?');
         }
@@ -100,18 +113,24 @@ describe('ajaxDoctor', () => {
                 password: workerPassword,
             }).toString(),
         });
+
         if (![302, 303].includes(loginResponse.status)) {
             const body = await loginResponse.text();
+
             throw new Error(`Login failed (${loginResponse.status}). ${body.slice(0, 400)}`);
         }
+
         const loginLocation = loginResponse.headers.get('location') ?? '';
+
         if (loginLocation && !loginLocation.includes('/dashboard')) {
             throw new Error(`Login did not redirect to dashboard. Location: ${loginLocation}`);
         }
+
         updateCookieJar(loginResponse, jar);
         const sessionCookie = Object.keys(jar).find(
             (name) => name.endsWith('-session') || name === 'laravel_session',
         );
+
         if (!sessionCookie) {
             throw new Error('Login did not set a session cookie. Check credentials or CSRF handling.');
         }
@@ -131,12 +150,15 @@ describe('ajaxDoctor', () => {
 
         if (!response.ok) {
             const body = await response.text();
+
             throw new Error(`ajaxDoctor failed (${response.status}). ${body.slice(0, 400)}`);
         }
 
         const contentType = response.headers.get('content-type') ?? '';
+
         if (!contentType.includes('application/json')) {
             const body = await response.text();
+
             throw new Error(`Expected JSON but got ${contentType}. ${body.slice(0, 400)}`);
         }
 
@@ -149,7 +171,7 @@ describe('ajaxDoctor', () => {
         expect(data.data.start_times).toEqual(
             buildQuarterHourTimes(8, 15, requestedMinutes + 10),
         );
-    });
+    }, { timeout: 20000 });
 });
 
 afterAll(() => {

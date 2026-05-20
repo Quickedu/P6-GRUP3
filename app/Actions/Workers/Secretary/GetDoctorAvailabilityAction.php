@@ -7,10 +7,23 @@ use App\Models\User;
 use App\Models\Worker;
 use Carbon\CarbonImmutable;
 
+/**
+ * Service action that computes a doctor's available time slots for a
+ * specific date and duration. Returns a structured array with
+ * `required_minutes`, `slots` and optionally `start_times`.
+ *
+ * Called from: `App\Http\Controllers\Workers\Secretary\DatesController::ajaxDoctor()`
+ */
 class GetDoctorAvailabilityAction
 {
     /**
-     * @return array<string, mixed>
+    * Calculate availability for a doctor.
+    *
+    * @param int $doctorId The `users.id` of the doctor.
+    * @param string $date Date in `Y-m-d` format.
+    * @param int $time Requested duration in minutes (API expects minutes).
+    * @param int|null $idDate Optional date id to exclude from the query (when rescheduling).
+    * @return array<string, mixed> structured response: status, message and data.
      */
     public function handle(int $doctorId, string $date, int $time, ?int $idDate = null): array
     {
@@ -111,6 +124,14 @@ class GetDoctorAvailabilityAction
     }
 
     /**
+     * Build a list of formatted start-times ("G:i") inside a slot range.
+     *
+     * This supports the `handle()` method by creating candidate start times
+     * at 5/15 minute boundaries.
+     *
+     * @param CarbonImmutable $slotStart
+     * @param CarbonImmutable $slotEnd
+     * @param int $requiredMinutes
      * @return array<int, string>
      */
     private function buildStartTimes(
@@ -139,6 +160,11 @@ class GetDoctorAvailabilityAction
         return $startTimes;
     }
 
+    /**
+     * Round a CarbonImmutable up to the next `interval` minutes.
+     *
+     * @return CarbonImmutable
+     */
     private function roundUpToMinutes(CarbonImmutable $time, int $interval): CarbonImmutable
     {
         $remainder = $time->minute % $interval;
@@ -150,6 +176,9 @@ class GetDoctorAvailabilityAction
         return $time->addMinutes($interval - $remainder);
     }
 
+    /**
+     * Check whether a start time plus required minutes fits inside slotEnd.
+     */
     private function fitsInSlot(CarbonImmutable $start, CarbonImmutable $slotEnd, int $requiredMinutes): bool
     {
         return $start->addMinutes($requiredMinutes)->lessThanOrEqualTo($slotEnd);
