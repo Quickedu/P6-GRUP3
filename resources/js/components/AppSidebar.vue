@@ -21,6 +21,7 @@ import {
     SidebarFooter,
     SidebarHeader,
 } from '@/components/ui/sidebar';
+import type { NavItem } from '@/types';
 import {
     dashboard,
     novaCita,
@@ -34,7 +35,6 @@ import {
 import { index as NeedIndex } from '@/routes/needs';
 import { index as TestIndex } from '@/routes/tests';
 import { index as WorkerIndex } from '@/routes/workers';
-import type { NavItem } from '@/types';
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);

@@ -11,9 +11,9 @@ import {
 import { ref } from 'vue';
 import DateDetailModal from '@/pages/components/DateDetailModal.vue';
 import RescheduleDateModal from '@/pages/components/RescheduleDateModal.vue';
-import { patientDetail } from '@/routes';
 import DatesFilterComponent from './DatesFilterComponent.vue';
 import PatientFilterComponent from './PatientFilterComponent.vue';
+import { patientDetail } from '@/routes';
 
 interface ScheduledDate {
     id: number;
