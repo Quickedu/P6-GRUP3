@@ -120,6 +120,7 @@ onBeforeUnmount(() => {
                 class="flex flex-col gap-6"
                 aria-describedby="appointment-form-help"
                 target="_blank"
+                :reset-on-success="true"
             >
                 <input
                     type="hidden"
