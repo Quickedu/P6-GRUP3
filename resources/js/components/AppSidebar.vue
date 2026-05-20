@@ -12,9 +12,9 @@ import {
     SidebarFooter,
     SidebarHeader,
 } from '@/components/ui/sidebar';
-import { dashboard, novaCita, patientDashboard, patientsList, formReport, patientReports, patientDetail, patientInformation, patientSearch } from '@/routes';
+import { dashboard, novaCita, patientDashboard, patientsList, formReport, patientReports, patientInformation, patientSearch } from '@/routes';
 import type { NavItem } from '@/types';
-import { Microscope, Users, BookUser, History, Cross, CalendarDays, FileEdit } from 'lucide-vue-next';
+import { Microscope, Users, BookUser, Cross, CalendarDays, FileEdit } from 'lucide-vue-next';
 import { Settings } from 'lucide-vue-next';
 import { index as TestIndex } from '@/routes/tests';
 import { index as NeedIndex } from '@/routes/needs';
@@ -27,7 +27,6 @@ const isPatient = computed(() => !user.value?.role);
 const isAdmin = computed(() => user.value?.role === 'admin');
 const isDoctor = computed(() => user.value?.role === 'doctor');
 const isSecretary = computed(() => user.value?.role === 'secretary');
-const isWorker = computed(() => user.value?.role === 'doctor' || user.value?.role === 'secretary');
 
 const AdminNavItems: NavItem[] = [
     {

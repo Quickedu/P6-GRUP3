@@ -43,7 +43,7 @@ const move = (direction: 'next' | 'prev') => {
         :aria-label="label"
     >
         <div
-            v-for="(option, index) in options"
+            v-for="option in options"
             :key="option.value"
             class="auth-tab-option"
             :class="{ active: modelValue === option.value }"
