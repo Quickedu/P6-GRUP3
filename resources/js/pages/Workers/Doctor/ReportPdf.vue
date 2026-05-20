@@ -194,6 +194,8 @@ onBeforeUnmount(() => {
                                                 class="h-9 flex-1 bg-background"
                                                 placeholder="Ex: NTSS1234567890"
                                                 autocomplete="off"
+                                                pattern="^[A-Za-z]{4}\d{10}$"
+                                                title="El NTS ha de tenir el format: 4 lletres seguides de 10 dígits (Ex: NTSS1234567890)"
                                                 aria-describedby="patient-check-help patient-check-status"
                                             />
 

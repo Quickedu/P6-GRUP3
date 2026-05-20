@@ -8,14 +8,15 @@ use App\Actions\Workers\Secretary\GetPatientConsultationAction;
 use App\Actions\Workers\Secretary\GetPatientDatesAction;
 use App\Actions\Workers\Secretary\GetTestConsultationAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Worker\DoctorAvailabilityRequest;
 use App\Http\Requests\Worker\FilterDatesRequest;
 use App\Http\Requests\Worker\FilterPatientByNtsRequest;
+use App\Http\Requests\Worker\RescheduleDateRequest;
 use App\Http\Requests\Worker\StoreDateRequest;
 use App\Models\Date;
 use App\Models\Test;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DatesController extends Controller
@@ -54,14 +55,11 @@ class DatesController extends Controller
         return response()->json($getTestConsultationAction->handle($id));
     }
 
-    public function ajaxDoctor(Request $request, GetDoctorAvailabilityAction $getDoctorAvailabilityAction, int $id, ?int $idDate = null): JsonResponse
+    public function ajaxDoctor(DoctorAvailabilityRequest $request, GetDoctorAvailabilityAction $getDoctorAvailabilityAction, int $id, ?int $idDate = null): JsonResponse
     {
-        $validate = $request->validate([
-            'date' => ['required', 'date_format:Y-m-d'],
-            'time' => ['required', 'integer', 'min:1'],
-        ]);
+        $validated = $request->validated();
 
-        return response()->json($getDoctorAvailabilityAction->handle($id, $validate['date'], (int) $validate['time'], $idDate));
+        return response()->json($getDoctorAvailabilityAction->handle($id, $validated['date'], (int) $validated['time'], $idDate));
     }
 
     public function seeDates()
@@ -122,11 +120,9 @@ class DatesController extends Controller
         return response()->json($dates);
     }
 
-    public function reSchedule(Date $date, Request $request): JsonResponse
+    public function reSchedule(Date $date, RescheduleDateRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'date_time' => ['required', 'date_format:Y-m-d H:i:s'],
-        ]);
+        $validated = $request->validated();
         $date->update($validated);
 
         return response()->json([
