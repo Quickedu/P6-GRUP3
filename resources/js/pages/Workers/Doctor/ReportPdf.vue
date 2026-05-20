@@ -52,6 +52,7 @@ const patientForm = ref({
 
 const centerRequested = ref('PMF');
 
+// Clears patient fields when the patient lookup fails or the NTS is empty
 function clearPatientFields() {
     patientForm.value.id = null;
     patientForm.value.name = '';
@@ -59,6 +60,8 @@ function clearPatientFields() {
     patientForm.value.birth_date = '';
 }
 
+// Loads a patient by NTS and fills in the read-only patient fields
+// If the request fails, we clear the fields to avoid showing stale data
 function loadPatient() {
     const nts = patientForm.value.nts.trim();
 
@@ -91,6 +94,8 @@ function loadPatient() {
 const imageInput = ref<HTMLInputElement | null>(null);
 const imagePreviews = ref<string[]>([]);
 
+// Creates object-URL previews for the selected images and revokes any
+// previously created URLs to avoid memory leaks.
 function onImageChange(event: Event) {
     const files = Array.from((event.target as HTMLInputElement).files ?? []);
 

@@ -43,6 +43,8 @@ const hasMore = computed(
     () => limit.value * perPage < filteredTests.value.length,
 );
 
+
+// Opens the "create test" modal and resets the form state.
 const OpenCreateModal = () => {
     selectedTest.value = {
         id: 0,
@@ -52,16 +54,22 @@ const OpenCreateModal = () => {
     isTestModalOpen.value = true;
 };
 
+
+// Closes the "create test" modal and clears the selected test
 const closeModal = () => {
     isTestModalOpen.value = false;
     selectedTest.value = { id: 0, name: '', time: 0 };
 };
 
+
+// Closes the "edit test" modal and clears the selected test
 const closeModalUpdate = () => {
     isTestUpdateModalOpen.value = false;
     selectedTest.value = { id: 0, name: '', time: 0 };
 };
 
+
+// Submits the "create test" form to the backend
 const createTest = () => {
     const form = useForm({
         name: selectedTest.value.name,
@@ -76,6 +84,7 @@ const createTest = () => {
     });
 };
 
+// Opens the "edit test" modal and loads the selected test into the form
 const openEditModal = (test: Test) => {
     selectedTest.value = {
         id: test.id,
@@ -85,6 +94,7 @@ const openEditModal = (test: Test) => {
     isTestUpdateModalOpen.value = true;
 };
 
+// Submits the "edit test" form to the backend
 function updateTest() {
     const form = useForm({
         name: selectedTest.value.name,
@@ -100,6 +110,7 @@ function updateTest() {
     });
 }
 
+// Deletes the selected test after confirmation
 function destroyTest() {
     const form = useForm({});
     const id = selectedTest.value.id;
@@ -117,6 +128,7 @@ function destroyTest() {
     });
 }
 
+// Opens the confirmation modal for deleting a test
 function openDeleteModal(test: Test) {
     selectedTest.value = {
         id: test.id,
@@ -152,7 +164,7 @@ function openDeleteModal(test: Test) {
                 </button>
             </div>
         </div>
-        <!-- Table -->
+        <!-- Tests table -->
         <div
             class="overflow-hidden rounded-xl border border-[#c5d8d5] bg-white"
         >
@@ -262,7 +274,7 @@ function openDeleteModal(test: Test) {
         @confirm="destroyTest"
     />
 
-    <!-- Modal create -->
+    <!-- Create test modal -->
 
     <div
         v-if="isTestModalOpen"
@@ -272,7 +284,7 @@ function openDeleteModal(test: Test) {
         <div
             class="relative mx-4 w-full max-w-2xl overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl"
         >
-            <!-- Header -->
+            <!-- Modal header -->
             <div
                 class="flex items-center justify-between border-b border-[#deecea] bg-[#f0f7f6] px-6 py-3"
             >
@@ -333,7 +345,7 @@ function openDeleteModal(test: Test) {
                     </div>
                 </div>
 
-                <!-- Footer -->
+                <!-- Modal footer -->
                 <div
                     class="flex items-center justify-end gap-3 border-t border-[#deecea] bg-[#f9fcfc] px-6 py-4"
                 >
@@ -355,7 +367,7 @@ function openDeleteModal(test: Test) {
         </div>
     </div>
 
-    <!-- Modal update -->
+    <!-- Edit test modal -->
 
     <div
         v-if="isTestUpdateModalOpen"
@@ -365,7 +377,7 @@ function openDeleteModal(test: Test) {
         <div
             class="relative mx-4 w-full max-w-2xl overflow-hidden rounded-2xl border border-[#b0ceca] bg-white shadow-xl"
         >
-            <!-- Header -->
+            <!-- Modal header -->
             <div
                 class="flex items-center justify-between border-b border-[#deecea] bg-[#f0f7f6] px-6 py-3"
             >
@@ -426,7 +438,7 @@ function openDeleteModal(test: Test) {
                     </div>
                 </div>
 
-                <!-- Footer -->
+                <!-- Modal footer -->
                 <div
                     class="flex items-center justify-end gap-3 border-t border-[#deecea] bg-[#f9fcfc] px-6 py-4"
                 >
