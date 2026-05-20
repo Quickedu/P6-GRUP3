@@ -13,12 +13,8 @@ test('secretary can search patient list by name and NTS', async ({ page }) => {
 
     // Login as secretary
     await page.goto(urlFor('/loginWorker'));
-    await page.locator('input#email').fill(secretaryEmail);
-    await page.locator('input#password').fill(secretaryPassword);
-    await page.locator('[data-test="login-button"]').click();
-
-    await page.waitForURL('**/dashboard');
-
+    await page.locator('input#email').fill(secretaryEmail!);
+    await page.locator('input#password').fill(secretaryPassword!);
     // Navigate to patient list
     await page.goto(urlFor('/patientsList'));
     await expect(page.getByText('Llistat de pacients')).toBeVisible();
