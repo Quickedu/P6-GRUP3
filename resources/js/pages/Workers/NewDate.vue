@@ -202,6 +202,7 @@ const visibleItems = computed(() => {
                 v-slot="{ errors, processing }"
                 class="flex flex-col gap-6"
                 aria-describedby="appointment-form-help"
+                :reset-on-success="true"
             >
                 <p id="appointment-form-help" class="sr-only">
                     Completa les dades del pacient, prova i franja horaria abans

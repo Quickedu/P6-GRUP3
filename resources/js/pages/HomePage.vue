@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { login } from '@/routes';
+import * as CookieConsent from 'vanilla-cookieconsent';
 
 const navItems = [
 	{ id: 'resum', label: 'Resum' },
