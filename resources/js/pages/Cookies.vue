@@ -2,7 +2,6 @@
 import { Head } from '@inertiajs/vue3';
 import * as CookieConsent from 'vanilla-cookieconsent';
 import AuthSimpleLayout from '@/layouts/auth/AuthSimpleLayout.vue';
-import AppFooter from '@/components/AppFooter.vue';
 
 function accio_ObrirPreferencies() {
     CookieConsent.showPreferences();
@@ -71,5 +70,4 @@ function accio_ObrirPreferencies() {
             </div>
         </main>
     </AuthSimpleLayout>
-    <AppFooter />
 </template>
