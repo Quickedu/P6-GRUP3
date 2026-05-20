@@ -69,7 +69,7 @@ function handleKeyup(event: KeyboardEvent) {
             type="text"
             :placeholder="props.placeholder"
             :aria-label="props.placeholder"
-            class="w-full rounded-2xl bg-[#f3f6f7] py-1.5 pr-4 pl-11 text-[#023e8a] placeholder-gray-400 border border-pmf-green/40 focus:ring-2 focus:ring-pmf-green focus:outline-none"
+            class="w-full rounded-2xl border border-pmf-green/40 bg-[#f3f6f7] py-1.5 pr-4 pl-11 text-[#023e8a] placeholder-gray-400 focus:ring-2 focus:ring-pmf-green focus:outline-none"
             @input="handleInput"
             @keyup="handleKeyup"
         />

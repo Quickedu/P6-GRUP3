@@ -12,7 +12,8 @@ import { email } from '@/routes/password';
 defineOptions({
     layout: {
         title: 'He oblidat la contrasenya',
-        description: 'Posa el teu email per rebre un enllaç de restabliment de contrasenya',
+        description:
+            'Posa el teu email per rebre un enllaç de restabliment de contrasenya',
     },
 });
 
@@ -48,19 +49,18 @@ defineProps<{
 
             <div class="my-6 flex items-center justify-start">
                 <Button
-                class="submit-btn mt-2 w-full"
-                :disabled="processing"
-                data-test="email-password-reset-link-button"
-            >
-                <Spinner v-if="processing" class="mr-2" />
-                Restablir contrasenya
-            </Button>
+                    class="submit-btn mt-2 w-full"
+                    :disabled="processing"
+                    data-test="email-password-reset-link-button"
+                >
+                    <Spinner v-if="processing" class="mr-2" />
+                    Restablir contrasenya
+                </Button>
             </div>
         </Form>
 
         <div class="space-x-1 text-center text-sm text-muted-foreground">
-            <span>O, torna a
-</span>
+            <span>O, torna a </span>
             <TextLink :href="loginWorker()">iniciar sessió</TextLink>
         </div>
     </div>

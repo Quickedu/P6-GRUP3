@@ -26,8 +26,8 @@ const emit = defineEmits(['update:modelValue', 'confirm', 'close']);
 
 const visible = computed(() => {
     if (typeof props.modelValue !== 'undefined') {
-return props.modelValue;
-}
+        return props.modelValue;
+    }
 
     return Boolean(props.show);
 });

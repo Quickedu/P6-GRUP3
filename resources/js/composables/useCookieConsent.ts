@@ -6,9 +6,9 @@ export function initCookieConsent() {
         categories: {
             necessary: {
                 enabled: true,
-                readOnly: true
+                readOnly: true,
             },
-            analytics: {}
+            analytics: {},
         },
 
         language: {
@@ -17,10 +17,11 @@ export function initCookieConsent() {
                 ca: {
                     consentModal: {
                         title: 'Utilitzem cookies',
-                        description: 'Utilitzem cookies per millorar la teva experiencia a la nostra web.',
+                        description:
+                            'Utilitzem cookies per millorar la teva experiencia a la nostra web.',
                         acceptAllBtn: 'Acceptar tot',
                         acceptNecessaryBtn: 'Rebutjar tot',
-                        showPreferencesBtn: 'Gestionar preferencies'
+                        showPreferencesBtn: 'Gestionar preferencies',
                     },
                     preferencesModal: {
                         title: 'Preferencies de cookies',
@@ -31,22 +32,25 @@ export function initCookieConsent() {
                         sections: [
                             {
                                 title: 'Us de cookies',
-                                description: 'Utilitzem cookies per millorar la teva experiencia de navegacio.'
+                                description:
+                                    'Utilitzem cookies per millorar la teva experiencia de navegacio.',
                             },
                             {
                                 title: 'Cookies estrictament necessaries',
-                                description: 'Aquestes cookies son essencials pel funcionament de la web.',
-                                linkedCategory: 'necessary'
+                                description:
+                                    'Aquestes cookies son essencials pel funcionament de la web.',
+                                linkedCategory: 'necessary',
                             },
                             {
                                 title: "Cookies d'analisi",
-                                description: 'Aquestes cookies ens ajuden a entendre com els usuaris interactuen amb la web.',
-                                linkedCategory: 'analytics'
-                            }
-                        ]
-                    }
-                }
-            }
-        }
+                                description:
+                                    'Aquestes cookies ens ajuden a entendre com els usuaris interactuen amb la web.',
+                                linkedCategory: 'analytics',
+                            },
+                        ],
+                    },
+                },
+            },
+        },
     });
 }

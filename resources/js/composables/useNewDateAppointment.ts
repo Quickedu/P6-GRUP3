@@ -1,6 +1,10 @@
 import { computed, ref } from 'vue';
 import type { ComputedRef, Ref } from 'vue';
-import { ajaxDoctor, ajaxPatient, ajaxTest } from '@/actions/App/Http/Controllers/Workers/Secretary/DatesController';
+import {
+    ajaxDoctor,
+    ajaxPatient,
+    ajaxTest,
+} from '@/actions/App/Http/Controllers/Workers/Secretary/DatesController';
 
 export type UseNewDateAppointmentReturn = {
     dataCita: Ref<string>;
@@ -47,7 +51,10 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
     const requiredSlotMinutes = ref<number | null>(null);
     const extraTime = ref(0);
 
-    function parseDateTimeFromParts(dateValue: string, timeValue: string): Date | null {
+    function parseDateTimeFromParts(
+        dateValue: string,
+        timeValue: string,
+    ): Date | null {
         const [rawHours, rawMinutes] = timeValue.split(':');
         const hours = Number(rawHours);
         const minutes = Number(rawMinutes);
@@ -114,7 +121,8 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
             return [];
         }
 
-        const requiredMinutes = requiredSlotMinutes.value ?? estimatedMinutes.value;
+        const requiredMinutes =
+            requiredSlotMinutes.value ?? estimatedMinutes.value;
         const validStartTimes = new Set<string>();
 
         slotRanges.forEach((slotRange) => {
@@ -124,7 +132,10 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
                 return;
             }
 
-            const slotStart = parseDateTimeFromParts(dataCita.value, rawStartTime);
+            const slotStart = parseDateTimeFromParts(
+                dataCita.value,
+                rawStartTime,
+            );
             const slotEnd = parseDateTimeFromParts(dataCita.value, rawEndTime);
 
             if (!slotStart || !slotEnd || slotStart >= slotEnd) {
@@ -133,7 +144,10 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
 
             const first = roundUpToMinutes(slotStart, 5);
 
-            if (first.getTime() + requiredMinutes * 60_000 <= slotEnd.getTime()) {
+            if (
+                first.getTime() + requiredMinutes * 60_000 <=
+                slotEnd.getTime()
+            ) {
                 validStartTimes.add(formatTimeForDisplay(first));
             }
 
@@ -144,7 +158,10 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
                 cursor.setMinutes(cursor.getMinutes() + 15);
             }
 
-            while (cursor.getTime() + requiredMinutes * 60_000 <= slotEnd.getTime()) {
+            while (
+                cursor.getTime() + requiredMinutes * 60_000 <=
+                slotEnd.getTime()
+            ) {
                 validStartTimes.add(formatTimeForDisplay(cursor));
                 cursor.setMinutes(cursor.getMinutes() + 15);
             }
@@ -152,7 +169,10 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
 
         return [...validStartTimes].sort((firstTime, secondTime) => {
             const firstDate = parseDateTimeFromParts(dataCita.value, firstTime);
-            const secondDate = parseDateTimeFromParts(dataCita.value, secondTime);
+            const secondDate = parseDateTimeFromParts(
+                dataCita.value,
+                secondTime,
+            );
 
             if (!firstDate || !secondDate) {
                 return 0;
@@ -167,7 +187,10 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
             return '';
         }
 
-        const startDateTime = parseDateTimeFromParts(dataCita.value, selectedStartTime.value);
+        const startDateTime = parseDateTimeFromParts(
+            dataCita.value,
+            selectedStartTime.value,
+        );
 
         return startDateTime ? formatDateTimeForSubmit(startDateTime) : '';
     });
@@ -197,7 +220,7 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
             : '!border-red-500 !focus:border-red-500 !focus:ring-red-500';
 
         patientId.value = patientAvailable.value
-            ? (data?.data?.id ?? null) 
+            ? (data?.data?.id ?? null)
             : null;
         confirmedPatient.value = patientAvailable.value ? currentCip : '';
         extraTime.value = Number(data?.data?.number) || 0;
@@ -250,10 +273,14 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
     };
 
     const validateDoctorSlots = async (): Promise<void> => {
-        if (!professionalId.value || !dataCita.value || estimatedMinutes.value === null) {
+        if (
+            !professionalId.value ||
+            !dataCita.value ||
+            estimatedMinutes.value === null
+        ) {
             resetSlotSelection();
             slotsMessage.value =
-                'Selecciona data i prova abans d\'escollir el doctor per veure franges.';
+                "Selecciona data i prova abans d'escollir el doctor per veure franges.";
 
             return;
         }
@@ -263,33 +290,44 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         slotsMessage.value = '';
 
         try {
-            const response = await fetch(ajaxDoctor.url({id: professionalId.value}, {
-                query: {
-                    date: dataCita.value,
-                    time: estimatedMinutes.value,
-                },
-            }));
+            const response = await fetch(
+                ajaxDoctor.url(
+                    { id: professionalId.value },
+                    {
+                        query: {
+                            date: dataCita.value,
+                            time: estimatedMinutes.value,
+                        },
+                    },
+                ),
+            );
             const data = await response.json();
 
-            availableSlots.value = Array.isArray(data?.data?.slots) ? data.data.slots : [];
-            requiredSlotMinutes.value = Number(data?.data?.required_minutes) || estimatedMinutes.value;
+            availableSlots.value = Array.isArray(data?.data?.slots)
+                ? data.data.slots
+                : [];
+            requiredSlotMinutes.value =
+                Number(data?.data?.required_minutes) || estimatedMinutes.value;
             const apiStartTimes = Array.isArray(data?.data?.start_times)
                 ? data.data.start_times
                 : [];
 
-            startTimeOptions.value = apiStartTimes.length > 0
-                ? apiStartTimes
-                : buildStartTimeOptions(availableSlots.value);
+            startTimeOptions.value =
+                apiStartTimes.length > 0
+                    ? apiStartTimes
+                    : buildStartTimeOptions(availableSlots.value);
             selectedStartTime.value = startTimeOptions.value[0] || '';
 
-            slotsMessage.value = startTimeOptions.value.length > 0
-                ? 'Selecciona una hora d\'inici disponible:'
-                : availableSlots.value.length > 0
-                    ? 'No hi ha hores d\'inici possibles per la durada indicada.'
-                    : 'Aquest doctor no té franges disponibles amb aquest temps.';
+            slotsMessage.value =
+                startTimeOptions.value.length > 0
+                    ? "Selecciona una hora d'inici disponible:"
+                    : availableSlots.value.length > 0
+                      ? "No hi ha hores d'inici possibles per la durada indicada."
+                      : 'Aquest doctor no té franges disponibles amb aquest temps.';
         } catch {
             resetSlotSelection();
-            slotsMessage.value = 'Error de connexió consultant les franges del doctor.';
+            slotsMessage.value =
+                'Error de connexió consultant les franges del doctor.';
         } finally {
             slotsLoading.value = false;
         }

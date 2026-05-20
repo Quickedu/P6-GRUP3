@@ -64,7 +64,7 @@
 //             loadingNeeds.value = false;
 //         }
 //     }
-    
+
 //     const assignNeed = async function assignNeed(): Promise<void> {
 //         if (!selectedNeedId.value || !props.patient) return;
 
@@ -119,4 +119,3 @@
 //     }
 
 // };
-

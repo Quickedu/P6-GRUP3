@@ -292,7 +292,6 @@ const visibleItems = computed(() => {
                                             autocomplete="off"
                                             required
                                             aria-required="true"
-                                            
                                             aria-describedby="patient-check-help patient-check-status"
                                         />
                                         <input
