@@ -4,10 +4,20 @@ namespace App\Actions\Workers\Secretary;
 
 use App\Models\Patient;
 
+/**
+ * Action used to compute consultation-related metadata for a patient
+ * identified by NTS. Primarily returns aggregated "needs" time so the
+ * appointment flow can account for extra minutes.
+ *
+ * Called from: `DatesController::ajaxPatient()` in controller context.
+ */
 class GetPatientConsultationAction
 {
     /**
-     * @return array<string, mixed>
+    * Handle patient consultation lookup.
+    *
+    * @param string $nts
+    * @return array<string, mixed>
      */
     public function handle(string $nts): array
     {

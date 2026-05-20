@@ -47,6 +47,14 @@
 //     const requiredSlotMinutes = ref<number | null>(null);
 //     const extraTime = ref(0);
 
+//     /**
+//      * Load the needs assigned to the given patient from the API and
+//      * populate `patientNeeds`.
+//      *
+//      * This composable variant mirrors the logic used in
+//      * `resources/js/pages/components/PatientNeedsModal.vue`.
+//      * Called when the modal opens or when the patient changes.
+//      */
 //     const loadPatientNeeds = async function loadPatientNeeds() {
 //         if (!props.patient) return;
 
@@ -65,6 +73,15 @@
 //         }
 //     }
 
+//     /**
+//      * Assign a selected need to the current patient by POSTing to the
+//      * `/patients/:id/needs` endpoint. On success the new need is pushed
+//      * into `patientNeeds` and UI state is reset.
+//      *
+//      * Note: the same action exists in
+//      * `resources/js/pages/components/PatientNeedsModal.vue` where it's
+//      * bound to the "Assignar" button.
+//      */
 //     const assignNeed = async function assignNeed(): Promise<void> {
 //         if (!selectedNeedId.value || !props.patient) return;
 
@@ -96,6 +113,14 @@
 //         }
 //     }
 
+//     /**
+//      * Remove an assigned need from the patient by DELETEing
+//      * `/patients/:id/needs/:needId`. On success the local list is updated
+//      * to remove the need.
+//      *
+//      * Called from `PatientNeedsModal.vue` when the trash button is pressed
+//      * for a specific need.
+//      */
 //     const removeNeed = async function removeNeed(needId: number): Promise<void> {
 //         if (!props.patient) return;
 
