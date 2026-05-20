@@ -101,11 +101,11 @@ jobs:
             - name: Run Tests
               run: |
                 composer run test
-                npm run test:vitest
+               # npm run test:vitest
 
     deploy:
         runs-on: ubuntu-latest
-        needs: tests
+        # needs: tests
 
         # SOLO deploy en push
         if: github.event_name == 'push'

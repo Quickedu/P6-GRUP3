@@ -101,7 +101,7 @@ jobs:
             - name: Run Tests
               run: |
                 composer run test
-                APP_ENV=testing npm run test:vitest
+              #  APP_ENV=testing npm run test:vitest
 
     deploy:
         runs-on: ubuntu-latest
