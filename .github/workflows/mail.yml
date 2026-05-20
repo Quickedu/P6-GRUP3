@@ -99,8 +99,9 @@ jobs:
               run: npm run build
 
             - name: Run Tests
-              run: php composer run test
-              run: php npm run test:vitest
+              run: |
+                composer run test
+                npm run test:vitest
 
     deploy:
         runs-on: ubuntu-latest
