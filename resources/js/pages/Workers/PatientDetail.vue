@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import { ArrowLeft, Download, Plus } from 'lucide-vue-next';
-import textNotify from '@/pages/components/textNotify.vue';
+import { ref, computed } from 'vue';
 import PatientInfoModal from '@/pages/components/PatientInfoModal.vue';
 import PatientNeedsModal from '@/pages/components/PatientNeedsModal.vue';
+import textNotify from '@/pages/components/textNotify.vue';
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);

@@ -1,12 +1,12 @@
 <script setup lang="ts">
+  import { Link } from '@inertiajs/vue3'
   import { Calendar, Stethoscope, User, FileText, Loader, Clock } from 'lucide-vue-next'
   import { ref } from 'vue'
+  import DateDetailModal from '@/pages/components/DateDetailModal.vue'
+  import RescheduleDateModal from '@/pages/components/RescheduleDateModal.vue'
   import { patientDetail } from '@/routes'
   import DatesFilterComponent from './DatesFilterComponent.vue'
   import PatientFilterComponent from './PatientFilterComponent.vue'
-  import DateDetailModal from '@/pages/components/DateDetailModal.vue'
-  import { Link } from '@inertiajs/vue3'
-  import RescheduleDateModal from '@/pages/components/RescheduleDateModal.vue'
 
   interface ScheduledDate {
     id: number;

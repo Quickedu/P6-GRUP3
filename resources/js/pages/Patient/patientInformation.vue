@@ -27,20 +27,29 @@ const props = defineProps<{
 }>();
 
 const formatDate = (dateStr: string) => {
-    if (!dateStr) return '-';
+    if (!dateStr) {
+return '-';
+}
+
     const date = new Date(dateStr);
+
     return date.toLocaleDateString('ca-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
 
 const getAge = (birthDate: string) => {
-    if (!birthDate) return '-';
+    if (!birthDate) {
+return '-';
+}
+
     const today = new Date();
     const birth = new Date(birthDate);
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
         age--;
     }
+
     return age;
 };
 </script>

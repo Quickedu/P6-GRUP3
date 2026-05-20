@@ -34,7 +34,7 @@ return new class extends Migration
             $table->enum('estat', ['programada', 'cancel·lada', 'realitzada']);
 
             $table->enum('urgencia', ['no urgent', 'preferent', 'urgent']);
-            
+
             $table->unique('date_time', 'worker_id');
         });
     }

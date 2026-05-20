@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Head, usePage, router } from '@inertiajs/vue3'
-import { patientDashboard, cancelDate } from '@/routes'
-import { computed, ref } from 'vue'
 import { Calendar, Clock, AlertCircle } from 'lucide-vue-next'
-import FullCalendar from '@/pages/components/FullCalendar.vue'
-import EventPopover from '@/pages/components/EventPopover.vue'
-import textNotify from '@/pages/components/textNotify.vue';
+import { computed, ref } from 'vue'
 import DeleteModal from '@/pages/components/CancelModal.vue';
+import EventPopover from '@/pages/components/EventPopover.vue'
+import FullCalendar from '@/pages/components/FullCalendar.vue'
+import textNotify from '@/pages/components/textNotify.vue';
+import { patientDashboard, cancelDate } from '@/routes'
 
 interface DateRecord {
     id: number;
@@ -56,9 +56,14 @@ const handleEventClick = (info: any) => {
     let y = rect.bottom + 8
 
     // Si surt per la dreta, desplaça a l'esquerra
-    if (x + 120 > window.innerWidth) x = window.innerWidth - 130
+    if (x + 120 > window.innerWidth) {
+x = window.innerWidth - 130
+}
+
     // Si surt per baix, apareix a dalt de l'event
-    if (y + 220 > window.innerHeight) y = rect.top - 228
+    if (y + 220 > window.innerHeight) {
+y = rect.top - 228
+}
 
     popover.value = {
         visible: true,
@@ -115,6 +120,7 @@ const todayDates = computed(() =>
     dates.value
         .filter(d => {
             const dt = new Date(d.date_time)
+
             return dt.toDateString() === now.toDateString()
         })
         .sort((a, b) => new Date(a.date_time).getTime() - new Date(b.date_time).getTime())

@@ -49,6 +49,7 @@ const isValidNts = computed(() => {
 const handleSearch = async () => {
   if (!isValidNts.value) {
     error.value = 'El NTS ha de tenir 4 lletres majúscules i 10 dígits, sense espais.'
+
     return
   }
 

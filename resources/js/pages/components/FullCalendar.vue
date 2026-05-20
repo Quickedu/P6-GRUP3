@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
 import caLocale from '@fullcalendar/core/locales/ca'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import FullCalendar from '@fullcalendar/vue3'
 import { computed } from 'vue'
 
 const props = defineProps<{

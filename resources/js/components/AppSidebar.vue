@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
 import { CalendarPlus, FileText, LayoutGrid } from 'lucide-vue-next';
+import { Microscope, Users, BookUser, Cross, CalendarDays, FileEdit } from 'lucide-vue-next';
+import { Settings } from 'lucide-vue-next';
+import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -13,12 +15,10 @@ import {
     SidebarHeader,
 } from '@/components/ui/sidebar';
 import { dashboard, novaCita, patientDashboard, patientsList, formReport, patientReports, patientInformation, patientSearch } from '@/routes';
-import type { NavItem } from '@/types';
-import { Microscope, Users, BookUser, Cross, CalendarDays, FileEdit } from 'lucide-vue-next';
-import { Settings } from 'lucide-vue-next';
-import { index as TestIndex } from '@/routes/tests';
 import { index as NeedIndex } from '@/routes/needs';
+import { index as TestIndex } from '@/routes/tests';
 import { index as WorkerIndex } from '@/routes/workers';
+import type { NavItem } from '@/types';
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);

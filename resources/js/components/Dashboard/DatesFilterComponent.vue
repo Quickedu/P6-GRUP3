@@ -110,10 +110,13 @@
 
   try {
     const response = await fetch(filterDates.url({ query }));
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
     const data = await response.json();
+
     if (data.status === 'success') {
       emit('results-found', data.data, '');
     } else {

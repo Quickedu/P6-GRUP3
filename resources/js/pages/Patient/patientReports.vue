@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
 import { Download, FileText, Search, X, ChevronLeft, ChevronRight, Microscope } from 'lucide-vue-next';
+import { ref, computed, watch } from 'vue';
 import { useRelativeTime } from '@/composables/useRelativeTime';
 import { patientDashboard } from '@/routes';
 
@@ -45,6 +45,7 @@ const dateTo = ref(toInputDate(today));
 
 const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
+
     return date.toLocaleDateString('ca-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
 
@@ -58,8 +59,15 @@ const filteredReports = computed(() => {
         const reportDate = new Date(report.created_at);
         const from = dateFrom.value ? new Date(dateFrom.value) : null;
         const to = dateTo.value ? new Date(dateTo.value + 'T23:59:59') : null;
-        if (from && reportDate < from) return false;
-        if (to && reportDate > to) return false;
+
+        if (from && reportDate < from) {
+return false;
+}
+
+        if (to && reportDate > to) {
+return false;
+}
+
         return true;
     });
 });
@@ -68,17 +76,28 @@ const PAGE_SIZE = 5;
 const currentPage = ref(1);
 
 // Reset to page 1 whenever the filter changes
-watch([dateFrom, dateTo], () => { currentPage.value = 1; });
+watch([dateFrom, dateTo], () => {
+ currentPage.value = 1; 
+});
 
 const totalPages = computed(() => Math.max(1, Math.ceil(filteredReports.value.length / PAGE_SIZE)));
 
 const pagedReports = computed(() => {
     const start = (currentPage.value - 1) * PAGE_SIZE;
+
     return filteredReports.value.slice(start, start + PAGE_SIZE);
 });
 
-const prevPage = () => { if (currentPage.value > 1) currentPage.value--; };
-const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++; };
+const prevPage = () => {
+ if (currentPage.value > 1) {
+currentPage.value--;
+} 
+};
+const nextPage = () => {
+ if (currentPage.value < totalPages.value) {
+currentPage.value++;
+} 
+};
 
 
 // Group ORDER as defined in the composable
@@ -102,7 +121,11 @@ const groupedReports = computed((): Group[] => {
 
     for (const report of pagedReports.value) {
         const label = getRelativeTime(report.created_at);
-        if (!map.has(label)) map.set(label, []);
+
+        if (!map.has(label)) {
+map.set(label, []);
+}
+
         map.get(label)!.push(report);
     }
 

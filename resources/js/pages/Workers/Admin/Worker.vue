@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
 import { usePage, useForm } from '@inertiajs/vue3';
 import { SquarePen, Trash2, X } from 'lucide-vue-next';
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
+import { ref, computed } from 'vue';
+import InputError from '@/components/InputError.vue';
+import ModalDelete from '@/pages/components/modalDelete.vue';
 import textNotify from '@/pages/components/textNotify.vue';
 import { update, destroy, store } from '@/routes/workers';
-import ModalDelete from '@/pages/components/modalDelete.vue';
-import InputError from '@/components/InputError.vue';
 
 interface Worker {
     id: number;
