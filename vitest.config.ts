@@ -13,6 +13,7 @@ export default defineConfig({
         environment: 'node',
         environmentMatchGlobs: [
             ['tests/vitest/rescheduleModal.test.ts', 'jsdom'],
+            ['tests/vitest/admin-workers.test.js', 'jsdom'],
         ],
         include: ['tests/vitest/**/*.test.{js,ts}'],
     },
