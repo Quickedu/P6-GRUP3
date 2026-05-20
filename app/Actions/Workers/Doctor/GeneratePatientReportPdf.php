@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class GeneratePatientReportPdf
 {
+    /**
+     * Create a report, persist related data, and stream the generated PDF.
+     */
     public function pdf(array $data): StreamedResponse
     {
         $report = $this->createReport($data);
@@ -36,6 +39,9 @@ class GeneratePatientReportPdf
         return $this->streamPdf($htmlContent, $report);
     }
 
+    /**
+     * Persist uploaded report images and link them to the report.
+    */
     private function createImageReport(array $data, Report $report): void
     {
         $images = $data['images'] ?? [];
@@ -50,6 +56,9 @@ class GeneratePatientReportPdf
         }
     }
 
+    /**
+     * Create the report model and assign its initial PDF path.
+    */
     private function createReport(array $data): Report
     {
         $report = Report::create([
@@ -69,6 +78,9 @@ class GeneratePatientReportPdf
         return $report;
     }
 
+    /**
+     * Build the QR payload and return its SVG content.
+    */
     private function generateCode(array $data): string
     {
         $renderer = new ImageRenderer(
@@ -103,6 +115,9 @@ class GeneratePatientReportPdf
         return $writer->writeString(json_encode($CodeData));
     }
 
+    /**
+     * Render the PDF HTML template with the report data and QR code.
+    */
     private function generateHtml(array $data, string $Code): string
     {
         return View::make('workers.doctor.report-pdf-template', [
@@ -111,6 +126,9 @@ class GeneratePatientReportPdf
         ])->render();
     }
 
+    /**
+     * Save the PDF to storage and stream it to the client.
+     */
     private function streamPdf(string $htmlContent, Report $report): StreamedResponse
     {
         $options = new Options;
