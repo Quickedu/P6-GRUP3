@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class NeedAdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List all needs for the admin view.
      */
     public function index()
     {
@@ -22,7 +22,7 @@ class NeedAdminController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form to create a new need.
      */
     public function create()
     {
@@ -30,7 +30,7 @@ class NeedAdminController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Persist a new need from validated input.
      */
     public function store(NeedAdminRequest $request)
     {
@@ -41,7 +41,7 @@ class NeedAdminController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display a single need.
      */
     public function show(string $id)
     {
@@ -51,7 +51,7 @@ class NeedAdminController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form to edit a need.
      */
     public function edit(string $id)
     {
@@ -61,7 +61,7 @@ class NeedAdminController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing need from validated input.
      */
     public function update(NeedAdminRequest $request, string $id)
     {
@@ -73,7 +73,7 @@ class NeedAdminController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a need.
      */
     public function destroy(string $id)
     {

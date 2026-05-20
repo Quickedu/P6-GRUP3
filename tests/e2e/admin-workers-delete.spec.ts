@@ -12,8 +12,8 @@ test('admin can create a worker', async ({ page }) => {
     const workerLicense = `LIC-${timestamp}`;
 
     await page.goto('/loginWorker');
-    await page.locator('input#email').fill(adminEmail);
-    await page.locator('input#password').fill(adminPassword);
+    await page.locator('input#email').fill(adminEmail!);
+    await page.locator('input#password').fill(adminPassword!);
     await page.locator('[data-test="login-button"]').click();
 
     await page.waitForURL('**/dashboard');

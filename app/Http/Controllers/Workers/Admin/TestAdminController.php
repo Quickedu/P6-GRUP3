@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class TestAdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List all tests for the admin view.
      */
     public function index()
     {
@@ -22,7 +22,7 @@ class TestAdminController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form to create a new test.
      */
     public function create()
     {
@@ -30,7 +30,7 @@ class TestAdminController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Persist a new test from validated input.
      */
     public function store(TestAdminRequest $request)
     {
@@ -42,7 +42,7 @@ class TestAdminController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display a single test.
      */
     public function show(string $id)
     {
@@ -52,7 +52,7 @@ class TestAdminController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form to edit a test.
      */
     public function edit(string $id)
     {
@@ -62,7 +62,7 @@ class TestAdminController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing test from validated input.
      */
     public function update(TestAdminRequest $request, string $id)
     {
@@ -74,7 +74,7 @@ class TestAdminController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a test.
      */
     public function destroy(string $id)
     {

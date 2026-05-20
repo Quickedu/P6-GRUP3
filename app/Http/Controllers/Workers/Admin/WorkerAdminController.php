@@ -11,7 +11,7 @@ use Inertia\Inertia;
 class WorkerAdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List all workers with related user details for the admin view.
      */
     public function index()
     {
@@ -38,12 +38,12 @@ class WorkerAdminController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+        * Reserved for a create form (not implemented here).
      */
     public function create() {}
 
     /**
-     * Store a newly created resource in storage.
+     * Create a user and the linked worker record.
      */
     public function store(WorkerAdminRequest $request)
     {
@@ -69,7 +69,7 @@ class WorkerAdminController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display a single worker.
      */
     public function show(string $id)
     {
@@ -79,7 +79,7 @@ class WorkerAdminController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form to edit a worker.
      */
     public function edit(string $id)
     {
@@ -89,7 +89,7 @@ class WorkerAdminController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the worker and its related user record.
      */
     public function update(WorkerAdminRequest $request, Worker $worker)
     {
@@ -106,7 +106,7 @@ class WorkerAdminController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the worker and its related user record.
      */
     public function destroy(string $id)
     {
