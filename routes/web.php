@@ -20,6 +20,8 @@ Route::inertia('/', 'HomePage', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
+Route::inertia('/privacitat', 'PrivacyPolicy')->name('privacy');
+
 Route::get('/dashboard', function (DatesController $datesController) {
     $user = Auth::guard('admin')->user() ?? Auth::guard('patient')->user();
     $role = $user?->role ?? 'patient';
