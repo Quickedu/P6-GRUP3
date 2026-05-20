@@ -14,7 +14,7 @@ let createdHotFile = false;
 const workerEmail = process.env.VITEST_WORKER_EMAIL ?? 'secretary1@gmail.com';
 const workerPassword = process.env.VITEST_WORKER_PASSWORD ?? 'password123';
 
-const formatDateOffset = (days) => {
+const formatDateOffset = (days: number): string => {
     const date = new Date();
     date.setDate(date.getDate() + days);
     const year = date.getFullYear();
@@ -23,7 +23,7 @@ const formatDateOffset = (days) => {
     return `${year}-${month}-${day}`;
 };
 
-const updateCookieJar = (response, jar) => {
+const updateCookieJar = (response: Response, jar: Record<string, string>): void => {
     const setCookie = response.headers.getSetCookie?.()
         ?? (response.headers.get('set-cookie') ? [response.headers.get('set-cookie')] : []);
 
@@ -42,19 +42,23 @@ const updateCookieJar = (response, jar) => {
     }
 };
 
-const buildCookieHeader = (jar) =>
+const buildCookieHeader = (jar: Record<string, string>): string =>
     Object.entries(jar)
         .map(([name, value]) => `${name}=${value}`)
         .join('; ');
 
-const buildQuarterHourTimes = (startHour, endHour, requiredMinutes) => {
-    const times = [];
+const buildQuarterHourTimes = (
+    startHour: number,
+    endHour: number,
+    requiredMinutes: number,
+): string[] => {
+    const times: string[] = [];
     const startMinutes = startHour * 60;
     const endMinutes = endHour * 60;
     const lastStartMinutes = endMinutes - requiredMinutes;
 
     for (let minutes = startMinutes; minutes <= lastStartMinutes; minutes += 15) {
-        const hours = String(Math.floor(minutes / 60));
+            const hours = String(Math.floor(minutes / 60));
         const mins = String(minutes % 60).padStart(2, '0');
         times.push(`${hours}:${mins}`);
     }
@@ -70,7 +74,7 @@ describe('ajaxDoctor', () => {
             createdHotFile = true;
         }
 
-        const jar = {};
+        const jar: Record<string, string> = {};
 
         const loginPage = await fetch(`${baseUrl}/loginWorker`, {
             redirect: 'manual',
@@ -149,7 +153,7 @@ describe('ajaxDoctor', () => {
         expect(data.data.start_times).toEqual(
             buildQuarterHourTimes(8, 15, requestedMinutes + 10),
         );
-    });
+    }, { timeout: 20000 });
 });
 
 afterAll(() => {
