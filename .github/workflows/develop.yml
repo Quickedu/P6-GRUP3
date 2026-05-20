@@ -180,13 +180,13 @@ jobs:
 
                       tar -xzf app.tgz
 
-                      php artisan config:clear
-                      php artisan key:generate
+                      $(which php84) artisan config:clear
+                      $(which php84) artisan key:generate
 
-                      php artisan migrate --force
+                      $(which php84) artisan migrate --force
 
-                      php artisan optimize:clear
-                      php artisan optimize
+                      $(which php84) artisan optimize:clear
+                      $(which php84) artisan optimize
 
-                      php artisan storage:unlink
-                      php artisan storage:link
+                      $(which php84) artisan storage:unlink
+                      $(which php84) artisan storage:link
