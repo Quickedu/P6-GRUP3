@@ -51,6 +51,15 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
     const requiredSlotMinutes = ref<number | null>(null);
     const extraTime = ref(0);
 
+    /**
+     * Parse a date string and a time string into a JavaScript Date.
+     *
+     * dateValue: expected format "YYYY-MM-DD".
+     * timeValue: expected format "HH:MM" (24h).
+     * Returns a Date set to the given date and time or `null` if input is invalid.
+     *
+     * Called by: `buildStartTimeOptions` and the `selectedDateTime` computed.
+     */
     function parseDateTimeFromParts(
         dateValue: string,
         timeValue: string,
@@ -78,6 +87,12 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         return dateTime;
     }
 
+    /**
+     * Format a Date into a string suitable for backend submission.
+     * Output format: "YYYY-MM-DD HH:MM:00".
+     *
+     * Called by: `selectedDateTime` when the user picks a start time.
+     */
     function formatDateTimeForSubmit(dateValue: Date): string {
         const year = dateValue.getFullYear();
         const month = String(dateValue.getMonth() + 1).padStart(2, '0');
@@ -88,6 +103,11 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         return `${year}-${month}-${day} ${hour}:${minute}:00`;
     }
 
+    /**
+     * Format a Date into a short time string "HH:MM" for display in UI.
+     *
+     * Called by: `buildStartTimeOptions` when generating available start times.
+     */
     function formatTimeForDisplay(dateValue: Date): string {
         const hour = String(dateValue.getHours()).padStart(2, '0');
         const minute = String(dateValue.getMinutes()).padStart(2, '0');
@@ -95,6 +115,12 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         return `${hour}:${minute}`;
     }
 
+    /**
+     * Round a Date up to the next multiple of `interval` minutes.
+     * Returns a new Date instance.
+     *
+     * Called by: `buildStartTimeOptions` to align candidate start times.
+     */
     function roundUpToMinutes(dateValue: Date, interval: number): Date {
         const rounded = new Date(dateValue.getTime());
         const minutes = rounded.getMinutes();
@@ -109,6 +135,13 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         return rounded;
     }
 
+    /**
+     * Reset all slot selection state (available slots, startTimeOptions,
+     * selectedStartTime and requiredSlotMinutes).
+     *
+     * Called by: `validatePatient`, `validateTimeTest`, and `validateDoctorSlots`
+     * when data changes that invalidate previously computed slots.
+     */
     function resetSlotSelection() {
         availableSlots.value = [];
         startTimeOptions.value = [];
@@ -116,6 +149,16 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         requiredSlotMinutes.value = null;
     }
 
+    /**
+     * Build a list of valid start time strings ("HH:MM") from an array of
+     * slot range strings like "09:00 - 12:30".
+     *
+     * It considers the required duration (from `requiredSlotMinutes` or
+     * `estimatedMinutes`) and steps through ranges in 15-minute increments.
+     *
+     * Called by: `validateDoctorSlots` when API does not provide explicit
+     * `start_times` and by internal logic to present selectable start times.
+     */
     function buildStartTimeOptions(slotRanges: string[]): string[] {
         if (!dataCita.value || estimatedMinutes.value === null) {
             return [];
@@ -182,6 +225,13 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         });
     }
 
+    /**
+     * Computed string used as the `date_time` form value. When both the date
+     * (`dataCita`) and a start time (`selectedStartTime`) are set, this
+     * produces the backend-friendly datetime via `formatDateTimeForSubmit`.
+     *
+     * Consumed by: the `NewDate.vue` form (hidden input `date_time`).
+     */
     const selectedDateTime = computed(() => {
         if (!dataCita.value || !selectedStartTime.value) {
             return '';
@@ -195,6 +245,15 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         return startDateTime ? formatDateTimeForSubmit(startDateTime) : '';
     });
 
+    /**
+     * Validate the patient by CIP (`cip` state) against the backend.
+     * - Fetches patient info via `ajaxPatient.url(currentCip)` and updates
+     *   `patientId`, `confirmedPatient`, `extraTime`, and `estimatedMinutes`.
+     * - Updates `validatedClass` to reflect visual validation state.
+     *
+     * Called from: `NewDate.vue` when the user clicks the "Comprovar usuari"
+     * button or interacts with the CIP field.
+     */
     const validatePatient = async (): Promise<void> => {
         const currentCip = cip.value.trim();
 
@@ -233,6 +292,14 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         isAvaible.value = true;
     };
 
+    /**
+     * Validate the selected test (`testId`) by calling `ajaxTest.url(testId)`.
+     * Updates `testMinutes`, `estimatedMinutes` and `timeValidationMessage`.
+     * If the API call fails or returns non-success, it resets related state.
+     *
+     * Called from: `NewDate.vue` when a test radio is changed
+     * (`@change="validateTimeTest(test.id)"`).
+     */
     const validateTimeTest = async (testId: number): Promise<void> => {
         selectedTestId.value = testId;
 
@@ -272,6 +339,15 @@ export const useNewDateAppointment = (): UseNewDateAppointmentReturn => {
         }
     };
 
+    /**
+     * Query available slots for the currently selected doctor on a given date
+     * for the estimated duration. Uses `ajaxDoctor.url(...)` to request
+     * `slots` and optional `start_times` from the API and fills
+     * `startTimeOptions` and `availableSlots`.
+     *
+     * Called from: `NewDate.vue` when the user clicks
+     * "Veure dates disponibles" (button bound to `validateDoctorSlots`).
+     */
     const validateDoctorSlots = async (): Promise<void> => {
         if (
             !professionalId.value ||

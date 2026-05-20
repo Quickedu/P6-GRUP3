@@ -4,10 +4,17 @@ namespace App\Actions\Workers\Secretary;
 
 use App\Models\Test;
 
+/**
+ * Action to fetch the duration (time) of a test by id. Returns the
+ * numeric time in minutes to be used by appointment scheduling logic.
+ *
+ * Called from: `DatesController::ajaxTest()` for test time validation.
+ */
 class GetTestConsultationAction
 {
     /**
-     * @return array<string, mixed>
+    * @param int $testId
+    * @return array<string, mixed>
      */
     public function handle(int $testId): array
     {
