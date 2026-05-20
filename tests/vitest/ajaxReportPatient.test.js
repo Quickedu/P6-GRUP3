@@ -20,13 +20,17 @@ const updateCookieJar = (response, jar) => {
 
     for (const cookie of setCookie) {
         const [pair] = cookie.split(';');
+
         if (!pair) {
             continue;
         }
+
         const index = pair.indexOf('=');
+
         if (index === -1) {
             continue;
         }
+
         const name = pair.slice(0, index).trim();
         const value = pair.slice(index + 1).trim();
         jar[name] = value;
@@ -50,13 +54,17 @@ const loginDoctor = async () => {
     const loginPage = await fetch(`${baseUrl}/loginWorker`, {
         redirect: 'manual',
     });
+
     if (!loginPage.ok) {
         const body = await loginPage.text();
+
         throw new Error(`Login page failed (${loginPage.status}). ${body.slice(0, 400)}`);
     }
+
     updateCookieJar(loginPage, jar);
 
     const csrf = decodeURIComponent(jar['XSRF-TOKEN'] ?? '');
+
     if (!csrf) {
         throw new Error('Missing XSRF token cookie. Is the app responding correctly?');
     }
@@ -78,6 +86,7 @@ const loginDoctor = async () => {
 
     if (![302, 303].includes(loginResponse.status)) {
         const body = await loginResponse.text();
+
         throw new Error(`Login failed (${loginResponse.status}). ${body.slice(0, 400)}`);
     }
 
@@ -85,6 +94,7 @@ const loginDoctor = async () => {
     const sessionCookie = Object.keys(jar).find(
         (name) => name.endsWith('-session') || name === 'laravel_session',
     );
+
     if (!sessionCookie) {
         throw new Error('Login did not set a session cookie. Check credentials');
     }
@@ -105,12 +115,15 @@ describe('ajaxReportPatient', () => {
 
         if (!response.ok) {
             const body = await response.text();
+
             throw new Error(`ajaxReportPatient failed (${response.status}). ${body.slice(0, 400)}`);
         }
 
         const contentType = response.headers.get('content-type') ?? '';
+
         if (!contentType.includes('application/json')) {
             const body = await response.text();
+
             throw new Error(`Expected JSON but got ${contentType}. ${body.slice(0, 400)}`);
         }
 

@@ -1,28 +1,25 @@
-<script setup>
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import caLocale from '@fullcalendar/core/locales/ca'
-import { computed } from 'vue'
+<script setup lang="ts">
+import caLocale from '@fullcalendar/core/locales/ca';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import FullCalendar from '@fullcalendar/vue3';
+import { computed } from 'vue';
 
-const props = defineProps({
-    events: Array,
-    onEventClick: Function,
-    initialView: {
-        type: String,
-        default: 'dayGridMonth'
-    }
-})
+const props = defineProps<{
+    events?: any[];
+    onEventClick?: (info: any) => void;
+    initialView?: string;
+}>();
 
 // Can change the calendar view from the parent using the initial-view prop.
 // Available views: 'dayGridMonth' (default), 'dayGridWeek', 'dayGridDay'.
 const calendarOptions = computed(() => ({
-    plugins: [dayGridPlugin ],
-    initialView: props.initialView,
+    plugins: [dayGridPlugin],
+    initialView: props.initialView || 'dayGridMonth',
     locale: caLocale,
     headerToolbar: {
         left: 'prev',
         center: 'title',
-        right: 'next'
+        right: 'next',
         // Other options: 'today', 'dayGridMonth,dayGridWeek,dayGridDay' (view switcher)
     },
     events: props.events,
@@ -32,9 +29,9 @@ const calendarOptions = computed(() => ({
     eventTimeFormat: {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false // can change to 24h format - set true for it
+        hour12: false, // can change to 24h format - set true for it
     },
-}))
+}));
 </script>
 
 <template>
@@ -50,8 +47,12 @@ const calendarOptions = computed(() => ({
                     }"
                 >
                     <span class="fc-event-time-label">{{ arg.timeText }}</span>
-                    <span class="fc-event-title-label">{{ arg.event.title }}</span>
-                    <span class="fc-event-status-label">{{ arg.event.extendedProps.status }}</span>
+                    <span class="fc-event-title-label">{{
+                        arg.event.title
+                    }}</span>
+                    <span class="fc-event-status-label">{{
+                        arg.event.extendedProps.status
+                    }}</span>
                 </div>
             </template>
         </FullCalendar>

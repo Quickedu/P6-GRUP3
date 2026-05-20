@@ -18,41 +18,55 @@ const props = defineProps<{
 const { isCurrentUrl } = useCurrentUrl();
 
 const activeIndex = computed(() =>
-    props.items.findIndex(item => isCurrentUrl(item.href))
+    props.items.findIndex((item) => isCurrentUrl(item.href)),
 );
 
 const direction = ref<'down' | 'up'>('down');
 
 watch(activeIndex, (newIndex, oldIndex) => {
-    if (newIndex === -1 || oldIndex === -1) return;
+    if (newIndex === -1 || oldIndex === -1) {
+        return;
+    }
+
     direction.value = newIndex > oldIndex ? 'down' : 'up';
 });
 </script>
 
 <template>
     <SidebarGroup class="px-0 py-0">
-        <SidebarGroupLabel v-if="label" class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm">{{ label }}</SidebarGroupLabel>
+        <SidebarGroupLabel
+            v-if="label"
+            class="px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm"
+            >{{ label }}</SidebarGroupLabel
+        >
         <SidebarMenu class="gap-1 sm:gap-2">
             <SidebarMenuItem
                 v-for="item in items"
                 :key="item.title"
                 class="relative"
             >
-                <Transition :name="direction === 'down' ? 'bar-down' : 'bar-up'">
+                <Transition
+                    :name="direction === 'down' ? 'bar-down' : 'bar-up'"
+                >
                     <span
                         v-if="isCurrentUrl(item.href)"
-                        class="pointer-events-none absolute right-0 top-1/2 z-10 h-[80%] w-1 -translate-y-1/2 rounded-l-sm bg-[var(--pmf-primary)]"
+                        class="pointer-events-none absolute top-1/2 right-0 z-10 h-[80%] w-1 -translate-y-1/2 rounded-l-sm bg-[var(--pmf-primary)]"
                     />
                 </Transition>
 
                 <Link
                     :href="item.href"
-                    class="flex w-full items-center gap-2 sm:gap-3 rounded px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium text-sidebar-foreground no-underline transition-colors duration-150 ease-in hover:bg-[color:rgba(0,163,142,0.08)] hover:text-[var(--pmf-primary)]"
-                    :class="isCurrentUrl(item.href)
-                        ? 'bg-[color:rgba(0,163,142,0.12)] font-semibold text-[var(--pmf-primary)]'
-                        : ''"
+                    class="flex w-full items-center gap-2 rounded px-2 py-2 text-xs font-medium text-sidebar-foreground no-underline transition-colors duration-150 ease-in hover:bg-[color:rgba(0,163,142,0.08)] hover:text-[var(--pmf-primary)] sm:gap-3 sm:px-4 sm:py-3 sm:text-sm"
+                    :class="
+                        isCurrentUrl(item.href)
+                            ? 'bg-[color:rgba(0,163,142,0.12)] font-semibold text-[var(--pmf-primary)]'
+                            : ''
+                    "
                 >
-                    <component :is="item.icon" class="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+                    <component
+                        :is="item.icon"
+                        class="h-4 w-4 shrink-0 sm:h-5 sm:w-5"
+                    />
                     <span class="truncate">{{ item.title }}</span>
                 </Link>
             </SidebarMenuItem>

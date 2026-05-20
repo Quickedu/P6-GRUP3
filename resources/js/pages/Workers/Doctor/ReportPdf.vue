@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { onBeforeUnmount, ref } from 'vue';
 import { CircleCheck, UserRoundSearch } from 'lucide-vue-next';
+import { onBeforeUnmount, ref } from 'vue';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -31,6 +31,8 @@ const props = defineProps<{
     };
     workerId: number;
 }>();
+
+const localUser = ref({ ...props.currentUser });
 
 interface Patient {
     id: number;
@@ -62,6 +64,7 @@ function loadPatient() {
 
     if (!nts) {
         clearPatientFields();
+
         return;
     }
 
@@ -89,9 +92,7 @@ const imageInput = ref<HTMLInputElement | null>(null);
 const imagePreviews = ref<string[]>([]);
 
 function onImageChange(event: Event) {
-    const files = Array.from(
-        (event.target as HTMLInputElement).files ?? []
-    );
+    const files = Array.from((event.target as HTMLInputElement).files ?? []);
 
     for (const url of imagePreviews.value) {
         URL.revokeObjectURL(url);
@@ -133,7 +134,6 @@ onBeforeUnmount(() => {
                     :value="props.workerId ?? ''"
                 />
 
-                
                 <div
                     class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12"
                 >
@@ -183,7 +183,9 @@ onBeforeUnmount(() => {
                                         >
                                             NTS
                                         </Label>
-                                        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2">
+                                        <div
+                                            class="flex flex-col items-stretch gap-2 md:flex-row md:items-center"
+                                        >
                                             <Input
                                                 id="patient_id"
                                                 v-model="patientForm.nts"
@@ -199,12 +201,14 @@ onBeforeUnmount(() => {
 
                                             <button
                                                 type="button"
-                                                class="inline-flex h-9 w-full shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 md:w-auto md:h-9"
+                                                class="inline-flex h-9 w-full shrink-0 cursor-pointer items-center justify-center rounded-md bg-pmf-primary px-5 py-3 text-pmf-secondary hover:bg-pmf-green focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 focus-visible:outline-none md:h-9 md:w-auto"
                                                 @click="loadPatient"
                                                 title="Comprovar pacient"
                                                 aria-label="Comprovar pacient"
                                             >
-                                                <UserRoundSearch class="size-4" />
+                                                <UserRoundSearch
+                                                    class="size-4"
+                                                />
                                                 Comprovar
                                             </button>
                                         </div>
@@ -222,7 +226,7 @@ onBeforeUnmount(() => {
                                             v-model="patientForm.name"
                                             type="text"
                                             name="name"
-                                            class="h-9 flex-1 bg-background block cursor-not-allowed"
+                                            class="block h-9 flex-1 cursor-not-allowed bg-background"
                                             placeholder="Ex: John Doe"
                                             readonly
                                             autocomplete="off"
@@ -243,7 +247,7 @@ onBeforeUnmount(() => {
                                             type="text"
                                             name="address"
                                             readonly
-                                            class="h-9 flex-1 bg-background block cursor-not-allowed"
+                                            class="block h-9 flex-1 cursor-not-allowed bg-background"
                                             placeholder="Ex: Carrer de l'Exemple, 123"
                                             autocomplete="off"
                                             aria-describedby="patient-check-help patient-check-status"
@@ -263,7 +267,7 @@ onBeforeUnmount(() => {
                                             type="date"
                                             name="birth_date"
                                             readonly
-                                            class="h-9 flex-1 bg-background block cursor-not-allowed"
+                                            class="block h-9 flex-1 cursor-not-allowed bg-background"
                                             placeholder="Ex: 01/01/1990"
                                             autocomplete="off"
                                             aria-describedby="patient-check-help patient-check-status"
@@ -356,7 +360,7 @@ onBeforeUnmount(() => {
                                                 required
                                                 aria-required="true"
                                                 aria-describedby="patient-check-help patient-check-status"
-                                                v-model="props.currentUser.name"
+                                                v-model="localUser.name"
                                             />
                                         </div>
 
@@ -446,7 +450,7 @@ onBeforeUnmount(() => {
                                                 class="min-h-24 w-full min-w-0 overflow-hidden rounded-md border border-pmf-primary/30 bg-transparent p-3 text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:border-pmf-primary focus-within:ring-2 focus-within:ring-pmf-primary/30 md:text-sm"
                                             ></textarea>
                                         </div>
-                                    </div>  
+                                    </div>
 
                                     <div
                                         class="grid grid-cols-1 gap-4 md:grid-cols-2"
@@ -507,7 +511,7 @@ onBeforeUnmount(() => {
 
                                             <button
                                                 type="button"
-                                                class="shrink-0 rounded-md bg-pmf-primary px-3 py-2 text-sm font-semibold text-pmf-secondary hover:bg-pmf-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2"
+                                                class="shrink-0 rounded-md bg-pmf-primary px-3 py-2 text-sm font-semibold text-pmf-secondary hover:bg-pmf-green focus-visible:ring-2 focus-visible:ring-pmf-primary focus-visible:ring-offset-2 focus-visible:outline-none"
                                                 @click="imageInput?.click()"
                                             >
                                                 Afegir imatges
@@ -529,7 +533,9 @@ onBeforeUnmount(() => {
                                             class="mt-4 rounded-lg border border-dashed border-pmf-primary/30 bg-muted/40 p-4"
                                         >
                                             <div
-                                                v-if="imagePreviews.length === 0"
+                                                v-if="
+                                                    imagePreviews.length === 0
+                                                "
                                                 class="text-sm text-muted-foreground"
                                             >
                                                 No hi ha cap imatge
@@ -541,7 +547,9 @@ onBeforeUnmount(() => {
                                                 class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
                                             >
                                                 <div
-                                                    v-for="(src, index) in imagePreviews"
+                                                    v-for="(
+                                                        src, index
+                                                    ) in imagePreviews"
                                                     :key="`${src}-${index}`"
                                                     class="overflow-hidden rounded-md border bg-background"
                                                 >

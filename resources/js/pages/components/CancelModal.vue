@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { Trash2 } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 const props = defineProps({
     modelValue: { type: Boolean, required: false },
@@ -25,7 +25,10 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'confirm', 'close']);
 
 const visible = computed(() => {
-    if (typeof props.modelValue !== 'undefined') return props.modelValue;
+    if (typeof props.modelValue !== 'undefined') {
+        return props.modelValue;
+    }
+
     return Boolean(props.show);
 });
 
@@ -51,11 +54,14 @@ const confirmDelete = () => {
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
         @click.self="close"
     >
-        <div class="mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-[#e8f1ef] bg-white shadow-2xl">
-
+        <div
+            class="mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-[#e8f1ef] bg-white shadow-2xl"
+        >
             <div class="px-6 pt-6 pb-5">
                 <div class="flex items-start gap-4">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-50">
+                    <div
+                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-50"
+                    >
                         <Trash2 class="h-5 w-5 text-red-600" />
                     </div>
 
@@ -63,14 +69,18 @@ const confirmDelete = () => {
                         <h3 class="text-base font-semibold text-pmf-green-dark">
                             {{ title }}
                         </h3>
-                        <p class="mt-1.5 text-sm leading-relaxed text-pmf-grey-light">
+                        <p
+                            class="mt-1.5 text-sm leading-relaxed text-pmf-grey-light"
+                        >
                             Estàs segur que vols cancel·lar la cita?
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div class="flex items-center gap-3 border-t border-[#eef7f6] px-6 py-4">
+            <div
+                class="flex items-center gap-3 border-t border-[#eef7f6] px-6 py-4"
+            >
                 <button
                     type="button"
                     class="flex-1 rounded-lg border border-[#cfe7e4] bg-white px-4 py-2.5 text-sm font-medium text-pmf-green-dark transition hover:bg-[#f4f9f8]"
