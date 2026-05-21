@@ -157,7 +157,7 @@ const plainDescription = computed(() =>
 );
 
 const descriptionForSubmit = computed(() =>
-    plainDescription.value.slice(0, 255),
+    plainDescription.value
 );
 
 const resumMinutsProva = computed(() =>
