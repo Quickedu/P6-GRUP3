@@ -1,10 +1,18 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import { Calendar, Clock, AlertCircle } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import EventPopover from '@/pages/components/EventPopover.vue';
 import FullCalendar from '@/pages/components/FullCalendar.vue';
 import { patientDashboard } from '@/routes';
+
+const page = usePage();
+
+const user = computed(() => page.props.auth?.user);
+
+const nts = ref(page.props.searchedNts || '');
+
+const isDoctor = computed(() => user.value?.role === 'doctor');
 
 interface DateRecord {
     id: number;
@@ -114,15 +122,6 @@ const getStatusText = (urgencia: string) => {
     }
 };
 
-// const getStatusStyle = (estat: string) => {
-//     switch (estat) {
-//         case 'programada':  return { bg: 'bg-blue-100 text-blue-700',   label: 'Programada' }
-//         case 'realitzada':  return { bg: 'bg-[#f0f7f6] text-pmf-green', label: 'Realitzada' }
-//         case 'cancel·lada': return { bg: 'bg-red-100 text-red-700',     label: 'Cancel·lada' }
-//         default:            return { bg: 'bg-gray-100 text-gray-600',   label: estat }
-//     }
-// }
-
 const now = new Date();
 const todayDates = computed(() =>
     dates.value
@@ -184,9 +183,7 @@ const getUrgencyStyle = (urgencia: string) => {
             <div
                 class="rounded-xl border border-red-200 bg-red-200/30 px-6 py-5"
             >
-                <p
-                    class="text-xs font-medium tracking-wider text-pmf-grey-light uppercase"
-                >
+                <p class="text-xs font-medium tracking-wider text-pmf-grey-light uppercase">
                     Urgent
                 </p>
                 <div class="mt-2 flex items-center justify-between">
@@ -202,9 +199,7 @@ const getUrgencyStyle = (urgencia: string) => {
                 </div>
             </div>
 
-            <div
-                class="rounded-xl border border-[#c5d8d5] bg-[#CBE2E5]/70 px-6 py-5"
-            >
+            <div class="rounded-xl border border-[#c5d8d5] bg-[#CBE2E5]/70 px-6 py-5">
                 <p
                     class="text-xs font-medium tracking-wider text-pmf-grey-light uppercase"
                 >
@@ -285,9 +280,7 @@ const getUrgencyStyle = (urgencia: string) => {
                                 {{ getUrgencyStyle(date.urgencia).label }}
                             </span>
                         </div>
-                        <div
-                            class="mt-1 flex items-center gap-1 text-xs text-pmf-grey-light"
-                        >
+                        <div class="mt-1 flex items-center gap-1 text-xs text-pmf-grey-light">
                             <Clock class="h-3 w-3" aria-hidden="true" />
                             {{ formatTime(date.date_time) }}
                         </div>
@@ -306,6 +299,7 @@ const getUrgencyStyle = (urgencia: string) => {
         :event="popover.event"
         :x="popover.x"
         :y="popover.y"
+        :can-cancel="false"
         @close="closePopover"
     />
 </template>

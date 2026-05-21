@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import {
     Calendar,
     Stethoscope,
@@ -7,10 +7,12 @@ import {
     FileText,
     Loader,
     Clock,
+    Trash2,
 } from 'lucide-vue-next';
 import { ref } from 'vue';
 import DateDetailModal from '@/pages/components/DateDetailModal.vue';
 import RescheduleDateModal from '@/pages/components/RescheduleDateModal.vue';
+import CancelModal from '@/pages/components/CancelModal.vue';
 import { patientDetail } from '@/routes';
 import DatesFilterComponent from './DatesFilterComponent.vue';
 import PatientFilterComponent from './PatientFilterComponent.vue';
@@ -70,6 +72,7 @@ const activeFilter = ref<ActiveFilter>('dates');
 // Modal state
 const isDetailModalOpen = ref(false);
 const isRescheduleModalOpen = ref(false);
+const isCancelModalOpen = ref(false);
 const selectedDate = ref<ScheduledDate | null>(null);
 
 const resetResults = () => {
@@ -138,6 +141,54 @@ const closeDetailModal = () => {
 const closeRescheduleModal = () => {
     isRescheduleModalOpen.value = false;
     selectedDate.value = null;
+};
+
+// Check if date is in the future
+const isFutureDate = (dateTime: string): boolean => {
+    return new Date(dateTime) > new Date();
+};
+
+// Open cancel modal with selected date
+const openCancelModal = (date: ScheduledDate) => {
+    if (!isFutureDate(date.date_time)) {
+        resultError.value = 'No es pot cancel·lar una cita passada';
+        setTimeout(() => {
+            resultError.value = '';
+        }, 3000);
+        return;
+    }
+    selectedDate.value = date;
+    isCancelModalOpen.value = true;
+};
+
+// Close cancel modal
+const closeCancelModal = () => {
+    isCancelModalOpen.value = false;
+    selectedDate.value = null;
+};
+
+// Handle cancel confirmation
+const handleCancelDate = (id: number) => {
+    router.post(`/dateSchedule/${id}/cancel`, {}, {
+        onSuccess: () => {
+            // Refresh the results after successful cancellation
+            if (activeFilter.value === 'dates') {
+                // Re-trigger the dates filter to refresh results
+                displayedDates.value = displayedDates.value.map(d =>
+                    d.id === id ? { ...d, estat: 'cancel·lada' } : d
+                );
+            } else if (activeFilter.value === 'patient') {
+                displayedDates.value = displayedDates.value.map(d =>
+                    d.id === id ? { ...d, estat: 'cancel·lada' } : d
+                );
+            }
+            closeCancelModal();
+        },
+        onError: (errors) => {
+            console.error(errors);
+            resultError.value = 'Error al cancel·lar la cita';
+        },
+    });
 };
 </script>
 
@@ -234,6 +285,15 @@ const closeRescheduleModal = () => {
                                     @click.stop="openRescheduleModal(date)"
                                 >
                                     Reprogramar
+                                </button>
+                                <button
+                                    v-if="date.estat !== 'cancel·lada' && isFutureDate(date.date_time)"
+                                    type="button"
+                                    class="rounded-md border border-red-300 bg-white px-3 py-1 text-xs font-semibold text-red-600 hover:bg-red-50"
+                                    @click.stop="openCancelModal(date)"
+                                >
+                                    <Trash2 class="inline h-3 w-3 mr-1" aria-hidden="true" />
+                                    Cancel·lar
                                 </button>
                                 <span
                                     :class="`inline-block rounded-lg px-2 py-1 text-xs font-medium ${getUrgencyColor(date.urgencia)}`"
@@ -354,6 +414,14 @@ const closeRescheduleModal = () => {
             v-model:is-open="isRescheduleModalOpen"
             :date="selectedDate"
             @close="closeRescheduleModal"
+        />
+
+        <!--cancel modal -->
+        <CancelModal
+            v-model="isCancelModalOpen"
+            title="Cancel·lar cita"
+            @confirm="handleCancelDate"
+            @close="closeCancelModal"
         />
     </div>
 </template>

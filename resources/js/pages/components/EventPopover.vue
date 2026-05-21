@@ -12,11 +12,12 @@ interface PopoverEvent {
     };
 }
 
-const { event, x, y, visible } = defineProps<{
+const { event, x, y, visible, canCancel = true } = defineProps<{
     event: PopoverEvent | null;
     x: number;
     y: number;
     visible: boolean;
+    canCancel?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -133,7 +134,7 @@ const formatDateTime = (dateStr: string) =>
                 </div>
             </div>
             <div
-                v-if="event.extendedProps.status !== 'cancel·lada'"
+                v-if="event.extendedProps.status !== 'cancel·lada' && canCancel"
                 class="mt-4 border-t border-gray-100 pt-3"
             >
                 <button
